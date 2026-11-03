@@ -123,3 +123,13 @@ video.rd-photo { display:block; cursor:pointer; object-fit:fill; background:#fff
 body.ii-in .ii-fab { opacity:1; visibility:visible; transform:none; }
 body.ii-in .ii-fab:hover { transform:translateY(-2px); }
 @media (prefers-reduced-motion: reduce) { .ii-order, .ii-fab { transition:none; } }
+
+/* Алина: оживлённые фото (видео = ровно видимая область рамки; геометрия = размер рамки) */
+#wb_element_instance221 video.rd-photo { width:308px; height:440px; position:static; left:0; top:0; max-width:none; }
+#wb_element_instance219 video.rd-photo { width:315px; height:440px; position:static; left:0; top:0; max-width:none; }
+#wb_element_instance220 video.rd-photo { width:311px; height:440px; position:static; left:0; top:0; max-width:none; }
+#wb_element_instance222 video.rd-photo { width:308px; height:440px; position:static; left:0; top:0; max-width:none; }
+#wb_element_instance223 video.rd-photo { width:314px; height:440px; position:static; left:0; top:0; max-width:none; }
+#wb_element_instance224 video.rd-photo { width:311px; height:440px; position:static; left:0; top:0; max-width:none; }
+#wb_element_instance225 video.rd-photo { width:240px; height:178px; position:static; left:0; top:0; max-width:none; }
+#wb_element_instance213 video.rd-photo { width:501px; height:190px; position:static; left:0; top:0; max-width:none; }
