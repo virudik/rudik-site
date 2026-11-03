@@ -50,3 +50,55 @@
 
 .rv h2.wb-stl-heading2 { font-size:26px; line-height:34px; font-weight:bold; }
 .rv-box video { position:absolute; inset:0; width:100%; height:100%; background:#000; object-fit:contain; }
+
+/* ---- t172u ---- */
+/* 1) меню: в одну строку на любом экране, не «съезжает» ИИШНИЦА */
+#wb_element_instance0 { left:0 !important; width:100% !important; min-width:0 !important; }
+#wb_element_instance0 > ul { white-space:nowrap !important; }
+#wb_element_instance0 > ul > li { margin:0 5px !important; white-space:nowrap; }
+#wb_element_instance0 li a { padding:20px 7px !important; font-size:20px !important; white-space:nowrap !important; }
+/* 2) выпадающее меню «Виталик»: по наведению, фокусу и тапу (класс .over ставит main.js) */
+#wb_element_instance0 > ul > li:has(> ul) > a::after { content:" \25BE"; font-size:.8em; line-height:1; vertical-align:baseline; }
+#wb_element_instance0 li ul li a { padding:12px 18px !important; font-size:18px !important; }
+#wb_element_instance0 li ul { min-width:100%; }
+#wb_element_instance0 .hmenu li.over > ul, #wb_element_instance0 .hmenu li:focus-within > ul { display:block; }
+@media (hover:hover) { #wb_element_instance0 .hmenu > li:hover > ul { display:block; } }
+
+/* 3) собаки по верхней рамке календаря */
+#rdDogs { top:884px; left:10px; width:970px; height:260px; z-index:585; overflow:hidden; pointer-events:none; background:#fff; }
+#rdDogs .rd-dogs-bar { position:absolute; left:0; right:0; bottom:3.6px; height:13.9px; background:#b6b6b6; }
+#rdDogs .rd-dogs-v { position:absolute; left:0; bottom:0; width:495px; height:260px; display:block; background:#fff; animation:rd-dogwalk 18s ease-in-out infinite; will-change:transform; }
+@keyframes rd-dogwalk {
+  0% { transform:translateX(0) scaleX(1); }
+  46% { transform:translateX(475px) scaleX(1); }
+  50% { transform:translateX(475px) scaleX(-1); }
+  96% { transform:translateX(0) scaleX(-1); }
+  100% { transform:translateX(0) scaleX(1); }
+}
+
+/* 7) космос справа от заголовка «РАБОТА» */
+#rdSpace { top:0; left:270px; width:710px; height:178px; z-index:610; overflow:hidden; border-radius:0 0 8px 8px; background:#000; box-shadow:0 2px 10px rgba(0,0,0,.35); pointer-events:none; }
+#rdSpace .rd-space-v { width:100%; height:100%; object-fit:cover; display:block; }
+
+/* фото-видео (замена картинок): геометрия берётся из правил #id video */
+video.rd-photo { display:block; cursor:pointer; object-fit:fill; background:#fff; }
+
+/* 4) ПРОМТЫ справа, другой цвет */
+#iiPromts .ii-sq { background:#ff8a00; }
+#iiPromts .ii-sq:hover { background:#d96f00; }
+
+/* плавное переливание цвета у всех цветных прямоугольников-заголовков и кнопок */
+@keyframes rd-hue { from { filter:hue-rotate(0deg); } to { filter:hue-rotate(360deg); } }
+@keyframes rd-black { 0%,100% { background-color:#000; } 25% { background-color:#2a0a4a; } 50% { background-color:#0a2f4a; } 75% { background-color:#0a3a22; } }
+#wb_element_instance56 > .wb_shp, #wb_element_instance91 > .wb_shp, #wb_element_instance106 > .wb_shp, #wb_element_instance109 > .wb_shp,
+#wb_element_instance192 > .wb_shp, #wb_element_instance205 > .wb_shp, #wb_element_instance227 > .wb_shp, #iiPromts .ii-sq { animation:rd-hue 24s linear infinite; }
+#wb_element_instance91 > .wb_shp { animation-delay:-4s; } #wb_element_instance106 > .wb_shp { animation-delay:-8s; }
+#wb_element_instance109 > .wb_shp { animation-delay:-12s; } #wb_element_instance192 > .wb_shp { animation-delay:-16s; }
+#wb_element_instance205 > .wb_shp { animation-delay:-20s; } #wb_element_instance227 > .wb_shp { animation-delay:-2s; }
+#iiPromts .ii-sq { animation-delay:-14s; }
+#wb_element_instance39 > .wb_shp { animation:rd-black 24s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  #wb_element_instance39 > .wb_shp, #wb_element_instance56 > .wb_shp, #wb_element_instance91 > .wb_shp, #wb_element_instance106 > .wb_shp,
+  #wb_element_instance109 > .wb_shp, #wb_element_instance192 > .wb_shp, #wb_element_instance205 > .wb_shp, #wb_element_instance227 > .wb_shp,
+  #iiPromts .ii-sq, #rdDogs .rd-dogs-v { animation:none !important; }
+}
