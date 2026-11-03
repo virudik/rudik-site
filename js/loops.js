@@ -48,3 +48,11 @@
     }, { rootMargin: "200px 0px" }).observe(cv);
   });
 })();
+
+/* ИИшница: плавающая кнопка «Заказать» видна, пока на экране раздел */
+(function () {
+  var pg = document.getElementById('page_3'); if (!pg || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(function (es) {
+    es.forEach(function (e) { document.body.classList.toggle('ii-in', e.isIntersecting); });
+  }, { threshold: 0.02 }).observe(pg);
+})();

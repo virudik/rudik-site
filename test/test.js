@@ -1,0 +1,33 @@
+(function () {
+  var root = document.documentElement, btn = document.getElementById('themeBtn');
+  var mq = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
+  function cur() { return root.getAttribute('data-theme') || (mq && mq.matches ? 'dark' : 'light'); }
+  function sync() { var d = cur() === 'dark'; if (btn) { btn.setAttribute('aria-pressed', d); btn.querySelector('.tx').textContent = d ? 'Светлая' : 'Тёмная'; btn.setAttribute('aria-label', d ? 'Включить светлую тему' : 'Включить тёмную тему'); } }
+  if (btn) btn.addEventListener('click', function () {
+    var n = cur() === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', n);
+    try { localStorage.setItem('rd-theme', n); } catch (e) {}
+    sync();
+  });
+  if (mq && mq.addEventListener) mq.addEventListener('change', sync);
+  sync();
+
+  /* видео-петли играют только в зоне видимости */
+  var vids = [].slice.call(document.querySelectorAll('video.lv'));
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function play(v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+  if (!reduce && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) { e.target.preload = 'auto'; play(e.target); } else e.target.pause();
+      });
+    }, { rootMargin: '200px 0px' });
+    vids.forEach(function (v) { io.observe(v); });
+  } else if (!reduce) { vids.forEach(play); }
+
+  var up = document.getElementById('toTop');
+  if (up) {
+    window.addEventListener('scroll', function () { up.hidden = window.scrollY < 700; }, { passive: true });
+    up.addEventListener('click', function () { window.scrollTo({ top: 0 }); });
+  }
+})();
