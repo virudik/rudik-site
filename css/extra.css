@@ -1,14 +1,9 @@
 /* ---- правки поверх конструктора ---- */
 /* подменю: непрозрачное, поверх заголовков */
-.menu-landing ul ul, #wb_header ul ul, .wb_header_fixed ul ul { background:#fff !important; box-shadow:0 6px 18px rgba(0,0,0,.25); z-index:99999; }
+.menu-landing ul ul, #wb_header ul ul, .wb_header_fixed ul ul { background:rgba(255,255,255,.84) !important; -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); box-shadow:0 6px 18px rgba(0,0,0,.18); z-index:99999; }
 .menu-landing li ul { z-index:99999; }
 .wb_header_fixed { z-index:99998 !important; }
 
-/* кнопки ВИДЕО / ИИШНИЦА под фото в разделе «Виталик» */
-#iiBtns { position:absolute; }
-#iiBtns .rd-btn { display:flex; align-items:center; justify-content:center; box-sizing:border-box; width:290px; height:34px; line-height:1; margin:0 0 8px; text-align:center;
-  font:bold 18px Georgia,serif; color:#000; background:transparent; border:1px solid #000; text-decoration:none; transition:.15s; }
-#iiBtns .rd-btn:hover { background:#000; color:#fff; }
 
 /* футер: иконки и копирайт — одна центрированная строка */
 #wb_footer .wb_cont_inner { display:flex; flex-wrap:nowrap; justify-content:center; align-items:center; gap:22px; height:72px !important; position:relative; }
@@ -58,27 +53,25 @@
 #wb_element_instance0 > ul > li { margin:0 5px !important; white-space:nowrap; }
 #wb_element_instance0 li a { padding:20px 7px !important; font-size:20px !important; white-space:nowrap !important; }
 /* 2) выпадающее меню «Виталик»: по наведению, фокусу и тапу (класс .over ставит main.js) */
-#wb_element_instance0 > ul > li:has(> ul) > a::after { content:" \25BE"; font-size:.8em; line-height:1; vertical-align:baseline; }
 #wb_element_instance0 li ul li a { padding:12px 18px !important; font-size:18px !important; }
 #wb_element_instance0 li ul { min-width:100%; }
 #wb_element_instance0 .hmenu li.over > ul, #wb_element_instance0 .hmenu li:focus-within > ul { display:block; }
 @media (hover:hover) { #wb_element_instance0 .hmenu > li:hover > ul { display:block; } }
 
-/* 3) собаки по верхней рамке календаря */
-#rdDogs { top:884px; left:10px; width:970px; height:260px; z-index:585; overflow:hidden; pointer-events:none; background:#fff; }
-#rdDogs .rd-dogs-bar { position:absolute; left:0; right:0; bottom:3.6px; height:13.9px; background:#b6b6b6; }
-#rdDogs .rd-dogs-v { position:absolute; left:0; bottom:0; width:495px; height:260px; display:block; background:#fff; animation:rd-dogwalk 18s ease-in-out infinite; will-change:transform; }
-@keyframes rd-dogwalk {
-  0% { transform:translateX(0) scaleX(1); }
-  46% { transform:translateX(475px) scaleX(1); }
-  50% { transform:translateX(475px) scaleX(-1); }
-  96% { transform:translateX(0) scaleX(-1); }
-  100% { transform:translateX(0) scaleX(1); }
-}
+/* 3) собаки по верхней рамке календаря (белый фон видео «вычитается» multiply, линии под лапами нет) */
+#rdDogs { top:824px; left:10px; width:970px; height:320px; z-index:585; overflow:hidden; pointer-events:none; background:transparent; mix-blend-mode:multiply; }
+#rdDogs .rd-dogs-v { position:absolute; left:50%; margin-left:-290px; bottom:-12px; width:580px; height:320px; display:block; background:#fff; }
 
-/* 7) космос справа от заголовка «РАБОТА» */
-#rdSpace { top:0; left:270px; width:710px; height:178px; z-index:610; overflow:hidden; border-radius:0 0 8px 8px; background:#000; box-shadow:0 2px 10px rgba(0,0,0,.35); pointer-events:none; }
-#rdSpace .rd-space-v { width:100%; height:100%; object-fit:cover; display:block; }
+/* 7) космос: Ресурс-П и космонавт летают поверх всего раздела «РАБОТА» (чистая прозрачность, canvas) */
+#rdSpace { top:0; left:0; width:100%; min-width:980px; height:1440px; z-index:610; overflow:hidden; pointer-events:none; }
+#rdSpace .sp-x { position:absolute; left:0; top:0; will-change:transform; animation:sp-x 34s ease-in-out infinite alternate; }
+#rdSpace .sp-y { will-change:transform; animation:sp-y 53s ease-in-out infinite alternate; }
+#rdSpace .sp-c { display:block; width:460px; height:287px; pointer-events:none;
+  filter:drop-shadow(0 0 1.5px rgba(0,0,0,.55)) drop-shadow(0 4px 7px rgba(0,0,0,.30)); }
+#rdSpace .rd-alpha-v { position:absolute; left:0; top:0; width:2px; height:2px; opacity:0; pointer-events:none; }
+@keyframes sp-x { from { transform:translateX(-30px); } to { transform:translateX(550px); } }
+@keyframes sp-y { from { transform:translateY(-10px); } to { transform:translateY(1170px); } }
+@media (max-width:700px) { #rdSpace .sp-c { width:320px; height:200px; } @keyframes sp-x { from { transform:translateX(-20px); } to { transform:translateX(690px); } } }
 
 /* фото-видео (замена картинок): геометрия берётся из правил #id video */
 video.rd-photo { display:block; cursor:pointer; object-fit:fill; background:#fff; }
@@ -100,5 +93,8 @@ video.rd-photo { display:block; cursor:pointer; object-fit:fill; background:#fff
 @media (prefers-reduced-motion: reduce) {
   #wb_element_instance39 > .wb_shp, #wb_element_instance56 > .wb_shp, #wb_element_instance91 > .wb_shp, #wb_element_instance106 > .wb_shp,
   #wb_element_instance109 > .wb_shp, #wb_element_instance192 > .wb_shp, #wb_element_instance205 > .wb_shp, #wb_element_instance227 > .wb_shp,
-  #iiPromts .ii-sq, #rdDogs .rd-dogs-v { animation:none !important; }
+  #iiPromts .ii-sq, #rdSpace .sp-x, #rdSpace .sp-y { animation:none !important; }
 }
+
+/* фото с котом: белое поле над головой не перекрывает соседние элементы */
+#wb_element_instance57 { mix-blend-mode:multiply; }
