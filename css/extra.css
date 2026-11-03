@@ -1,0 +1,52 @@
+/* ---- правки поверх конструктора ---- */
+/* подменю: непрозрачное, поверх заголовков */
+.menu-landing ul ul, #wb_header ul ul, .wb_header_fixed ul ul { background:#fff !important; box-shadow:0 6px 18px rgba(0,0,0,.25); z-index:99999; }
+.menu-landing li ul { z-index:99999; }
+.wb_header_fixed { z-index:99998 !important; }
+
+/* кнопки ВИДЕО / ИИШНИЦА под фото в разделе «Виталик» */
+#iiBtns { position:absolute; }
+#iiBtns .rd-btn { display:flex; align-items:center; justify-content:center; box-sizing:border-box; width:290px; height:34px; line-height:1; margin:0 0 8px; text-align:center;
+  font:bold 18px Georgia,serif; color:#000; background:transparent; border:1px solid #000; text-decoration:none; transition:.15s; }
+#iiBtns .rd-btn:hover { background:#000; color:#fff; }
+
+/* футер: иконки и копирайт — одна центрированная строка */
+#wb_footer .wb_cont_inner { display:flex; flex-wrap:nowrap; justify-content:center; align-items:center; gap:22px; height:72px !important; position:relative; }
+#wb_footer { height:72px !important; }
+#wb_footer > .wb_cont_bg { background-color:#151515 !important; box-shadow:0 0 0 100vmax #151515; clip-path:inset(0 -100vmax); }
+#wb_footer .wb_element { position:static !important; top:auto !important; left:auto !important; margin:0 !important; flex:0 0 auto; }
+#wb_footer .wb_element_picture { width:30px !important; min-width:30px !important; height:30px !important; min-height:30px !important; display:block; }
+#wb_footer .wb_element_picture img { width:30px !important; height:30px !important; object-fit:contain; border-radius:0; }
+#wb_footer #wb_element_instance53 { border-radius:50% !important; }
+#wb_footer #wb_element_instance2 { order:-1; width:auto !important; min-width:0 !important; white-space:nowrap; margin-right:14px !important; }
+#wb_footer #wb_element_instance53{order:1} #wb_footer #wb_element_instance52{order:2} #wb_footer #wb_element_instance6{order:3}
+#wb_footer #wb_element_instance5{order:4} #wb_footer #wb_element_instance4{order:5} #wb_footer #wb_element_instance3{order:6}
+#wb_footer #wb_element_instance234 { display:none !important; }
+
+/* ИИшница: красные квадраты */
+.ii-sq { display:flex; align-items:center; justify-content:center; box-sizing:border-box; width:230px; height:120px; background:#ff0000;
+  border-radius:0 0 5px 5px; text-decoration:none; color:#fff; font:normal normal 42px Myriad Set Pro,Lucida Grande,Helvetica Neue,Verdana,sans-serif; line-height:48px; text-transform:uppercase; transition:.15s; }
+.ii-sq:hover { background:#c80000; color:#fff; }
+
+/* сетка по проектам */
+#iiFlow { box-sizing:border-box; padding:0 26px; }
+#iiFlow .rg { max-width:940px; margin:0 auto; }
+.ii-more { margin:46px auto 0; width:290px; }
+.ii-more .wb_button { width:290px; height:30px; font-family:Georgia,serif; font-size:18px; border:1px solid #000; color:#000; text-decoration:none; background:transparent; }
+.ii-more .wb_button > span { font-weight:bold; }
+.ii-more .wb_button:hover { background:#000; color:#fff; }
+.ii-line { margin:36px 1px 0; border-top:4px solid #303030; width:990px; max-width:100%; }
+
+/* Мои видео */
+.rv { max-width:970px; margin:56px auto 0; position:relative; }
+.rv-anchor { position:absolute; top:-70px; }
+.rv-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px 20px; margin-top:22px; }
+.rv-card { position:relative; }
+.rv-card .rv-t { font:bold 18px/26px 'Open Sans',sans-serif; color:#1F1209; text-align:center; margin:0 0 6px; }
+.rv-box { position:relative; height:320px; background:#111; color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.rv-box iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+.rv-box .rv-play { width:0;height:0;border-left:34px solid rgba(255,255,255,.85);border-top:21px solid transparent;border-bottom:21px solid transparent; margin-bottom:16px; }
+.rv-box .rv-soon { font:normal 20px 'Open Sans',sans-serif; letter-spacing:.08em; text-transform:lowercase; opacity:.8; }
+
+.rv h2.wb-stl-heading2 { font-size:26px; line-height:34px; font-weight:bold; }
+.rv-box video { position:absolute; inset:0; width:100%; height:100%; background:#000; object-fit:contain; }

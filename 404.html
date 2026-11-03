@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><title>Рудики</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta http-equiv="refresh" content="1;url=/">
+<script>
+(function(){
+  var A={'vitalik':'виталик','vitaly':'виталик','about':'обо-мне','work':'работа','photo':'фото','foto':'фото','masha':'маша','alina':'алина','ii':'иишница','ai':'иишница','iishnica':'иишница','promts':'prompts','prompt':'prompts','video':'видео','videos':'видео'};
+  var S=['виталик','обо-мне','работа','фото','маша','алина','иишница','prompts','промты','видео','мои-видео'];
+  var p=location.pathname; try{p=decodeURIComponent(p);}catch(e){}
+  p=p.replace(/^\/+|\/+$/g,'').replace(/\.html?$/,'').toLowerCase();
+  var t='/';
+  if(S.indexOf(p)>-1) t='/'+p; else if(A[p]) t='/'+A[p];
+  location.replace(t);
+})();
+</script></head>
+<body style="font-family:Arial,sans-serif;text-align:center;padding-top:80px"><p>Такой страницы нет. <a href="/">Перейти на главную</a></p></body></html>
