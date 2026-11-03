@@ -16,5 +16,7 @@ window.RUDIK_VIDEOS = [
   { title: 'Кот-детектив',                      rutube: '' },
   { title: 'Котмонавты',                        rutube: '' },
   { title: 'Роскосмос',                         rutube: '' },
-  { title: 'Серёгиус',                          rutube: '' }
+  { title: 'Серёгиус',                          rutube: '' },
+  { title: 'Стасов калоген',                    rutube: '' },
+  { title: 'Черепашки в гараже',                rutube: '' }
 ];
