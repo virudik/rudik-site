@@ -202,32 +202,69 @@
      исчезает, и герой продолжает свою петлю. Если ролика нет — клик ничего не делает. */
   var HEROES = TEST ? { dogs: 'rdDogs' } : { iiDance: 'iiDance', iiDetective: 'iiDetective', iiShip: 'iiShip', rdDogs: 'rdDogs' };
   /* Сюда впишем пути готовых роликов, когда они появятся (или задать window.RUDIK_REACTIONS до загрузки скрипта) */
+  /* ret — время кадра петли, больше всего похожего на последний кадр реакции (подобрано попиксельным сравнением
+     всех кадров петли, scripts/../seam: diff ниже = лучше); туда петля перематывается к концу реакции. */
   var REACTIONS = {
-    iiDance: '/video/reactions/vitalik-dance-react.mp4?v=1',
-    iiDetective: '/video/reactions/kot-detektiv-dog-react.mp4?v=1',
-    iiShip: '/video/reactions/roskotmos-ship-react.mp4?v=1',
-    rdDogs: '/video/reactions/dogs-react.mp4?v=1',   /* в /test/ ключ тот же: dogs */
+    iiDance: { src: '/video/reactions/vitalik-dance-react.mp4?v=1', ret: 0.042 },
+    iiDetective: { src: '/video/reactions/kot-detektiv-dog-react.mp4?v=1', ret: 13.917 },
+    iiShip: { src: '/video/reactions/roskotmos-ship-react.mp4?v=1', ret: 0 },
+    rdDogs: { src: '/video/reactions/dogs-react.mp4?v=1', ret: 7.458 },   /* в /test/ ключ тот же: dogs */
   };
-  function reactionSrc(key) { var r = window.RUDIK_REACTIONS || REACTIONS; return r[key] || ''; }
-  function playReaction(host, key) {
-    var src = reactionSrc(key); if (!src || host._rdBusy || reduce) return false;
-    var loop = host.querySelector('video:not(.rd-react)'); if (!loop) return false;
-    host._rdBusy = true;
+  var FADE_IN = 200, FADE_OUT = 450;
+  function reactionCfg(key) {
+    var r = (window.RUDIK_REACTIONS || REACTIONS)[key];
+    if (!r) return null; return typeof r === 'string' ? { src: r, ret: 0 } : r;
+  }
+  function reactionSrc(key) { var c = reactionCfg(key); return c ? c.src : ''; }
+  function nextFrame(v, cb) { if (v.requestVideoFrameCallback) v.requestVideoFrameCallback(function () { cb(); }); else requestAnimationFrame(function () { requestAnimationFrame(cb); }); }
+  function getReactVid(host, key, preload) {
+    var c = reactionCfg(key); if (!c) return null;
+    var loop = host.querySelector('video:not(.rd-react)'); if (!loop) return null;
     var rv = host._rdVid;
     if (!rv) {
       rv = host._rdVid = document.createElement('video');
-      rv.className = loop.className + ' rd-react'; rv.muted = true; rv.playsInline = true; rv.setAttribute('playsinline', ''); rv.preload = 'auto';
-      rv.setAttribute('aria-hidden', 'true'); rv.tabIndex = -1; rv.src = src; host.appendChild(rv);
+      rv.className = loop.className + ' rd-react'; rv.muted = true; rv.defaultMuted = true; rv.playsInline = true;
+      rv.setAttribute('playsinline', ''); rv.setAttribute('muted', ''); rv.preload = preload || 'auto';
+      rv.setAttribute('aria-hidden', 'true'); rv.tabIndex = -1; rv.src = c.src; host.appendChild(rv);
+    } else if (preload === 'auto' && rv.preload !== 'auto') { rv.preload = 'auto'; }
+    return rv;
+  }
+  function playReaction(host, key) {
+    var c = reactionCfg(key); if (!c || host._rdBusy || reduce) return false;
+    var loop = host.querySelector('video:not(.rd-react)'); if (!loop) return false;
+    var rv = getReactVid(host, key, 'auto'); if (!rv) return false;
+    host._rdBusy = true;
+    /* оверлей — ровно в коробку петли (размер, позиция), без зависимостей от CSS страницы */
+    var st = rv.style; st.margin = '0'; st.right = st.bottom = 'auto';
+    st.left = loop.offsetLeft + 'px'; st.top = loop.offsetTop + 'px'; st.width = loop.offsetWidth + 'px'; st.height = loop.offsetHeight + 'px';
+    try { var cs = getComputedStyle(loop); st.objectFit = cs.objectFit; st.objectPosition = cs.objectPosition; st.borderRadius = cs.borderRadius; } catch (x) {}
+    var phase = 0, timer = 0;
+    function playLoop() { var p = loop.play(); if (p && p.catch) p.catch(function () {}); }
+    function done() {
+      clearTimeout(timer); rv.onended = rv.onerror = rv.ontimeupdate = null;
+      rv.classList.remove('on'); rv.style.transitionDuration = '';
+      setTimeout(function () { rv.pause(); host._rdBusy = false; }, FADE_OUT + 30);
     }
-    var finish = function () {
-      rv.onended = rv.onerror = null; rv.pause();
-      var p = loop.play(); if (p && p.catch) p.catch(function () {});
-      rv.classList.remove('on'); host._rdBusy = false;
-    };
-    rv.onended = finish; rv.onerror = finish;
+    function fail() { if (phase > 1) return; phase = 2; playLoop(); done(); }
+    /* за FADE_OUT до конца: петля уже стоит на подобранном кадре и играет, реакция плавно растворяется в неё */
+    function startOut() {
+      if (phase !== 1) return; phase = 2;
+      var go = function () { loop.onseeked = null; playLoop(); nextFrame(loop, function () { rv.style.transitionDuration = FADE_OUT + 'ms'; rv.classList.remove('on'); timer = setTimeout(done, FADE_OUT); }); };
+      try { if (Math.abs(loop.currentTime - c.ret) > 0.02) { loop.onseeked = go; loop.currentTime = c.ret; setTimeout(function () { if (loop.onseeked) go(); }, 300); } else go(); } catch (x) { go(); }
+    }
+    rv.onerror = fail;
+    rv.onended = function () { if (phase === 1) startOut(); else if (phase === 2) { /* последний кадр держится, пока идёт растворение */ } };
+    rv.ontimeupdate = function () { if (phase === 1 && rv.duration && rv.currentTime >= rv.duration - FADE_OUT / 1000 - 0.05) startOut(); };
     try { rv.currentTime = 0; } catch (x) {}
+    var shown = function () {
+      if (phase) return; phase = 1;
+      /* первый кадр реакции уже декодирован — проявляем поверх живой петли, затем петлю ставим на паузу
+         и заранее перематываем на кадр возврата (пока её не видно) */
+      rv.style.transitionDuration = FADE_IN + 'ms'; rv.classList.add('on');
+      setTimeout(function () { if (phase !== 1) return; loop.pause(); try { loop.currentTime = c.ret; } catch (x) {} }, FADE_IN + 20);
+    };
     var pl = rv.play();
-    if (pl && pl.then) pl.then(function () { rv.classList.add('on'); }).catch(finish); else rv.classList.add('on');
+    if (pl && pl.then) pl.then(function () { nextFrame(rv, shown); }).catch(fail); else nextFrame(rv, shown);
     return true;
   }
   function heroAt(e) {
@@ -247,7 +284,7 @@
   function markHeroes() {
     Object.keys(HEROES).forEach(function (k) {
       var host = TEST ? document.querySelector('.dogs') : document.getElementById(k);
-      if (host && reactionSrc(HEROES[k])) host.classList.add('rd-react-ready');
+      if (host && reactionSrc(HEROES[k])) { host.classList.add('rd-react-ready'); if (!reduce) getReactVid(host, HEROES[k], 'metadata'); if (!host._rdPre) { host._rdPre = 1; ['pointerenter', 'touchstart'].forEach(function (ev) { host.addEventListener(ev, function () { getReactVid(host, HEROES[k], 'auto'); }, { passive: true }); }); } }
     });
   }
   window.RUDIK_PLAY_REACTION = function (key) {
