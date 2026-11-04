@@ -177,44 +177,43 @@ section{padding:34px 0 26px;border-bottom:1px solid var(--line)}
 
 /* Зацикленные анимации значков (только CSS; ссылки и HTML не менялись). Синхронно с основным сайтом (css/icons-anim.css). */
 @media (prefers-reduced-motion: no-preference){
-@keyframes ia-float { 0%,100%{translate:0 0} 25%{translate:0 -3px} 50%{translate:0 .5px} 75%{translate:0 2px} }
-@keyframes ia-tg   { 0%,70%,100%{transform:none;rotate:0deg} 74%{transform:translate(-2px,2px);rotate:-6deg} 80%{transform:translate(9px,-9px);rotate:14deg} 86%{transform:translate(-2px,1px);rotate:-4deg} 92%{transform:none;rotate:0deg} }
-@keyframes ia-mail { 0%,38%,56%,100%{transform:none;rotate:0deg} 42%{transform:translateY(-6px);rotate:-8deg} 46%{transform:translateY(-1px);rotate:7deg} 50%{transform:translateY(-4px);rotate:-5deg} 53%{transform:none;rotate:2deg} }
-@keyframes ia-ig   { 0%,55%,80%,100%{scale:1;filter:none} 64%{scale:1.1;filter:drop-shadow(0 0 7px rgba(225,48,108,.75))} 72%{scale:1.04;filter:drop-shadow(0 0 11px rgba(252,175,69,.7))} }
-@keyframes ia-vk   { 0%,52%,70%,100%{transform:none} 56%{transform:translateY(-7px)} 59%{transform:translateY(0)} 62%{transform:translateY(-5px)} 65%{transform:translateY(0)} }
-@keyframes ia-fb   { 0%,60%,84%,100%{rotate:0deg;scale:1} 66%{rotate:-6deg;scale:1.07} 72%{rotate:5deg;scale:1.07} 78%{rotate:-2deg;scale:1.03} }
-@keyframes ia-max  { 0%,45%,72%,100%{scale:1;rotate:0deg} 53%{scale:1.12;rotate:-6deg} 60%{scale:1.12;rotate:6deg} 66%{scale:1;rotate:0deg} }
-@keyframes ia-bird { 0%,18%,46%,100%{transform:none;rotate:0deg} 22%{transform:translateY(-9px);rotate:-10deg} 26%{transform:translateY(0);rotate:3deg} 30%{transform:translateY(-6px);rotate:8deg} 34%{transform:translateY(0);rotate:-2deg} 38%{transform:translateY(-3px);rotate:-5deg} 42%{transform:none;rotate:0deg} }
-@keyframes ia-steam{ 0%,50%,85%,100%{scale:1;filter:none} 65%{scale:1.08;filter:drop-shadow(0 0 9px rgba(60,160,255,.8))} }
-@keyframes ia-reel { 0%,48%{rotate:0deg} 66%,100%{rotate:360deg} }
-@keyframes ia-shows{ 0%,40%,62%,100%{rotate:0deg;transform:none} 45%{rotate:-7deg;transform:translateY(-2px)} 50%{rotate:6deg} 55%{rotate:-4deg} 59%{rotate:2deg} }
-@keyframes ia-wa   { 0%,26%,46%,100%{rotate:0deg} 29%{rotate:-11deg} 32%{rotate:10deg} 35%{rotate:-9deg} 38%{rotate:8deg} 41%{rotate:-4deg} 44%{rotate:2deg} }
-@keyframes ia-yt   { 0%,40%,70%,100%{scale:1} 55%{scale:1.045} }
-@keyframes ia-likee{ 0%,30%,62%,100%{scale:1} 36%{scale:1.1} 42%{scale:1} 48%{scale:1.08} 56%{scale:1} }
-@keyframes ia-strip{ 0%,100%{rotate:0deg} 30%{rotate:.9deg} 55%{rotate:-.5deg} 80%{rotate:.4deg} }
-@keyframes ia-strip{0%,100%{rotate:0deg}30%{rotate:.9deg}55%{rotate:-.5deg}80%{rotate:.4deg}}
-.ico a[aria-label="Telegram"] img{animation:ia-float var(--fd,11s) ease-in-out var(--fs,0s) infinite,ia-tg 18s ease-in-out var(--as,0s) infinite}
-.ico a[aria-label="MAX"] img{animation:ia-float var(--fd,11s) ease-in-out var(--fs,0s) infinite,ia-max 21s ease-in-out var(--as,0s) infinite}
-.ico a[aria-label="Почта"] img{animation:ia-float var(--fd,11s) ease-in-out var(--fs,0s) infinite,ia-mail 20s ease-in-out var(--as,0s) infinite}
-.ico a[aria-label="Instagram"] img{animation:ia-float var(--fd,11s) ease-in-out var(--fs,0s) infinite,ia-ig 23s ease-in-out var(--as,0s) infinite}
-.ico a[aria-label="ВКонтакте"] img{animation:ia-float var(--fd,11s) ease-in-out var(--fs,0s) infinite,ia-vk 16s ease-in-out var(--as,0s) infinite}
-.ico a[aria-label="Facebook"] img{animation:ia-float var(--fd,11s) ease-in-out var(--fs,0s) infinite,ia-fb 24s ease-in-out var(--as,0s) infinite}
-.ico a[aria-label="Twitter"] img{animation:ia-float var(--fd,11s) ease-in-out var(--fs,0s) infinite,ia-bird 15s ease-in-out var(--as,0s) infinite}
-.ico a[aria-label="Steam"] img{animation:ia-float var(--fd,11s) ease-in-out var(--fs,0s) infinite,ia-steam 26s ease-in-out var(--as,0s) infinite}
-.ico a[aria-label="Кинопоиск"] img{animation:ia-float var(--fd,11s) ease-in-out var(--fs,0s) infinite,ia-reel 17s ease-in-out var(--as,0s) infinite}
-.ico a[aria-label="MyShows"] img{animation:ia-float var(--fd,11s) ease-in-out var(--fs,0s) infinite,ia-shows 19s ease-in-out var(--as,0s) infinite}
-.ico a:nth-child(1){--fd:10.4s;--fs:-2.7s;--as:-5.3s}
-.ico a:nth-child(2){--fd:12.1s;--fs:-5.4s;--as:-10.6s}
-.ico a:nth-child(3){--fd:9.6s;--fs:-8.1s;--as:-15.9s}
-.ico a:nth-child(4){--fd:13.2s;--fs:-10.8s;--as:-4.2s}
-.ico a:nth-child(5){--fd:11.3s;--fs:-2.2s;--as:-9.5s}
-.ico a:nth-child(6){--fd:12.8s;--fs:-3.4s;--as:-14.8s}
-.ico a:nth-child(7){--fd:10.0s;--fs:-8.9s;--as:-3.1s}
-.ico a:nth-child(8){--fd:13.6s;--fs:-8.0s;--as:-8.4s}
-.ico a:nth-child(9){--fd:9.9s;--fs:-4.5s;--as:-13.7s}
-.ico a:nth-child(10){--fd:11.8s;--fs:-3.4s;--as:-2.0s}
-.ico a:nth-child(11){--fd:12.4s;--fs:-4.9s;--as:-7.3s}
-.card:nth-child(2) .ico a{--as:-9s}.card:nth-child(3) .ico a{--as:-4s}
+@keyframes ia-float { 0%,100%{translate:0 0} 25%{translate:0 -5.5px} 50%{translate:0 0} 75%{translate:0 4px} }
+@keyframes ia-tg   { 0%,32%,78%,100%{transform:none;rotate:0deg} 38%{transform:translate(-4px,4px);rotate:-10deg} 48%{transform:translate(15px,-15px);rotate:18deg} 56%{transform:translate(-3px,2px);rotate:-8deg} 66%{transform:translate(6px,-6px);rotate:7deg} }
+@keyframes ia-mail { 0%,25%,70%,100%{transform:none;rotate:0deg} 31%{transform:translateY(-11px);rotate:-10deg} 38%{transform:translateY(-2px);rotate:9deg} 45%{transform:translateY(-8px);rotate:-8deg} 52%{transform:translateY(0);rotate:5deg} 60%{transform:none;rotate:-2deg} }
+@keyframes ia-ig   { 0%,30%,75%,100%{scale:1;filter:none} 45%{scale:1.14;filter:drop-shadow(0 0 9px rgba(225,48,108,.85))} 60%{scale:1.06;filter:drop-shadow(0 0 13px rgba(252,175,69,.8))} }
+@keyframes ia-vk   { 0%,28%,72%,100%{transform:none} 34%{transform:translateY(-12px)} 40%{transform:translateY(0)} 47%{transform:translateY(-9px)} 54%{transform:translateY(0)} 60%{transform:translateY(-4px)} 65%{transform:none} }
+@keyframes ia-fb   { 0%,25%,78%,100%{rotate:0deg;scale:1} 33%{rotate:-9deg;scale:1.1} 44%{rotate:8deg;scale:1.1} 55%{rotate:-5deg;scale:1.06} 66%{rotate:2deg;scale:1.02} }
+@keyframes ia-max  { 0%,22%,75%,100%{scale:1;rotate:0deg} 32%{scale:1.15;rotate:-9deg} 44%{scale:1.15;rotate:9deg} 56%{scale:1.05;rotate:-3deg} 65%{scale:1;rotate:0deg} }
+@keyframes ia-bird { 0%,14%,66%,100%{transform:none;rotate:0deg} 20%{transform:translateY(-14px);rotate:-14deg} 27%{transform:translateY(0);rotate:4deg} 34%{transform:translateY(-10px);rotate:12deg} 41%{transform:translateY(0);rotate:-3deg} 48%{transform:translateY(-5px);rotate:-7deg} 56%{transform:none;rotate:0deg} }
+@keyframes ia-steam{ 0%,25%,80%,100%{scale:1;filter:none} 45%{scale:1.14;filter:drop-shadow(0 0 11px rgba(60,160,255,.9))} 60%{scale:1.05;filter:drop-shadow(0 0 6px rgba(60,160,255,.5))} }
+@keyframes ia-reel { 0%,30%{rotate:0deg} 62%,100%{rotate:360deg} }
+@keyframes ia-shows{ 0%,22%,72%,100%{rotate:0deg;transform:none} 30%{rotate:-10deg;transform:translateY(-4px)} 38%{rotate:9deg} 46%{rotate:-7deg} 54%{rotate:5deg} 62%{rotate:-2deg} }
+@keyframes ia-wa   { 0%,18%,58%,100%{rotate:0deg} 22%{rotate:-14deg} 26%{rotate:13deg} 30%{rotate:-12deg} 34%{rotate:11deg} 38%{rotate:-8deg} 42%{rotate:6deg} 47%{rotate:-3deg} 52%{rotate:1deg} }
+@keyframes ia-yt   { 0%,25%,80%,100%{scale:1} 50%{scale:1.07} }
+@keyframes ia-likee{ 0%,15%,70%,100%{scale:1} 24%{scale:1.14} 32%{scale:1.02} 42%{scale:1.12} 52%{scale:1} }
+@keyframes ia-strip{0%,100%{rotate:0deg}25%{rotate:1.8deg}50%{rotate:-1deg}75%{rotate:.8deg}}
+.ico a[aria-label="Telegram"] img{animation:ia-float var(--fd,7s) ease-in-out var(--fs,0s) infinite,ia-tg 9s ease-in-out var(--as,0s) infinite}
+.ico a[aria-label="MAX"] img{animation:ia-float var(--fd,7s) ease-in-out var(--fs,0s) infinite,ia-max 10s ease-in-out var(--as,0s) infinite}
+.ico a[aria-label="Почта"] img{animation:ia-float var(--fd,7s) ease-in-out var(--fs,0s) infinite,ia-mail 10s ease-in-out var(--as,0s) infinite}
+.ico a[aria-label="Instagram"] img{animation:ia-float var(--fd,7s) ease-in-out var(--fs,0s) infinite,ia-ig 11s ease-in-out var(--as,0s) infinite}
+.ico a[aria-label="ВКонтакте"] img{animation:ia-float var(--fd,7s) ease-in-out var(--fs,0s) infinite,ia-vk 8s ease-in-out var(--as,0s) infinite}
+.ico a[aria-label="Facebook"] img{animation:ia-float var(--fd,7s) ease-in-out var(--fs,0s) infinite,ia-fb 12s ease-in-out var(--as,0s) infinite}
+.ico a[aria-label="Twitter"] img{animation:ia-float var(--fd,7s) ease-in-out var(--fs,0s) infinite,ia-bird 8s ease-in-out var(--as,0s) infinite}
+.ico a[aria-label="Steam"] img{animation:ia-float var(--fd,7s) ease-in-out var(--fs,0s) infinite,ia-steam 12s ease-in-out var(--as,0s) infinite}
+.ico a[aria-label="Кинопоиск"] img{animation:ia-float var(--fd,7s) ease-in-out var(--fs,0s) infinite,ia-reel 9s ease-in-out var(--as,0s) infinite}
+.ico a[aria-label="MyShows"] img{animation:ia-float var(--fd,7s) ease-in-out var(--fs,0s) infinite,ia-shows 10s ease-in-out var(--as,0s) infinite}
+.ico a:nth-child(1){--fd:6.2s;--fs:-2.7s;--as:-3.3s}
+.ico a:nth-child(2){--fd:7.4s;--fs:-5.4s;--as:-6.6s}
+.ico a:nth-child(3){--fd:5.8s;--fs:-2.3s;--as:-0.9s}
+.ico a:nth-child(4){--fd:8.1s;--fs:-2.7s;--as:-4.2s}
+.ico a:nth-child(5){--fd:6.9s;--fs:-6.6s;--as:-7.5s}
+.ico a:nth-child(6){--fd:7.8s;--fs:-0.6s;--as:-1.8s}
+.ico a:nth-child(7){--fd:6.0s;--fs:-0.9s;--as:-5.1s}
+.ico a:nth-child(8){--fd:8.3s;--fs:-5.0s;--as:-8.4s}
+.ico a:nth-child(9){--fd:5.9s;--fs:-0.7s;--as:-2.7s}
+.ico a:nth-child(10){--fd:7.1s;--fs:-5.7s;--as:-6.0s}
+.ico a:nth-child(11){--fd:7.6s;--fs:-6.9s;--as:-0.3s}
+.card:nth-child(2) .ico a{--as:-6s}.card:nth-child(3) .ico a{--as:-3s}
 .ico a:hover img{animation-play-state:paused}
-.tape{transform-origin:0 50%;animation:ia-float 12.5s ease-in-out -3s infinite,ia-strip 22s ease-in-out -8s infinite}.tape:hover{animation-play-state:paused}
+.tape{transform-origin:0 50%;animation:ia-float 7.5s ease-in-out -3s infinite,ia-strip 10s ease-in-out -4s infinite}.tape:hover{animation-play-state:paused}
 }
