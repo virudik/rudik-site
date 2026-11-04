@@ -1,0 +1,32 @@
+/* satellites: Канопус-В, Электро-Л и Аист-2Д кружат по всему разделу «РАБОТА» по дальним неровным траекториям.
+   Отдельно от космонавта и Ресурса-П (#rdSpace). Позиции — в % от контейнера, поэтому одни и те же траектории работают и на сайте, и в /test/. */
+.rd-sats { position:absolute; left:0; top:0; width:100%; height:100%; z-index:3; overflow:hidden; pointer-events:none; }
+#rdSats { height:1440px; min-width:980px; z-index:605; }
+.rd-sats, .rd-sats * { pointer-events:none; }
+.rd-sats .st-x, .rd-sats .st-y { position:absolute; left:0; top:0; width:100%; height:100%; will-change:transform; }
+.rd-sats img { position:absolute; left:0; top:0; display:block; height:auto; max-width:none; will-change:transform;
+  filter:drop-shadow(0 0 1.5px rgba(0,0,0,.45)) drop-shadow(0 3px 5px rgba(0,0,0,.25)); }
+.rd-sats .st-k img { width:210px; } .rd-sats .st-e img { width:178px; } .rd-sats .st-a img { width:160px; }
+@media (max-width:640px) { .rd-sats-t .st-k img { width:104px; } .rd-sats-t .st-e img { width:90px; } .rd-sats-t .st-a img { width:80px; } }
+.rd-sats.is-off .st-x, .rd-sats.is-off .st-y, .rd-sats.is-off img { animation-play-state:paused !important; }
+@media (prefers-reduced-motion: no-preference) {
+  .rd-sats .st-k .st-x { animation:stk-x 79s ease-in-out -23s infinite alternate; } .rd-sats .st-k .st-y { animation:stk-y 131s ease-in-out -61s infinite alternate; }
+  .rd-sats .st-e .st-x { animation:ste-x 107s ease-in-out -71s infinite alternate; } .rd-sats .st-e .st-y { animation:ste-y 67s ease-in-out -9s infinite alternate; }
+  .rd-sats .st-a .st-x { animation:sta-x 59s ease-in-out -41s infinite alternate; } .rd-sats .st-a .st-y { animation:sta-y 149s ease-in-out -97s infinite alternate; }
+  .rd-sats .st-k img { animation:st-rot-k 23s ease-in-out -5s infinite alternate, st-sc-k 37s ease-in-out -11s infinite alternate; }
+  .rd-sats .st-e img { animation:st-rot-e 17s ease-in-out -13s infinite alternate, st-sc-e 43s ease-in-out -29s infinite alternate; }
+  .rd-sats .st-a img { animation:st-rot-a 29s ease-in-out -19s infinite alternate, st-sc-a 31s ease-in-out -3s infinite alternate; }
+}
+@media (prefers-reduced-motion: reduce) { .rd-sats { display:none; } }
+@keyframes stk-x { 0%{transform:translateX(70%)} 22%{transform:translateX(8%)} 41%{transform:translateX(52%)} 63%{transform:translateX(-4%)} 82%{transform:translateX(80%)} 100%{transform:translateX(30%)} }
+@keyframes stk-y { 0%{transform:translateY(62%)} 18%{transform:translateY(10%)} 37%{transform:translateY(78%)} 58%{transform:translateY(30%)} 80%{transform:translateY(90%)} 100%{transform:translateY(4%)} }
+@keyframes ste-x { 0%{transform:translateX(5%)} 30%{transform:translateX(76%)} 46%{transform:translateX(58%)} 71%{transform:translateX(82%)} 100%{transform:translateX(16%)} }
+@keyframes ste-y { 0%{transform:translateY(88%)} 25%{transform:translateY(45%)} 52%{transform:translateY(6%)} 76%{transform:translateY(58%)} 100%{transform:translateY(30%)} }
+@keyframes sta-x { 0%{transform:translateX(82%)} 19%{transform:translateX(40%)} 48%{transform:translateX(76%)} 66%{transform:translateX(10%)} 100%{transform:translateX(54%)} }
+@keyframes sta-y { 0%{transform:translateY(20%)} 33%{transform:translateY(70%)} 55%{transform:translateY(40%)} 79%{transform:translateY(86%)} 100%{transform:translateY(52%)} }
+@keyframes st-rot-k { 0%{rotate:-22deg} 40%{rotate:9deg} 70%{rotate:-6deg} 100%{rotate:28deg} }
+@keyframes st-rot-e { 0%{rotate:18deg} 35%{rotate:-12deg} 100%{rotate:24deg} }
+@keyframes st-rot-a { 0%{rotate:-34deg} 50%{rotate:6deg} 100%{rotate:21deg} }
+@keyframes st-sc-k { 0%{scale:.78} 50%{scale:1.1} 100%{scale:.9} }
+@keyframes st-sc-e { 0%{scale:1.08} 55%{scale:.74} 100%{scale:.95} }
+@keyframes st-sc-a { 0%{scale:.86} 45%{scale:1.14} 100%{scale:.76} }
