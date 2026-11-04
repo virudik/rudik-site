@@ -152,3 +152,27 @@ body.ii-in .ii-fab:hover { transform:translateY(-2px); }
   #aiCallout i { animation:ai-nudge 2.6s ease-in-out infinite; }
   @keyframes ai-nudge { 0%,60%,100% { transform:translateX(0); } 75% { transform:translateX(7px); } 90% { transform:translateX(2px); } }
 }
+
+/* ===== batch-1104 ===== */
+/* подпись «Алина» под верхним фото: у ссылки была высота 1px (у «Маши» и «Виталика» — 60px) */
+#wb_element_instance45 { min-height:60px; height:60px; }
+/* копирайт внизу страницы живёт как логотипы справа: плавает и время от времени «подмигивает» */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rd-copy { 0%,28%,78%,100%{rotate:0deg;scale:1} 34%{rotate:-3deg;scale:1.07} 42%{rotate:2.6deg;scale:1.07} 50%{rotate:-2deg;scale:1.05} 58%{rotate:1deg;scale:1.02} 66%{rotate:-.4deg;scale:1} }
+  #wb_element_instance2 p { transform-origin:0 50%; animation:ia-float 6.8s ease-in-out -2.4s infinite, rd-copy 9s ease-in-out -4s infinite; }
+}
+/* плитки разделов и герои: подсказка, что на них можно нажать */
+.rd-tile, .rd-react-ready, .rd-zoom { cursor:pointer; }
+.rd-zoom { cursor:zoom-in; }
+/* ролики-реакции героев (подключаются из window.RUDIK_REACTIONS; без роликов ничего не делают) */
+.rd-react { position:absolute; left:0; top:0; opacity:0; pointer-events:none; transition:opacity .08s linear; }
+.rd-react.on { opacity:1; }
+/* полноэкранный просмотр: «живая» версия фото и ссылка на оригинал */
+.rd-lb-slide { position:absolute; left:0; top:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:44px 0; box-sizing:border-box; }
+.rd-lb-slide video { max-width:100%; max-height:100%; display:block; background:#000; box-shadow:0 0 30px rgba(0,0,0,.5); }
+.rd-lb-orig { position:absolute; left:50%; bottom:12px; transform:translateX(-50%); padding:6px 14px; border-radius:16px; background:rgba(0,0,0,.55); color:#fff; font:600 13px/1.2 'Open Sans',sans-serif; text-decoration:none; white-space:nowrap; }
+.rd-lb-orig:hover { background:rgba(213,0,0,.85); color:#fff; }
+.rd-lb-orig[hidden] { display:none; }
+/* пустой блок Skype-кнопки лежал поверх фото Виталика и ловил клики; ссылки в нём остаются кликабельными */
+#wb_element_instance76 { pointer-events:none; }
+#wb_element_instance76 a { pointer-events:auto; }
