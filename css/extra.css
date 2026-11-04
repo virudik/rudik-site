@@ -59,7 +59,7 @@
 @media (hover:hover) { #wb_element_instance0 .hmenu > li:hover > ul { display:block; } }
 
 /* 3) собаки по верхней рамке календаря (белый фон видео «вычитается» multiply, линии под лапами нет) */
-#rdDogs { top:824px; left:10px; width:970px; height:320px; z-index:585; overflow:hidden; pointer-events:none; background:transparent; mix-blend-mode:multiply; }
+#rdDogs { top:802px; left:10px; width:970px; height:320px; z-index:585; overflow:hidden; pointer-events:none; background:transparent; mix-blend-mode:multiply; }
 #rdDogs .rd-dogs-v { position:absolute; left:50%; margin-left:-290px; bottom:-12px; width:580px; height:320px; display:block; background:#fff; }
 
 /* 7) космос: Ресурс-П и космонавт летают поверх всего раздела «РАБОТА» (чистая прозрачность, canvas) */
@@ -203,11 +203,11 @@ body.ii-in .ii-fab:hover { transform:translateY(-2px); }
     linear-gradient(140deg, #04061a 0%, #0d0a2e 50%, #031a36 100%);
   background-size:430px 290px,430px 290px,430px 290px,430px 290px,430px 290px,430px 290px,430px 290px,430px 290px,100% 100%,100% 100%,100% 100%;
   box-shadow:0 0 0 2px rgba(150,190,255,.75), 0 0 26px 4px rgba(80,130,255,.65), 0 0 70px 12px rgba(150,70,255,.35); }
-#wb_element_instance103::after { content:""; position:absolute; right:46px; top:-58px; width:104px; height:62px; z-index:3; pointer-events:none;
+#wb_element_instance103 .rd-planet { position:absolute; right:46px; top:-58px; width:104px; height:62px; z-index:5; padding:0; border:0; margin:0; cursor:pointer; -webkit-appearance:none; appearance:none; -webkit-tap-highlight-color:transparent;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 104 62'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.35' cy='.3' r='.8'%3E%3Cstop offset='0' stop-color='%23ffd9a0'/%3E%3Cstop offset='.55' stop-color='%23d9822b'/%3E%3Cstop offset='1' stop-color='%23552a0a'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cellipse cx='52' cy='34' rx='50' ry='11' fill='none' stroke='%23e8c88a' stroke-width='3' opacity='.55' transform='rotate(-14 52 34)'/%3E%3Ccircle cx='52' cy='34' r='20' fill='url(%23g)'/%3E%3Cpath d='M2 38 Q52 56 102 30' fill='none' stroke='%23e8c88a' stroke-width='3.5' transform='rotate(-14 52 34)' opacity='.95' clip-path='inset(50% 0 0 0)'/%3E%3C/svg%3E") center/contain no-repeat; filter:drop-shadow(0 0 8px rgba(255,190,110,.6)); }
 @media (prefers-reduced-motion: no-preference) {
   #wb_element_instance103::before { animation:rd-space-glow 9s ease-in-out infinite alternate; }
-  #wb_element_instance103::after { animation:rd-planet 14s ease-in-out infinite; }
+  #wb_element_instance103 .rd-planet { animation:rd-planet 14s ease-in-out infinite; }
   @keyframes rd-space-glow { from { box-shadow:0 0 0 2px rgba(150,190,255,.6), 0 0 22px 3px rgba(80,130,255,.5), 0 0 60px 8px rgba(150,70,255,.28); } to { box-shadow:0 0 0 2px rgba(190,170,255,.85), 0 0 34px 6px rgba(110,150,255,.8), 0 0 90px 16px rgba(170,80,255,.45); } }
   @keyframes rd-planet { 0%,100% { translate:0 0; rotate:-3deg; } 50% { translate:-14px 5px; rotate:4deg; } }
 }
@@ -216,3 +216,60 @@ body.ii-in .ii-fab:hover { transform:translateY(-2px); }
 #iiShip { overflow:hidden; }
 #iiShip video.rd-react { -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 7.5%, #000 100%); mask-image:linear-gradient(to bottom, transparent 0, #000 7.5%, #000 100%); }
 #rdDogs .rd-dogs-v.rd-react { top:auto; } /* как у петли: прижата bottom:-12px, иначе реакция съезжала на 12px вверх */
+
+/* ===== batch-1105 ===== */
+/* герои раздела ИИшница чуть крупнее (собаки без изменений); белый фон роликов «вычитается» multiply, чтобы увеличенные рамки не закрывали кнопки */
+#iiDance { top:-66px !important; left:216px !important; width:561px !important; height:290px !important; mix-blend-mode:multiply; }
+#iiDetective { top:284px !important; left:4px !important; width:189px !important; height:241px !important; }
+#iiShip { top:276px !important; left:800px !important; width:189px !important; height:264px !important; }
+/* корабль после клика улетает: прозрачный спрайт летает по разделу и возвращается в ролик */
+.rd-fly { position:absolute; z-index:900; pointer-events:none; will-change:transform; }
+.rd-fly img { position:absolute; left:0; top:0; width:100%; height:100%; display:block; -webkit-user-select:none; user-select:none; }
+/* планета календаря «Работа» — кнопка: обычный вид / космос */
+#wb_element_instance103 .rd-planet:hover, #wb_element_instance103 .rd-planet:focus-visible { scale:1.1; outline:none; }
+#wb_element_instance103 .rd-planet { transition:scale .2s ease; }
+#wb_element_instance103.rd-plain > div { mix-blend-mode:normal; }
+#wb_element_instance103.rd-plain iframe { filter:none; }
+#wb_element_instance103.rd-plain::before { opacity:0; }
+#wb_element_instance104.rd-plain h1, #wb_element_instance104.rd-plain h1 span { color:rgba(0,0,0,1) !important; text-shadow:none; letter-spacing:normal; }
+/* косточки над календарём */
+.rd-bones { position:absolute; left:0; top:0; right:0; bottom:0; overflow:hidden; border-radius:16px; pointer-events:none; z-index:6; --bw:900px; }
+.rd-bone { position:absolute; left:0; display:block; animation:rd-bone-x 10s ease-in-out infinite alternate; }
+.rd-bone-y { display:block; animation:rd-bone-y 2.6s ease-in-out infinite alternate; }
+.rd-bone-i { display:block; background:center/contain no-repeat; animation:rd-bone-spin 3s linear infinite; filter:drop-shadow(0 2px 2px rgba(0,0,0,.35)); }
+.rd-bones.rd-off * { animation-play-state:paused; }
+@keyframes rd-bone-x { from { translate:-4px 0; } to { translate:var(--bw) 0; } }
+@keyframes rd-bone-y { from { translate:0 -16px; } to { translate:0 16px; } }
+@keyframes rd-bone-spin { to { rotate:360deg; } }
+/* оторванная страница с номером: рулон слева отдельный слой, полоса сворачивается к нему */
+#wb_element_instance40, #wb_element_instance62 { overflow:visible !important; }
+.rd-roll { position:absolute; left:0; top:0; background-size:100% 100%; background-repeat:no-repeat; pointer-events:none; will-change:transform; }
+.rd-curlable { cursor:pointer; }
+/* Виталик на Yamaha V-Max 1200 проезжает по разделителю */
+.rd-lane { position:absolute; left:0; right:0; overflow:hidden; pointer-events:none; z-index:3; visibility:hidden; }
+.rd-lane.go { visibility:visible; }
+.rd-rider { position:absolute; left:0; bottom:0; will-change:transform; }
+.rd-rider img { display:block; width:100%; height:100%; animation:rd-ride-shake .17s linear infinite alternate; }
+.rd-dust { position:absolute; left:-18px; bottom:2px; width:58px; height:24px; border-radius:50%; background:radial-gradient(closest-side, rgba(150,140,120,.6), transparent); filter:blur(3px); animation:rd-dust .5s ease-out infinite; }
+@keyframes rd-ride-shake { from { translate:0 0; rotate:0deg; } to { translate:0 -1.6px; rotate:-.5deg; } }
+@keyframes rd-dust { 0% { opacity:.75; scale:.5 .6; translate:14px 0; } 100% { opacity:0; scale:1.5 1; translate:-36px -6px; } }
+/* больше воздуха между разделами: разделитель опущен, чтобы под мотоцикл хватило места, снизу добавлено расстояние */
+#wb_element_instance38 { top:1994px !important; }
+#wb_main #page_7 { height:2060px !important; }
+#wb_main #page_7e { height:1870px !important; }
+#wb_element_instance74 { top:1851px !important; }
+#wb_main #page_1 { height:1917px !important; }
+#wb_main #page_1e { height:1917px !important; }
+#wb_element_instance92 { top:2470px !important; }
+#wb_main #page_2 { height:2536px !important; }
+#wb_main #page_2e { height:2536px !important; }
+#wb_element_instance105 { top:1490px !important; }
+#wb_main #page_10 { height:1556px !important; }
+#wb_main #page_10e { height:1556px !important; }
+#wb_element_instance127 { top:11275px !important; }
+#wb_main #page_4 { height:11341px !important; }
+#wb_main #page_4e { height:11341px !important; }
+#wb_element_instance201 { top:1232px !important; }
+#wb_main #page_8 { height:1298px !important; }
+#wb_element_instance9001 { top:2690px !important; }
+#wb_main #page_9 { height:2756px !important; }

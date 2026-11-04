@@ -1,7 +1,9 @@
 /* Интерактив рудик.рф (общий для основного сайта и /test/):
    1) полноэкранный просмотр фото и «живых» фото (PhotoSwipe, тот же что и раньше);
    2) вращение плиток-логотипов разделов по клику;
-   3) крючок для роликов-реакций героев (window.RUDIK_REACTIONS; без роликов — ничего не делает). */
+   3) крючок для роликов-реакций героев (window.RUDIK_REACTIONS; без роликов — ничего не делает);
+   4) batch-1105: полёт корабля после клика, планета-переключатель календаря, «заворот» страницы с номером, косточки над календарём,
+      Виталик на мотоцикле по разделителям. */
 (function () {
   'use strict';
   var TEST = !!document.getElementById('themeBtn') || /^\/test\//.test(location.pathname);
@@ -207,7 +209,9 @@
   var REACTIONS = {
     iiDance: { src: '/video/reactions/vitalik-dance-react.mp4?v=1', ret: 0.042 },
     iiDetective: { src: '/video/reactions/kot-detektiv-dog-react.mp4?v=1', ret: 13.917 },
-    iiShip: { src: '/video/reactions/roskotmos-ship-react.mp4?v=1', ret: 0 },
+    iiShip: { src: '/video/reactions/roskotmos-ship-react.mp4?v=1', ret: 0,
+      /* после взлёта (out, с) корабль подменяется прозрачным спрайтом и летает по разделу; перед посадкой (in, с) снова подхватывает ролик */
+      fly: { out: 1.25, in: 4.25, a: '/video/reactions/roskotmos-ship-fly-a.webp?v=1', b: '/video/reactions/roskotmos-ship-fly-b.webp?v=1' } },
     rdDogs: { src: '/video/reactions/dogs-react.mp4?v=1', ret: 7.458 },   /* в /test/ ключ тот же: dogs */
   };
   var FADE_IN = 200, FADE_OUT = 450;
@@ -238,19 +242,151 @@
     var st = rv.style; st.margin = '0'; st.right = st.bottom = 'auto';
     st.left = loop.offsetLeft + 'px'; st.top = loop.offsetTop + 'px'; st.width = loop.offsetWidth + 'px'; st.height = loop.offsetHeight + 'px';
     try { var cs = getComputedStyle(loop); st.objectFit = cs.objectFit; st.objectPosition = cs.objectPosition; st.borderRadius = cs.borderRadius; } catch (x) {}
-    var phase = 0, timer = 0;
+    var phase = 0, timer = 0, fly = c.fly && !!window.requestAnimationFrame ? c.fly : null, spr = null, flyTimer = 0;
     function playLoop() { var p = loop.play(); if (p && p.catch) p.catch(function () {}); }
     function done() {
-      clearTimeout(timer); rv.onended = rv.onerror = rv.ontimeupdate = null;
+      clearTimeout(timer); clearTimeout(flyTimer); rv.onended = rv.onerror = rv.ontimeupdate = null;
+      if (spr) { spr.remove(); spr = null; } loop.style.visibility = '';
       rv.classList.remove('on'); rv.style.transitionDuration = '';
       setTimeout(function () { rv.pause(); host._rdBusy = false; }, FADE_OUT + 30);
     }
-    function fail() { if (phase > 1) return; phase = 2; playLoop(); done(); }
+    function fail() { if (phase > 1 && phase !== 3) return; phase = 2; playLoop(); done(); }
     /* за FADE_OUT до конца: петля уже стоит на подобранном кадре и играет, реакция плавно растворяется в неё */
     function startOut() {
       if (phase !== 1) return; phase = 2;
-      var go = function () { loop.onseeked = null; playLoop(); nextFrame(loop, function () { rv.style.transitionDuration = FADE_OUT + 'ms'; rv.classList.remove('on'); timer = setTimeout(done, FADE_OUT); }); };
+      var go = function () { loop.onseeked = null; loop.style.visibility = ''; playLoop(); nextFrame(loop, function () { rv.style.transitionDuration = FADE_OUT + 'ms'; rv.classList.remove('on'); timer = setTimeout(done, FADE_OUT); }); };
       try { if (Math.abs(loop.currentTime - c.ret) > 0.02) { loop.onseeked = go; loop.currentTime = c.ret; setTimeout(function () { if (loop.onseeked) go(); }, 300); } else go(); } catch (x) { go(); }
+    }
+
+    /* ---- полёт корабля: после взлёта ролик заменяется прозрачным спрайтом, который летит по свободной траектории
+       в видимой части раздела и садится в то же место, откуда взлетел; затем ролик подхватывает посадку ---- */
+    function flyImgs(f) {
+      if (!f._imgs) { f._imgs = [new Image(), new Image()]; f._imgs[0].src = f.a; f._imgs[1].src = f.b; }
+      return f._imgs;
+    }
+    function watchFly() {
+      flyImgs(fly);
+      var arm, tick = function (now, meta) {
+        if (phase !== 1) return;
+        var t = meta && meta.mediaTime != null ? meta.mediaTime : rv.currentTime;
+        if (t >= fly.out - 0.01) startFlight(); else arm();
+      };
+      arm = function () { if (rv.requestVideoFrameCallback) rv.requestVideoFrameCallback(tick); else flyTimer = setTimeout(tick, 16); };
+      arm();
+    }
+    function startFlight() {
+      if (phase !== 1) return;
+      try {
+        var page = host.offsetParent || host.parentNode, hw = host.offsetWidth, hh = host.offsetHeight;
+        var C = { x: host.offsetLeft + hw / 2, y: host.offsetTop + hh / 2 };
+        var pr = page.getBoundingClientRect(), W = page.offsetWidth, H = page.offsetHeight;
+        var x0 = Math.max(0, -pr.left), x1 = Math.min(W, window.innerWidth - pr.left);
+        var y0 = Math.max(0, -pr.top) + 70, y1 = Math.min(H, window.innerHeight - pr.top) - 12;
+        if (y1 - y0 < 340) y0 = Math.max(0, y1 - 340);
+        var mx = hw * 0.45, my = hh * 0.42;
+        var X0 = x0 + mx, X1 = x1 - mx, Y0 = y0 + my, Y1 = y1 - my;
+        if (X1 - X0 < 120) { X0 = C.x - 60; X1 = C.x + 60; }
+        if (Y1 - Y0 < 120) { Y0 = Y1 - 120; }
+        function rnd(a, b) { return a + Math.random() * (b - a); }
+        /* зигзаг по всему видимому разделу: чередуем левую/правую половины и разные высоты */
+        var rows = [0.12, 0.34, 0.56, 0.78, 0.95], order = rows.sort(function () { return Math.random() - .5; });
+        var side = Math.random() < .5 ? 0 : 1, pts = [];
+        for (var i = 0; i < order.length; i++) {
+          var fx = side ? rnd(.58, .96) : rnd(.04, .42); side = 1 - side;
+          pts.push({ x: X0 + (X1 - X0) * fx, y: Y0 + (Y1 - Y0) * order[i] });
+        }
+        var up = { x: C.x + rnd(-30, 30), y: Math.max(Y0, C.y - hh * 1.1) };
+        var pre = { x: C.x + rnd(-28, 28), y: Math.max(Y0 + 10, C.y - hh * 1.5) };
+        var P = [{ x: C.x, y: C.y }, up].concat(pts, [pre, { x: C.x, y: C.y }]);
+        /* Эрмитов сплайн с касательными: старт — строго вверх, финиш — строго вниз (посадка соплами вниз) */
+        function len(a, b) { return Math.hypot(b.x - a.x, b.y - a.y); }
+        var M = P.map(function (q, k) {
+          if (k === 0) return { x: 0, y: -len(P[0], P[1]) };
+          if (k === P.length - 1) return { x: 0, y: len(P[k - 1], P[k]) };
+          return { x: (P[k + 1].x - P[k - 1].x) * .5, y: (P[k + 1].y - P[k - 1].y) * .5 };
+        });
+        var S = [{ x: P[0].x, y: P[0].y, d: 0 }], N = 36;
+        for (var k = 0; k < P.length - 1; k++) {
+          for (var j = 1; j <= N; j++) {
+            var t = j / N, t2 = t * t, t3 = t2 * t;
+            var h00 = 2 * t3 - 3 * t2 + 1, h10 = t3 - 2 * t2 + t, h01 = -2 * t3 + 3 * t2, h11 = t3 - t2;
+            var q = { x: h00 * P[k].x + h10 * M[k].x + h01 * P[k + 1].x + h11 * M[k + 1].x, y: h00 * P[k].y + h10 * M[k].y + h01 * P[k + 1].y + h11 * M[k + 1].y };
+            var pv = S[S.length - 1]; q.d = pv.d + Math.hypot(q.x - pv.x, q.y - pv.y); S.push(q);
+          }
+        }
+        var L = S[S.length - 1].d, T = Math.max(5.5, Math.min(8.5, L / 420)) * 1000;
+        function at(dist) {
+          var lo = 0, hi = S.length - 1; while (hi - lo > 1) { var m = (lo + hi) >> 1; if (S[m].d <= dist) lo = m; else hi = m; }
+          var a = S[lo], b = S[hi], f = b.d > a.d ? (dist - a.d) / (b.d - a.d) : 0;
+          return { x: a.x + (b.x - a.x) * f, y: a.y + (b.y - a.y) * f, hx: b.x - a.x, hy: b.y - a.y };
+        }
+        /* скорость: разгон — крейсер — торможение; путь ∈ [0..1] */
+        var t1 = .14, t2 = .78, area = t1 / 2 + (t2 - t1) + (1 - t2) / 2;
+        function prog(u) {
+          var v;
+          if (u < t1) v = u * u / (2 * t1); else if (u < t2) v = t1 / 2 + (u - t1); else { var r = 1 - u; v = area - r * r / (2 * (1 - t2)); }
+          return v / area;
+        }
+        function sm(a, b, x) { x = Math.max(0, Math.min(1, (x - a) / (b - a))); return x * x * (3 - 2 * x); }
+
+        /* спрайт: два полнокадровых прозрачных кадра (взлёт/посадка) ровно в коробку героя */
+        spr = document.createElement('div'); spr.className = 'rd-fly';
+        spr.style.cssText = 'left:' + host.offsetLeft + 'px;top:' + host.offsetTop + 'px;width:' + hw + 'px;height:' + hh + 'px;';
+        var imgs = flyImgs(fly), ia = imgs[0], ib = imgs[1]; ia.alt = ib.alt = ''; ia.draggable = ib.draggable = false; ia.style.opacity = 1;
+        ib.style.opacity = 0; ia.style.opacity = 1; spr.appendChild(ia); spr.appendChild(ib); page.appendChild(spr);
+        var ready = function (im) { return im.complete && im.naturalWidth; };
+        if (!ready(ia) || !ready(ib)) { spr.remove(); spr = null; return; }   /* спрайтов нет — просто доигрываем ролик */
+        phase = 3;
+        spr.style.transformOrigin = '50% 46%';
+        /* ролик ставим на нужный кадр посадки заранее и прячем петлю, пока корабль в воздухе */
+        loop.style.visibility = 'hidden';
+        var spriteUp = false, sp = spr;
+        nextFrame(rv, function () { /* спрайт уже нарисован поверх — ролик можно убрать */
+          rv.style.transitionDuration = '60ms'; rv.classList.remove('on');
+          setTimeout(function () { try { rv.pause(); rv.currentTime = fly.in; } catch (x) {} }, 90);
+        });
+        var t0 = performance.now(), ang = 0, lastT = t0, lastHead = 0, pend = true, finished = false;
+        function frame(now) {
+          if (!spr || sp !== spr || phase !== 3) return;
+          var u = Math.min(1, (now - t0) / T), dt = Math.min(.06, (now - lastT) / 1000); lastT = now;
+          var d = prog(u) * L, o = at(d), tx = o.x - C.x, ty = o.y - C.y;
+          /* курс по касательной, сглаженный; в конце — разворот соплами вниз (нос вверх) без рывка */
+          var head = Math.atan2(o.hy, o.hx) * 180 / Math.PI + 90;
+          if (u < .005 || (o.hx === 0 && o.hy === 0)) head = lastHead;
+          while (head - lastHead > 180) head -= 360; while (head - lastHead < -180) head += 360; lastHead = head;
+          ang += (head - ang) * Math.min(1, dt * 7);
+          var a = ang, w = sm(.8, 1, u);
+          if (w > 0) { var tgt = Math.round(ang / 360) * 360; a = ang * (1 - w) + tgt * w; }
+          var sc = 1 - .16 * Math.sin(Math.PI * Math.min(1, u * 1.05));
+          var bsh = sm(.22, .5, u);
+          spr.style.transform = 'translate3d(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px,0) rotate(' + a.toFixed(2) + 'deg) scale(' + sc.toFixed(3) + ')';
+          ib.style.opacity = bsh; ia.style.opacity = bsh >= .99 ? 0 : 1;
+          if (u >= 1) return land();
+          requestAnimationFrame(frame);
+        }
+        function land() {
+          if (finished) return; finished = true;
+          spr.style.transform = 'none';
+          var afterSeek = function () {
+            rv.style.transitionDuration = '0s'; rv.classList.add('on');
+            var fin = false, swap = function () {
+              if (fin) return; fin = true;
+              if (spr) { spr.remove(); spr = null; }
+              phase = 1; rv.style.transitionDuration = '';
+              var p = rv.play(); if (p && p.catch) p.catch(fail);
+            };
+            requestAnimationFrame(function () { requestAnimationFrame(swap); });
+            setTimeout(swap, 250);
+          };
+          try {
+            if (Math.abs(rv.currentTime - fly.in) > 0.02) { rv.onseeked = function () { rv.onseeked = null; afterSeek(); }; rv.currentTime = fly.in; setTimeout(function () { if (rv.onseeked) { rv.onseeked = null; afterSeek(); } }, 400); }
+            else afterSeek();
+          } catch (x) { afterSeek(); }
+        }
+        requestAnimationFrame(frame);
+        /* страховка: если что-то пошло не так, через T+3 с возвращаем героя на место */
+        flyTimer = setTimeout(function () { if (phase === 3) { phase = 2; fail(); } }, T + 3000);
+      } catch (x) { if (spr) { spr.remove(); spr = null; } loop.style.visibility = ''; if (phase === 3) phase = 1; }
     }
     rv.onerror = fail;
     rv.onended = function () { if (phase === 1) startOut(); else if (phase === 2) { /* последний кадр держится, пока идёт растворение */ } };
@@ -262,6 +398,7 @@
          и заранее перематываем на кадр возврата (пока её не видно) */
       rv.style.transitionDuration = FADE_IN + 'ms'; rv.classList.add('on');
       setTimeout(function () { if (phase !== 1) return; loop.pause(); try { loop.currentTime = c.ret; } catch (x) {} }, FADE_IN + 20);
+      if (fly) watchFly();
     };
     var pl = rv.play();
     if (pl && pl.then) pl.then(function () { nextFrame(rv, shown); }).catch(fail); else nextFrame(rv, shown);
@@ -284,14 +421,161 @@
   function markHeroes() {
     Object.keys(HEROES).forEach(function (k) {
       var host = TEST ? document.querySelector('.dogs') : document.getElementById(k);
-      if (host && reactionSrc(HEROES[k])) { host.classList.add('rd-react-ready'); if (!reduce) getReactVid(host, HEROES[k], 'metadata'); if (!host._rdPre) { host._rdPre = 1; ['pointerenter', 'touchstart'].forEach(function (ev) { host.addEventListener(ev, function () { getReactVid(host, HEROES[k], 'auto'); }, { passive: true }); }); } }
+      if (host && reactionSrc(HEROES[k])) { host.classList.add('rd-react-ready'); var fc = reactionCfg(HEROES[k]); if (fc && fc.fly && !reduce && !host._rdFlyPre) { host._rdFlyPre = 1; fc.fly._imgs || (fc.fly._imgs = [Object.assign(new Image(), { src: fc.fly.a }), Object.assign(new Image(), { src: fc.fly.b })]); } if (!reduce) getReactVid(host, HEROES[k], 'metadata'); if (!host._rdPre) { host._rdPre = 1; ['pointerenter', 'touchstart'].forEach(function (ev) { host.addEventListener(ev, function () { getReactVid(host, HEROES[k], 'auto'); }, { passive: true }); }); } }
     });
   }
   window.RUDIK_PLAY_REACTION = function (key) {
     var host = TEST ? document.querySelector('.dogs') : document.getElementById(key); return host ? playReaction(host, key) : false;
   };
 
-  function init() { markZoom(); markHeroes(); }
+
+  /* ================= batch-1105 ================= */
+  function svgUrl(svg) { return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")'; }
+  function inView(el, cb, opts) {
+    if (!('IntersectionObserver' in window)) { cb(true); return null; }
+    var io = new IntersectionObserver(function (es) { cb(es[es.length - 1].isIntersecting); }, opts || { threshold: 0 }); io.observe(el); return io;
+  }
+
+  /* ---------- планета у космического календаря: клик — обычный календарь, ещё клик — снова космос ---------- */
+  function initPlanet() {
+    var host = TEST ? document.querySelector('.cal-space') : document.getElementById('wb_element_instance103');
+    if (!host || host.querySelector('.rd-planet')) return;
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'rd-planet';
+    b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', 'Космический вид календаря: переключить на обычный'); b.title = 'Обычный календарь / космос';
+    host.appendChild(b);
+    var wrap = TEST ? host.querySelector('.cal-blend') : host.firstElementChild, busyP = false;
+    b.addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation(); if (busyP) return; busyP = true;
+      function flip() {
+        var plain = host.classList.toggle('rd-plain');
+        b.setAttribute('aria-pressed', plain ? 'true' : 'false');
+        var ttl = TEST ? null : document.getElementById('wb_element_instance104'); if (ttl) ttl.classList.toggle('rd-plain', plain);
+        b.setAttribute('aria-label', plain ? 'Обычный вид календаря: вернуть космос' : 'Космический вид календаря: переключить на обычный');
+      }
+      if (reduce || !wrap || !wrap.animate) { flip(); busyP = false; return; }
+      var o = wrap.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 170, easing: 'ease-in', fill: 'forwards' });
+      o.onfinish = function () { flip(); var i = wrap.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 230, easing: 'ease-out' }); o.cancel(); i.onfinish = function () { busyP = false; }; i.oncancel = function () { busyP = false; }; };
+    });
+  }
+
+  /* ---------- косточки летают по календарю туда-сюда ---------- */
+  var BONE = svgUrl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 20'><g fill='#6b4a2b' stroke='#6b4a2b' stroke-width='3' stroke-linejoin='round'><rect x='8' y='6' width='32' height='8'/><circle cx='7' cy='5.5' r='4.6'/><circle cx='7' cy='14.5' r='4.6'/><circle cx='41' cy='5.5' r='4.6'/><circle cx='41' cy='14.5' r='4.6'/></g><g fill='#fff8e6'><rect x='8' y='6' width='32' height='8'/><circle cx='7' cy='5.5' r='4.6'/><circle cx='7' cy='14.5' r='4.6'/><circle cx='41' cy='5.5' r='4.6'/><circle cx='41' cy='14.5' r='4.6'/></g></svg>");
+  function initBones() {
+    if (reduce) return;
+    var host = TEST ? document.querySelector('.cal-wall') : document.getElementById('wb_element_instance34');
+    if (!host || host.querySelector('.rd-bones')) return;
+    var box = document.createElement('div'); box.className = 'rd-bones'; box.setAttribute('aria-hidden', 'true');
+    var cfg = [{ y: 22, d: 9.5, s: 1, delay: 0, spin: 3.2, bob: 2.6 }, { y: 50, d: 12, s: .85, delay: -4, spin: 4.4, bob: 3.3 }, { y: 76, d: 14.5, s: 1.15, delay: -9, spin: 5.2, bob: 2.1 }];
+    cfg.forEach(function (c) {
+      var a = document.createElement('i'), b = document.createElement('i'), im = document.createElement('i');
+      a.className = 'rd-bone'; b.className = 'rd-bone-y'; im.className = 'rd-bone-i';
+      a.style.cssText = 'top:' + c.y + '%;animation-duration:' + c.d + 's;animation-delay:' + c.delay + 's;';
+      b.style.cssText = 'animation-duration:' + c.bob + 's;animation-delay:' + (c.delay / 2) + 's;';
+      im.style.cssText = 'width:' + Math.round(54 * c.s) + 'px;height:' + Math.round(22.5 * c.s) + 'px;animation-duration:' + c.spin + 's;background-image:' + BONE + ';';
+      b.appendChild(im); a.appendChild(b); box.appendChild(a);
+    });
+    host.appendChild(box);
+    var setW = function () { box.style.setProperty('--bw', Math.max(0, box.clientWidth - 46) + 'px'); };
+    setW(); window.addEventListener('resize', setW);
+    inView(host, function (v) { box.classList.toggle('rd-off', !v); setW(); }, { threshold: 0 });
+  }
+
+  /* ---------- «оторванный кусок страницы»: по клику заворачивается обратно на 3 секунды и разворачивается ---------- */
+  function initCurl() {
+    var HOLD = 3000, FOLD = 700, UNFOLD = 900, TOT = FOLD + HOLD + UNFOLD;
+    function ease(a) { return a; }
+    function wire(clickEls, run) {
+      var busyC = false;
+      clickEls.forEach(function (el) { el.classList.add('rd-curlable'); });
+      document.addEventListener('click', function (e) {
+        if (e.button) return;
+        var hit = closest(e.target, '.rd-curlable'); if (!hit || clickEls.indexOf(hit) < 0) return;
+        if (busyC || reduce) return; busyC = true;
+        run(function () { busyC = false; });
+      });
+    }
+    if (TEST) {
+      all('.tape').forEach(function (tp) {
+        wire([tp], function (fin) {
+          var an = tp.animate([
+            { transform: 'scaleX(1)', opacity: 1, offset: 0 },
+            { transform: 'scaleX(.06)', opacity: .2, offset: FOLD / TOT, easing: 'ease-in-out' },
+            { transform: 'scaleX(.06)', opacity: .2, offset: (FOLD + HOLD) / TOT, easing: 'ease-out' },
+            { transform: 'scaleX(1)', opacity: 1, offset: 1 }
+          ], { duration: TOT });
+          an.onfinish = an.oncancel = fin;
+        });
+      });
+      return;
+    }
+    [[40, 41, 42], [62, 72, 73]].forEach(function (ids) {
+      var pic = document.getElementById('wb_element_instance' + ids[0]);
+      var rest = ids.slice(1).map(function (i) { return document.getElementById('wb_element_instance' + i); });
+      var img = pic && pic.querySelector('img'); if (!pic || !img || rest.some(function (x) { return !x; })) return;
+      var PIV = Math.round(pic.offsetWidth * .22);                 /* граница «рулона» слева и оторванной полосы справа */
+      var roll = document.createElement('div'); roll.className = 'rd-roll';
+      roll.style.cssText = 'background-image:url("' + (img.currentSrc || img.src) + '");width:' + pic.offsetWidth + 'px;height:' + pic.offsetHeight + 'px;clip-path:inset(0 ' + (100 - 22.6) + '% 0 0);transform-origin:' + Math.round(PIV * .55) + 'px ' + Math.round(pic.offsetHeight * .55) + 'px;';
+      pic.insertBefore(roll, img);
+      img.style.clipPath = 'inset(0 0 0 21.4%)'; img.style.transformOrigin = PIV + 'px 50%';
+      var picLeft = pic.offsetLeft;
+      wire([pic].concat(rest), function (fin) {
+        var offs = [0, FOLD / TOT, (FOLD + HOLD) / TOT, 1], S = .03;
+        var fr = function (arr) { return arr.map(function (k, i) { var o = { offset: offs[i] }; for (var p in k) o[p] = k[p]; if (i === 0 || i === 2) o.easing = i === 0 ? 'ease-in-out' : 'ease-out'; return o; }); };
+        var anims = [];
+        anims.push(img.animate(fr([{ transform: 'scaleX(1)', opacity: 1 }, { transform: 'scaleX(' + S + ')', opacity: 0 }, { transform: 'scaleX(' + S + ')', opacity: 0 }, { transform: 'scaleX(1)', opacity: 1 }]), { duration: TOT }));
+        rest.forEach(function (el) {
+          var org = parseFloat(getComputedStyle(el).transformOrigin) || 0;             /* px от левого края элемента */
+          var dx = (picLeft + PIV) - (el.offsetLeft + org), tx = dx * (1 - S);
+          anims.push(el.animate(fr([{ transform: 'translateX(0px) scaleX(1)', opacity: 1 }, { transform: 'translateX(' + tx.toFixed(1) + 'px) scaleX(' + S + ')', opacity: 0 }, { transform: 'translateX(' + tx.toFixed(1) + 'px) scaleX(' + S + ')', opacity: 0 }, { transform: 'translateX(0px) scaleX(1)', opacity: 1 }]), { duration: TOT }));
+        });
+        anims.push(roll.animate([
+          { transform: 'rotate(0deg) scale(1)', offset: 0, easing: 'ease-in-out' },
+          { transform: 'rotate(-7deg) scale(1.1)', offset: offs[1], easing: 'ease-in-out' },
+          { transform: 'rotate(-3deg) scale(1.1)', offset: .42, easing: 'ease-in-out' },
+          { transform: 'rotate(-8deg) scale(1.1)', offset: .66, easing: 'ease-in-out' },
+          { transform: 'rotate(-7deg) scale(1.1)', offset: offs[2], easing: 'ease-out' },
+          { transform: 'rotate(0deg) scale(1)', offset: 1 }
+        ], { duration: TOT }));
+        anims[0].onfinish = anims[0].oncancel = fin;
+      });
+    });
+  }
+
+  /* ---------- Виталик на Yamaha V-Max 1200 проезжает по разделителю от начала до конца ---------- */
+  var RIDER = '/img/vitalik-vmax.webp?v=1';
+  function mkRider(lane, h) {
+    var r = document.createElement('div'); r.className = 'rd-rider'; r.style.height = h + 'px'; r.style.width = Math.round(h * 420 / 278) + 'px';
+    var im = document.createElement('img'); im.src = RIDER; im.alt = ''; im.draggable = false; im.decoding = 'async';
+    var dust = document.createElement('i'); dust.className = 'rd-dust';
+    r.appendChild(dust); r.appendChild(im); lane.appendChild(r); return r;
+  }
+  function initRiders() {
+    if (reduce) return;
+    var targets = [];
+    if (TEST) {
+      all('main section, body > section, section').forEach(function (sec, i, arr) { targets.push({ host: sec, h: 100, line: 0 }); });
+    } else {
+      [38, 74, 92, 105, 127, 201, 9001].forEach(function (n) { var el = document.getElementById('wb_element_instance' + n); if (el) targets.push({ host: el, h: 128, line: 14 }); });
+    }
+    targets.forEach(function (t) {
+      var lane = document.createElement('div'); lane.className = 'rd-lane'; lane.setAttribute('aria-hidden', 'true');
+      lane.style.bottom = t.line + 'px'; lane.style.height = (t.h + 10) + 'px';
+      t.host.appendChild(lane);
+      var r = mkRider(lane, t.h), run = null, armed = true;
+      function start() {
+        var W = lane.clientWidth, rw = r.offsetWidth, dur = Math.max(3200, Math.min(5200, W * 4.1));
+        lane.classList.add('go');
+        run = r.animate([{ transform: 'translateX(' + (-rw - 10) + 'px)' }, { transform: 'translateX(' + (W + 10) + 'px)' }], { duration: dur, easing: 'cubic-bezier(.2,.35,.8,.7)' });
+        run.onfinish = run.oncancel = function () { run = null; lane.classList.remove('go'); };
+      }
+      inView(t.host, function (v) {
+        if (v) { if (run) run.play(); else if (armed) { armed = false; start(); } }
+        else { if (run) run.pause(); else armed = true; }
+      }, { threshold: 0, rootMargin: '-160px 0px -130px 0px' });
+    });
+  }
+
+  function init() { markZoom(); markHeroes(); initPlanet(); initBones(); initCurl(); initRiders(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
   window.addEventListener('load', init);
 })();
