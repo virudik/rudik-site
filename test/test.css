@@ -225,3 +225,18 @@ section{padding:34px 0 26px;border-bottom:1px solid var(--line)}
 .pgal a[href*="instagram.com/ru.dik"] img{animation:ia-glow 11s ease-in-out -5s infinite}
 .skype:hover,.likee:hover img,.ytl:hover svg{animation-play-state:paused}
 }
+
+/* плашка «Делаю ИИ-видео и ИИ-фото на заказ» справа от заголовка → ИИшница */
+.tagrow{display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap;margin:0 0 26px}
+.tagrow .tag{margin:0}
+.aicall{position:relative;display:block;margin-top:6px;padding:9px 18px 10px;border:2px solid var(--fg);border-radius:12px;background:var(--bg);color:var(--fg);text-decoration:none;line-height:1.25;transition:background .2s,color .2s}
+.aicall::before{content:"";position:absolute;left:-11px;top:20px;border:9px solid transparent;border-right:9px solid var(--fg);border-left:0}
+.aicall::after{content:"";position:absolute;left:-7px;top:22px;border:7px solid transparent;border-right:7px solid var(--bg);border-left:0;transition:border-right-color .2s}
+.aicall b{display:block;font-size:clamp(16px,4.4vw,20px);font-weight:700}
+.aicall i{display:inline-block;font-style:normal}
+.aicall span{display:block;margin-top:2px;font-size:clamp(13px,3.6vw,15px);color:var(--muted)}
+.aicall:hover,.aicall:focus-visible{background:var(--fg);color:var(--bg)}
+.aicall:hover::after,.aicall:focus-visible::after{border-right-color:var(--fg)}
+.aicall:hover span,.aicall:focus-visible span{color:var(--bg);opacity:.8}
+@media (max-width:640px){.tagrow{gap:14px}.aicall{margin:2px 0 0 12px}.aicall::before,.aicall::after{display:none}}
+@media (prefers-reduced-motion: no-preference){.aicall i{animation:ai-nudge 2.6s ease-in-out infinite}@keyframes ai-nudge{0%,60%,100%{transform:translateX(0)}75%{transform:translateX(6px)}90%{transform:translateX(2px)}}}
