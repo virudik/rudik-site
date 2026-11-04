@@ -11,6 +11,7 @@ window.RUDIK_VIDEOS = [
   { title: 'ЗВ',                                rutube: '', file: '/video/zv.mp4', poster: '/video/zv.jpg' },
   { title: 'Котмонавты',                        rutube: '', file: '/video/kotmonavty.mp4', poster: '/video/kotmonavty.jpg' },
   { title: 'Канцлер',                           rutube: '' },
+  { title: 'Матиз',                             rutube: '' },
   { title: 'Мошенники',                         rutube: '' },
   { title: 'Открытка',                          rutube: '' },
   { title: 'Собаки блогеры',                    rutube: '' },
