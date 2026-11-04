@@ -203,10 +203,10 @@
   var HEROES = TEST ? { dogs: 'rdDogs' } : { iiDance: 'iiDance', iiDetective: 'iiDetective', iiShip: 'iiShip', rdDogs: 'rdDogs' };
   /* Сюда впишем пути готовых роликов, когда они появятся (или задать window.RUDIK_REACTIONS до загрузки скрипта) */
   var REACTIONS = {
-    /* iiDance: '/video/reactions/vitalik-dance-react.mp4?v=1', */
-    /* iiDetective: '/video/reactions/kot-detektiv-dog-react.mp4?v=1', */
-    /* iiShip: '/video/reactions/roskotmos-ship-react.mp4?v=1', */
-    /* rdDogs: '/video/reactions/dogs-react.mp4?v=1', */   /* в /test/ ключ тот же: dogs */
+    iiDance: '/video/reactions/vitalik-dance-react.mp4?v=1',
+    iiDetective: '/video/reactions/kot-detektiv-dog-react.mp4?v=1',
+    iiShip: '/video/reactions/roskotmos-ship-react.mp4?v=1',
+    rdDogs: '/video/reactions/dogs-react.mp4?v=1',   /* в /test/ ключ тот же: dogs */
   };
   function reactionSrc(key) { var r = window.RUDIK_REACTIONS || REACTIONS; return r[key] || ''; }
   function playReaction(host, key) {
