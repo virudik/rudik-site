@@ -298,8 +298,9 @@ section{position:relative;padding-bottom:116px}
 .rd-lane{position:absolute;left:0;right:0;overflow:hidden;pointer-events:none;z-index:3;visibility:hidden}
 .rd-lane.go{visibility:visible}
 .rd-rider{position:absolute;left:0;bottom:0;will-change:transform}
-.rd-rider img{display:block;width:100%;height:100%;animation:rd-ride-shake .17s linear infinite alternate}
-.rd-dust{position:absolute;left:-18px;bottom:2px;width:58px;height:24px;border-radius:50%;background:radial-gradient(closest-side,rgba(150,140,120,.6),transparent);filter:blur(3px);animation:rd-dust .5s ease-out infinite}
-@keyframes rd-ride-shake{from{translate:0 0;rotate:0deg}to{translate:0 -1.6px;rotate:-.5deg}}
+.rd-rider::before{content:'';position:absolute;left:6%;right:0;bottom:-3px;height:14px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.34),transparent)}
+.rd-rider img{position:relative;display:block;width:100%;height:100%;transform-origin:30% 92%;animation:rd-ride-shake .26s ease-in-out infinite alternate}
+.rd-dust{position:absolute;left:-8px;bottom:2px;width:58px;height:24px;border-radius:50%;background:radial-gradient(closest-side,rgba(150,140,120,.6),transparent);filter:blur(3px);animation:rd-dust .5s ease-out infinite}
+@keyframes rd-ride-shake{from{translate:0 0;rotate:.5deg}to{translate:0 -2px;rotate:-.7deg}}
 @keyframes rd-dust{0%{opacity:.75;scale:.5 .6;translate:14px 0}100%{opacity:0;scale:1.5 1;translate:-36px -6px}}
 @media(prefers-reduced-motion:reduce){.rd-lane,.rd-bones{display:none}}

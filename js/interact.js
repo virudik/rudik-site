@@ -542,9 +542,9 @@
   }
 
   /* ---------- Виталик на Yamaha V-Max 1200 проезжает по разделителю от начала до конца ---------- */
-  var RIDER = '/img/vitalik-vmax.webp?v=1';
+  var RIDER = '/img/vitalik-vmax.webp?v=2';
   function mkRider(lane, h) {
-    var r = document.createElement('div'); r.className = 'rd-rider'; r.style.height = h + 'px'; r.style.width = Math.round(h * 420 / 278) + 'px';
+    var r = document.createElement('div'); r.className = 'rd-rider'; r.style.height = h + 'px'; r.style.width = Math.round(h * 312 / 300) + 'px';
     var im = document.createElement('img'); im.src = RIDER; im.alt = ''; im.draggable = false; im.decoding = 'async';
     var dust = document.createElement('i'); dust.className = 'rd-dust';
     r.appendChild(dust); r.appendChild(im); lane.appendChild(r); return r;
@@ -553,13 +553,13 @@
     if (reduce) return;
     var targets = [];
     if (TEST) {
-      all('main section, body > section, section').forEach(function (sec, i, arr) { targets.push({ host: sec, h: 100, line: 0 }); });
+      all('main section, body > section, section').forEach(function (sec, i, arr) { targets.push({ host: sec, h: 118, line: 0 }); });
     } else {
-      [38, 74, 92, 105, 127, 201, 9001].forEach(function (n) { var el = document.getElementById('wb_element_instance' + n); if (el) targets.push({ host: el, h: 128, line: 14 }); });
+      [38, 74, 92, 105, 127, 201, 9001].forEach(function (n) { var el = document.getElementById('wb_element_instance' + n); if (el) targets.push({ host: el, h: 148, line: 14 }); });
     }
     targets.forEach(function (t) {
       var lane = document.createElement('div'); lane.className = 'rd-lane'; lane.setAttribute('aria-hidden', 'true');
-      lane.style.bottom = t.line + 'px'; lane.style.height = (t.h + 10) + 'px';
+      lane.style.bottom = t.line + 'px'; lane.style.height = (t.h + 12) + 'px';
       t.host.appendChild(lane);
       var r = mkRider(lane, t.h), run = null, armed = true;
       function start() {
