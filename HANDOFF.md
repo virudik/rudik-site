@@ -71,3 +71,9 @@
 - Плитки при вращении: `spinEls` временно поднимает z-index (3000+).
 - Спутники: клик/тап → улетает в противоположный угол видимой части, возвращается (WAAPI `translate`, `rotate` add). `.rd-sats img{pointer-events:auto}`.
 - Версии: extra.css 16, test.css 16, interact.js 9, satellites.css/js 2.
+
+## 2026-11-05 — ship-1105d (main 9a74de6, Pages built 05:32 МСК)
+- Влиты правки batch-1105d (4c3c6dc): записка, якорь ИИшницы, календари без красных полос/чёрный «график», собаки выше, календарь «Работа» на телефоне + планета, YouTube над Likee, плитки над фото, спутники улетают в противоположный угол. Календарь Маши НЕ трогали.
+- Падение мотоциклиста: клик/тап по едущему (.rd-rider) → img/vitalik-fall.webm (Safari: vitalik-fall-sbs.mp4 на canvas), холст 726×574, кадр проезда в нём на x132 y81 (масштаб h/440). WAAPI-проезд на паузе, после ended — ride с 0 и продолжение. Ленивая загрузка (pointerenter/touchstart/клик); не догрузилось за 2,5 с — едет дальше. Клик по полоске — проезд заново (как было).
+- Версии: interact.js v10, extra.css v17, test.css v17. Старые: js/interact-old.js, css/extra-old.css, test/test-old.css.
+- Safari-путь не проверен (нет Safari на боксе).
