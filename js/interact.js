@@ -218,7 +218,7 @@
     rdDogs: { src: '/video/reactions/dogs-react.mp4?v=1', ret: 7.458 },   /* в /test/ ключ тот же: dogs */
     /* долгое нажатие на собак — ложатся на спину, чешем пузико. Заглушка: src пустой → ничего не происходит.
        Подключить: src: '/video/reactions/dogs-belly.mp4?v=1' (кадр петли dogs-loop.mp4, как dogs-react), ret — кадр возврата */
-    rdDogsBelly: { src: '', ret: 0 },
+    rdDogsBelly: { src: '/img/dogs-belly-react.mp4?v=1', ret: 0.0 },
   };
   var FADE_IN = 200, FADE_OUT = 450;
   function reactionCfg(key) {
@@ -594,8 +594,8 @@
      ready:false — ролика ещё нет (заглушка): просто едем дальше. Чтобы подключить — положить файлы и поставить ready:true (или window.RUDIK_RIDER_FX). */
   var RIDER_FX = window.RUDIK_RIDER_FX || {
     fall:    { ready: true,  webm: '/img/vitalik-fall.webm?v=1',    sbs: '/img/vitalik-fall-sbs.mp4?v=1',    w: 726, h: 574, x: 132, y: 81 },
-    fall2:   { ready: false, webm: '/img/vitalik-fall2.webm?v=1',   sbs: '/img/vitalik-fall2-sbs.mp4?v=1',   w: 726, h: 574, x: 132, y: 81 },   /* «дикое» падение */
-    wheelie: { ready: false, webm: '/img/vitalik-wheelie.webm?v=1', sbs: '/img/vitalik-wheelie-sbs.mp4?v=1', w: 726, h: 574, x: 132, y: 81, move: true }
+    fall2:   { ready: true,  webm: '/img/vitalik-fall2.webm?v=1',   sbs: '/img/vitalik-fall2-sbs.mp4?v=1',   w: 722, h: 538, x: 94, y: 51 },   /* «дикое» падение */
+    wheelie: { ready: true,  webm: '/img/vitalik-wheelie.webm?v=1', sbs: '/img/vitalik-wheelie-sbs.mp4?v=1', w: 610, h: 492, x: 25, y: 43, move: true }
   };
   var RIDE_H = 260;                                                    /* высота мотоциклиста на странице, px — как у рыжей собаки (~270) */
   var UA = navigator.userAgent || '';
@@ -739,7 +739,7 @@
       rewind: function () { if (!dead && loaded) { try { v.currentTime = 0; } catch (e) {} } },
       retry: function (quiet) { if (dead) return; this.load(); tryPlay(quiet); if (bx && running) { draw(); tick(); } },
       isRunning: function () { return running; },
-      fall: fStart, fallLoad: fLoad, isFalling: function () { return !!cur; }, has: function (n) { return !fx(n).dead; },
+      fall: fStart, fallStop: fEnd, fallLoad: fLoad, isFalling: function () { return !!cur; }, has: function (n) { return !fx(n).dead; },
       moving: function () { return !!(cur && cur.cfg.move); },
       fallPause: function () { if (cur) cur.v.pause(); }, fallPlay: function () { if (cur) cur.v.play().catch(function () {}); }
     };
@@ -768,7 +768,7 @@
         lane.classList.add('go'); r._ride.rewind(); r._ride.play();
         var me = r.animate([{ transform: 'translateX(' + (-rw - 10) + 'px)' }, { transform: 'translateX(' + (W + 10) + 'px)' }], { duration: dur, easing: 'cubic-bezier(.2,.35,.8,.7)' });
         run = me;
-        me.onfinish = me.oncancel = function () { if (run !== me) return; run = null; lane.classList.remove('go'); r._ride.pause(); };
+        me.onfinish = me.oncancel = function () { if (run !== me) return; run = null; if (r._ride.isFalling()) r._ride.fallStop(); lane.classList.remove('go'); r._ride.pause(); };
       }
       /* клик по полоске (и по всей плашке футера, кроме ссылок/иконок) — проезд ещё раз; если он уже идёт — стартует заново */
       function again() {
