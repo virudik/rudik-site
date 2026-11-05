@@ -293,8 +293,9 @@ section{padding:34px 0 26px;border-bottom:1px solid var(--line)}
 @keyframes rd-bone-y{from{translate:0 -16px}to{translate:0 16px}}
 @keyframes rd-bone-spin{to{rotate:360deg}}
 .rd-curlable{cursor:pointer}
-section{position:relative;padding-bottom:116px}
-@media(max-width:640px){section{padding-bottom:98px}}
+section{position:relative;padding-bottom:216px}
+@media(max-width:640px){section{padding-bottom:166px}}
+.rd-hit{position:absolute;left:0;right:0;bottom:-10px;height:22px;z-index:4;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 .rd-lane{position:absolute;left:0;right:0;overflow:hidden;pointer-events:none;z-index:3;visibility:hidden}
 .rd-lane.go{visibility:visible}
 .rd-rider{position:absolute;left:0;bottom:0;will-change:transform}
@@ -302,7 +303,7 @@ section{position:relative;padding-bottom:116px}
 .rd-rider .rd-rv{position:relative;display:block;width:100%;height:100%;pointer-events:none}
 .rd-rider .rd-rv-src{position:absolute;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none}
 .rd-rider .rd-still{position:relative;display:block;width:100%;height:100%;transform-origin:30% 92%;animation:rd-ride-shake .26s ease-in-out infinite alternate}
-.rd-dust{position:absolute;left:-8px;bottom:2px;width:58px;height:24px;border-radius:50%;background:radial-gradient(closest-side,rgba(150,140,120,.6),transparent);filter:blur(3px);animation:rd-dust .5s ease-out infinite}
+.rd-dust{position:absolute;left:-12px;bottom:2px;width:92px;height:36px;border-radius:50%;background:radial-gradient(closest-side,rgba(150,140,120,.6),transparent);filter:blur(3px);animation:rd-dust .5s ease-out infinite}
 @keyframes rd-ride-shake{from{translate:0 0;rotate:.5deg}to{translate:0 -2px;rotate:-.7deg}}
-@keyframes rd-dust{0%{opacity:.75;scale:.5 .6;translate:14px 0}100%{opacity:0;scale:1.5 1;translate:-36px -6px}}
+@keyframes rd-dust{0%{opacity:.75;scale:.5 .6;translate:14px 0}100%{opacity:0;scale:1.5 1;translate:-60px -8px}}
 @media(prefers-reduced-motion:reduce){.rd-lane,.rd-bones{display:none}}

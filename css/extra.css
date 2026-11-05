@@ -249,30 +249,80 @@ body.ii-in .ii-fab:hover { transform:translateY(-2px); }
 .rd-lane { position:absolute; left:0; right:0; overflow:hidden; pointer-events:none; z-index:3; visibility:hidden; }
 .rd-lane.go { visibility:visible; }
 .rd-rider { position:absolute; left:0; bottom:0; will-change:transform; }
-.rd-rider::before { content:''; position:absolute; left:6%; right:0; bottom:-3px; height:14px; border-radius:50%; background:radial-gradient(closest-side, rgba(0,0,0,.34), transparent); }
+.rd-rider::before { content:''; position:absolute; left:6%; right:0; bottom:-4px; height:20px; border-radius:50%; background:radial-gradient(closest-side, rgba(0,0,0,.34), transparent); }
 .rd-rider .rd-rv { position:relative; display:block; width:100%; height:100%; pointer-events:none; }
 .rd-rider .rd-rv-src { position:absolute; left:0; top:0; width:2px; height:2px; opacity:0; pointer-events:none; }
 .rd-rider .rd-still { position:relative; display:block; width:100%; height:100%; transform-origin:30% 92%; animation:rd-ride-shake .26s ease-in-out infinite alternate; }
-.rd-dust { position:absolute; left:-8px; bottom:2px; width:58px; height:24px; border-radius:50%; background:radial-gradient(closest-side, rgba(150,140,120,.6), transparent); filter:blur(3px); animation:rd-dust .5s ease-out infinite; }
+.rd-dust { position:absolute; left:-12px; bottom:2px; width:92px; height:36px; border-radius:50%; background:radial-gradient(closest-side, rgba(150,140,120,.6), transparent); filter:blur(3px); animation:rd-dust .5s ease-out infinite; }
 @keyframes rd-ride-shake { from { translate:0 0; rotate:.5deg; } to { translate:0 -2px; rotate:-.7deg; } }
-@keyframes rd-dust { 0% { opacity:.75; scale:.5 .6; translate:14px 0; } 100% { opacity:0; scale:1.5 1; translate:-36px -6px; } }
+@keyframes rd-dust { 0% { opacity:.75; scale:.5 .6; translate:14px 0; } 100% { opacity:0; scale:1.5 1; translate:-60px -8px; } }
 /* больше воздуха между разделами: разделитель опущен, чтобы под мотоцикл хватило места, снизу добавлено расстояние */
-#wb_element_instance38 { top:1994px !important; }
-#wb_main #page_7 { height:2060px !important; }
-#wb_main #page_7e { height:1870px !important; }
-#wb_element_instance74 { top:1851px !important; }
-#wb_main #page_1 { height:1917px !important; }
-#wb_main #page_1e { height:1917px !important; }
-#wb_element_instance92 { top:2470px !important; }
-#wb_main #page_2 { height:2536px !important; }
-#wb_main #page_2e { height:2536px !important; }
-#wb_element_instance105 { top:1490px !important; }
-#wb_main #page_10 { height:1556px !important; }
-#wb_main #page_10e { height:1556px !important; }
-#wb_element_instance127 { top:11275px !important; }
-#wb_main #page_4 { height:11341px !important; }
-#wb_main #page_4e { height:11341px !important; }
-#wb_element_instance201 { top:1232px !important; }
-#wb_main #page_8 { height:1298px !important; }
-#wb_element_instance9001 { top:2690px !important; }
-#wb_main #page_9 { height:2756px !important; }
+#wb_element_instance38 { top:2114px !important; }
+#wb_main #page_7 { height:2180px !important; }
+#wb_main #page_7e { height:1990px !important; }
+#wb_element_instance74 { top:1971px !important; }
+#wb_main #page_1 { height:2037px !important; }
+#wb_main #page_1e { height:2037px !important; }
+#wb_element_instance92 { top:2590px !important; }
+#wb_main #page_2 { height:2656px !important; }
+#wb_main #page_2e { height:2656px !important; }
+#wb_element_instance105 { top:1610px !important; }
+#wb_main #page_10 { height:1676px !important; }
+#wb_main #page_10e { height:1676px !important; }
+#wb_element_instance127 { top:11595px !important; }
+#wb_main #page_4 { height:11661px !important; }
+#wb_main #page_4e { height:11661px !important; }
+#wb_element_instance201 { top:1352px !important; }
+#wb_main #page_8 { height:1418px !important; }
+#wb_element_instance9001 { top:2810px !important; }
+#wb_main #page_9 { height:2876px !important; }
+/* разделитель «Раньше увлекался съёмками» (#162) стоит посреди страницы: под мотоцикл ему нужно ещё ~200px воздуха, всё ниже (до #127) сдвинуто вниз */
+#wb_element_instance162 { top:4860px !important; }
+#wb_element_instance132 { top:4914px !important; }
+#wb_element_instance133 { top:4914px !important; }
+#wb_element_instance158 { top:4974px !important; }
+#wb_element_instance129 { top:5044px !important; }
+#wb_element_instance130 { top:5044px !important; }
+#wb_element_instance131 { top:5044px !important; }
+#wb_element_instance134 { top:5364px !important; }
+#wb_element_instance135 { top:5364px !important; }
+#wb_element_instance136 { top:5784px !important; }
+#wb_element_instance137 { top:5784px !important; }
+#wb_element_instance138 { top:6014px !important; }
+#wb_element_instance139 { top:6264px !important; }
+#wb_element_instance140 { top:6264px !important; }
+#wb_element_instance141 { top:6684px !important; }
+#wb_element_instance142 { top:6684px !important; }
+#wb_element_instance143 { top:7084px !important; }
+#wb_element_instance144 { top:7084px !important; }
+#wb_element_instance146 { top:7084px !important; }
+#wb_element_instance145 { top:7594px !important; }
+#wb_element_instance151 { top:8354px !important; }
+#wb_element_instance149 { top:8424px !important; }
+#wb_element_instance150 { top:8424px !important; }
+#wb_element_instance147 { top:8764px !important; }
+#wb_element_instance148 { top:8764px !important; }
+#wb_element_instance152 { top:9104px !important; }
+#wb_element_instance153 { top:9194px !important; }
+#wb_element_instance154 { top:9294px !important; }
+#wb_element_instance161 { top:9350px !important; }
+#wb_element_instance156 { top:9494px !important; }
+#wb_element_instance155 { top:9564px !important; }
+#wb_element_instance157 { top:9564px !important; }
+#wb_element_instance159 { top:9920px !important; }
+#wb_element_instance160 { top:9920px !important; }
+#wb_element_instance183 { top:10280px !important; }
+#wb_element_instance188 { top:10320px !important; }
+#wb_element_instance187 { top:10380px !important; }
+#wb_element_instance189 { top:10380px !important; }
+#wb_element_instance190 { top:10380px !important; }
+#wb_element_instance182 { top:10670px !important; }
+#wb_element_instance184 { top:10670px !important; }
+#wb_element_instance185 { top:11020px !important; }
+#wb_element_instance186 { top:11020px !important; }
+/* мотоциклист побольше (≈ рыжая собака): клик по полоске (и по плашке футера) — проезд ещё раз */
+.rd-hit { position:absolute; left:0; right:0; top:-9px; bottom:-9px; z-index:4; cursor:pointer; -webkit-user-select:none; user-select:none; -webkit-tap-highlight-color:transparent; }
+.rd-hitfoot { cursor:pointer; }
+.rd-hitfoot a, .rd-hitfoot button { cursor:pointer; }
+/* тонкая линия над футером убрана: на её месте воздух, чтобы мотоциклисту хватило места над тёмной плашкой */
+.ii-line { border:0; margin:0; height:136px; width:100%; }

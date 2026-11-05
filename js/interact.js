@@ -545,7 +545,8 @@
   /* Анимация: зацикленное видео с прозрачностью (img/vitalik-ride.webm, VP9+alpha — Chrome, Edge, Firefox).
      Safari/iOS не показывают альфу в webm → там mp4 «цвет слева | маска справа» склеивается на canvas (как космос в loops.js).
      Если видео не стартует (экономия трафика, автоплей запрещён, ошибка) — показываем статичный кадр того же байка. */
-  var RIDE = { webm: '/img/vitalik-ride.webm?v=1', sbs: '/img/vitalik-ride-sbs.mp4?v=1', still: '/img/vitalik-ride-still.webp?v=1', w: 394, h: 300 };
+  var RIDE = { webm: '/img/vitalik-ride.webm?v=2', sbs: '/img/vitalik-ride-sbs.mp4?v=2', still: '/img/vitalik-ride-still.webp?v=2', w: 578, h: 440 };
+  var RIDE_H = 260;                                                    /* высота мотоциклиста на странице, px — как у рыжей собаки (~270) */
   var UA = navigator.userAgent || '';
   var NO_WEBM_ALPHA = /iP(hone|ad|od)/.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
                       (/Safari\//.test(UA) && !/Chrome|Chromium|CriOS|Edg|OPR|Android|Firefox|FxiOS/.test(UA));
@@ -595,30 +596,50 @@
     if (reduce) return;
     var targets = [];
     if (TEST) {
-      all('main section, body > section, section').forEach(function (sec, i, arr) { targets.push({ host: sec, h: 118, line: 0 }); });
+      var th = innerWidth <= 640 ? 150 : 200;                       /* в /test/ рыжая собака ~205px; на телефоне поменьше */
+      all('main section, body > section, section').forEach(function (sec) { targets.push({ host: sec, h: th, line: 0, hit: true }); });
     } else {
-      [38, 74, 92, 105, 127, 201, 9001].forEach(function (n) { var el = document.getElementById('wb_element_instance' + n); if (el) targets.push({ host: el, h: 148, line: 14 }); });
+      /* все разделители-полоски (Line) на странице: 38, 74, 92, 105, 127, 162 («Раньше увлекался съёмками»), 201, 9001; плюс тёмная плашка футера */
+      [38, 74, 92, 105, 127, 162, 201, 9001].forEach(function (n) { var el = document.getElementById('wb_element_instance' + n); if (el) targets.push({ host: el, h: RIDE_H, line: 14, hit: true }); });
+      var wf = document.getElementById('wb_footer'); if (wf) targets.push({ host: wf, h: RIDE_H, foot: true, click: true });
     }
     targets.forEach(function (t) {
       if (t.host.querySelector(':scope > .rd-lane')) return;            /* init() вызывается дважды (DOMContentLoaded и load) */
       var lane = document.createElement('div'); lane.className = 'rd-lane'; lane.setAttribute('aria-hidden', 'true');
-      lane.style.bottom = t.line + 'px'; lane.style.height = (t.h + 12) + 'px';
+      if (t.foot) lane.style.bottom = '100%'; else lane.style.bottom = t.line + 'px';     /* футер: колёса стоят на верхней кромке плашки */
+      lane.style.height = (t.h + 12) + 'px';
       t.host.appendChild(lane);
       var r = mkRider(lane, t.h), run = null, armed = true;
       function start() {
-        var W = lane.clientWidth, rw = r.offsetWidth, dur = Math.max(3200, Math.min(5200, W * 4.1));
+        var W = lane.clientWidth, rw = r.offsetWidth, dur = Math.max(3200, Math.min(5600, W * 4.1));
         lane.classList.add('go'); r._ride.rewind(); r._ride.play();
-        run = r.animate([{ transform: 'translateX(' + (-rw - 10) + 'px)' }, { transform: 'translateX(' + (W + 10) + 'px)' }], { duration: dur, easing: 'cubic-bezier(.2,.35,.8,.7)' });
-        run.onfinish = run.oncancel = function () { run = null; lane.classList.remove('go'); r._ride.pause(); };
+        var me = r.animate([{ transform: 'translateX(' + (-rw - 10) + 'px)' }, { transform: 'translateX(' + (W + 10) + 'px)' }], { duration: dur, easing: 'cubic-bezier(.2,.35,.8,.7)' });
+        run = me;
+        me.onfinish = me.oncancel = function () { if (run !== me) return; run = null; lane.classList.remove('go'); r._ride.pause(); };
       }
-      inView(t.host, function (v) { if (v) r._ride.load(); }, { threshold: 0, rootMargin: '700px 0px' });   /* подгружаем заранее */
-      inView(t.host, function (v) {
+      /* клик по полоске (и по всей плашке футера, кроме ссылок/иконок) — проезд ещё раз; если он уже идёт — стартует заново */
+      function again() {
+        if (run) { var o = run; run = null; o.onfinish = o.oncancel = null; o.cancel(); }
+        armed = false; start();
+      }
+      var watch = t.host;                                            /* за чем следим: за самой полоской, а не за всем (высоким) разделом */
+      if (t.hit) {
+        var hit = document.createElement('div'); hit.className = 'rd-hit'; hit.setAttribute('aria-hidden', 'true'); t.host.appendChild(hit); watch = hit;
+        hit.addEventListener('click', function (e) { e.preventDefault(); again(); });
+      }
+      if (t.click) {
+        t.host.classList.add('rd-hitfoot');
+        t.host.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('a, button, input, textarea, select, label, [role="button"]')) return; again(); });
+      }
+      var top = t.foot ? 160 : Math.min(t.h + 36, Math.round(innerHeight * .5)), bot = t.foot ? 40 : TEST ? 60 : Math.min(130, Math.round(innerHeight * .25));   /* /test/: последний раздел упирается в низ страницы */
+      inView(watch, function (v) { if (v) r._ride.load(); }, { threshold: 0, rootMargin: '700px 0px' });   /* подгружаем заранее */
+      inView(watch, function (v) {
         if (v) { if (run) { run.play(); r._ride.play(); } else if (armed) { armed = false; start(); } }
         else { if (run) { run.pause(); r._ride.pause(); } else armed = true; }
-      }, { threshold: 0, rootMargin: '-160px 0px -130px 0px' });
+      }, { threshold: 0, rootMargin: '-' + top + 'px 0px -' + bot + 'px 0px' });
       document.addEventListener('visibilitychange', function () {
         if (!run) return; if (document.hidden) { run.pause(); r._ride.pause(); } else if (host_visible()) { run.play(); r._ride.play(); }
-        function host_visible() { var b = t.host.getBoundingClientRect(); return b.bottom > 130 && b.top < innerHeight - 160; }
+        function host_visible() { var b = watch.getBoundingClientRect(); return b.bottom > top && b.top < innerHeight - bot; }
       });
     });
   }
