@@ -77,3 +77,7 @@
 - Падение мотоциклиста: клик/тап по едущему (.rd-rider) → img/vitalik-fall.webm (Safari: vitalik-fall-sbs.mp4 на canvas), холст 726×574, кадр проезда в нём на x132 y81 (масштаб h/440). WAAPI-проезд на паузе, после ended — ride с 0 и продолжение. Ленивая загрузка (pointerenter/touchstart/клик); не догрузилось за 2,5 с — едет дальше. Клик по полоске — проезд заново (как было).
 - Версии: interact.js v10, extra.css v17, test.css v17. Старые: js/interact-old.js, css/extra-old.css, test/test-old.css.
 - Safari-путь не проверен (нет Safari на боксе).
+
+## ship-1105e (2026-11-05, MSK)
+- Merged batch-1105e (cf13e03) into main: wheelie stands then rides after landing, dog bark (audio/dog-bark.ogg|m4a, CC0), belly video v2, js/modes.js holiday/birthday modes (copyright chooser, typed words, ?mode=, ?date=).
+- Versions: interact.js v14, modes.js v2, extra.css v20, test.css v20 across root + 11 copies + /test/. Backups: *-old.
