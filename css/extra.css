@@ -59,7 +59,7 @@
 @media (hover:hover) { #wb_element_instance0 .hmenu > li:hover > ul { display:block; } }
 
 /* 3) собаки по верхней рамке календаря (белый фон видео «вычитается» multiply, линии под лапами нет) */
-#rdDogs { top:802px; left:10px; width:970px; height:320px; z-index:585; overflow:hidden; pointer-events:none; background:transparent; mix-blend-mode:multiply; }
+#rdDogs { top:778px; left:10px; width:970px; height:320px; z-index:585; overflow:hidden; pointer-events:none; background:transparent; mix-blend-mode:multiply; }
 #rdDogs .rd-dogs-v { position:absolute; left:50%; margin-left:-290px; bottom:-12px; width:580px; height:320px; display:block; background:#fff; }
 
 /* 7) космос: Ресурс-П и космонавт летают поверх всего раздела «РАБОТА» (чистая прозрачность, canvas) */
@@ -182,12 +182,12 @@ body.ii-in .ii-fab:hover { transform:translateY(-2px); }
 #wb_element_instance36, #wb_element_instance104 { pointer-events:none; }
 /* --- верхний календарь: «настенный календарь на спирали» в стиле сайта (чёрная рамка, красная тень, Arima Madurai) --- */
 #wb_element_instance34 { overflow:visible !important; }
-#wb_element_instance34 iframe { display:block; box-sizing:border-box; border-radius:16px; box-shadow:0 0 0 3px #303030, 7px 8px 0 2px #d50000; background:#f0f4f9; }
+#wb_element_instance34 iframe { display:block; box-sizing:border-box; border-radius:16px; box-shadow:0 0 0 3px #303030; background:#f0f4f9; }
 #wb_element_instance34::before { content:""; position:absolute; left:22px; right:22px; top:-12px; height:24px; z-index:3; pointer-events:none;
   background:radial-gradient(ellipse 4px 11px at 50% 50%, #303030 0 68%, transparent 74%) 0 0/32px 24px repeat-x; }
 #wb_element_instance34::after { content:""; position:absolute; left:22px; right:22px; top:-12px; height:24px; z-index:4; pointer-events:none;
   background:radial-gradient(ellipse 1.6px 5px at 50% 50%, #fff 0 80%, transparent 90%) 0 0/32px 24px repeat-x; }
-#wb_element_instance36 h1 { font:normal bold 30px/36px 'Trebuchet MS',Arial,sans-serif; color:#d50000; letter-spacing:1px; text-shadow:2px 2px 0 #303030; text-transform:lowercase; }
+#wb_element_instance36 h1 { font:normal bold 30px/36px 'Trebuchet MS',Arial,sans-serif; color:#111; letter-spacing:1px; text-shadow:none; text-transform:lowercase; }
 /* --- календарь в «Работе»: космос (тёмная инверсия + звёздное поле + свечение), клики и функции те же --- */
 #wb_element_instance103 { overflow:visible !important; }
 #wb_element_instance103 > div { position:relative; z-index:2; mix-blend-mode:screen; }
@@ -245,6 +245,7 @@ body.ii-in .ii-fab:hover { transform:translateY(-2px); }
 #wb_element_instance40, #wb_element_instance62 { overflow:visible !important; }
 .rd-roll { position:absolute; left:0; top:0; background-size:100% 100%; background-repeat:no-repeat; pointer-events:none; will-change:transform; }
 .rd-curlable { cursor:pointer; }
+.rd-flap { position:absolute; z-index:530; background-size:100% 100%; background-repeat:no-repeat; pointer-events:none; will-change:transform; filter:drop-shadow(0 2px 3px rgba(0,0,0,.4)); }
 /* Виталик на Yamaha V-Max 1200 проезжает по разделителю */
 .rd-lane { position:absolute; left:0; right:0; overflow:hidden; pointer-events:none; z-index:3; visibility:hidden; }
 .rd-lane.go { visibility:visible; }
@@ -329,3 +330,19 @@ body.ii-in .ii-fab:hover { transform:translateY(-2px); }
 /* автоплей заблокирован: пока видео не заиграло, показываем кадр-заглушку (повторные попытки — в interact.js) */
 .rd-rider.rd-wait .rd-rv, .rd-rider.rd-wait canvas.rd-rv { opacity:0; }
 .rd-rider .rd-still-wait { position:absolute; left:0; top:0; }
+
+/* ===== batch-1105d ===== */
+/* ИИшница: после перехода из меню голова танцующего Виталика не прячется под меню (якорь выше — больше зазор над разделом) */
+#page_3_anchor { top:-160px !important; }
+/* Алина: логотип YouTube выше Likee (белый фон Likee не закрывает логотип) */
+#wb_element_instance46 { z-index:617 !important; }
+#wb_element_instance214 { z-index:834 !important; }
+/* календарь «Работа»: на телефоне (layout 992) звёздное свечение не упирается в левый край экрана */
+#wb_element_instance103 { left:28px !important; width:936px !important; min-width:0 !important; }
+#wb_element_instance103 > div, #wb_element_instance103 iframe { width:100% !important; }
+/* планета: увеличенная зона касания (кнопка ~104×62 → ~170×130), на тач-экранах и сама побольше */
+#wb_element_instance103 .rd-planet::after { content:""; position:absolute; inset:-34px -32px -30px -32px; }
+@media (pointer:coarse) {
+  #wb_element_instance103 .rd-planet { width:132px; height:79px; right:34px; top:-68px; touch-action:manipulation; }
+  #wb_element_instance103 .rd-planet::after { inset:-40px -36px -34px -36px; }
+}

@@ -3,6 +3,7 @@
 .rd-sats { position:absolute; left:0; top:0; width:100%; height:100%; z-index:3; overflow:hidden; pointer-events:none; }
 #rdSats { height:1440px; min-width:980px; z-index:605; }
 .rd-sats, .rd-sats * { pointer-events:none; }
+.rd-sats img { pointer-events:auto; cursor:pointer; -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
 .rd-sats .st-x, .rd-sats .st-y { position:absolute; left:0; top:0; width:100%; height:100%; will-change:transform; }
 .rd-sats img { position:absolute; left:0; top:0; display:block; height:auto; max-width:none; will-change:transform;
   filter:drop-shadow(0 0 1.5px rgba(0,0,0,.45)) drop-shadow(0 3px 5px rgba(0,0,0,.25)); }

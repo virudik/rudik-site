@@ -163,10 +163,13 @@
     var spinning = els[0]._rdSpin; if (spinning) return;
     els.forEach(function (el) {
       el._rdSpin = true;
+      /* на время вращения плитка поднимается над соседними фото (иначе уходит под них) */
+      var cs0 = getComputedStyle(el);
+      if (cs0.position !== 'static') { el._rdZ = el.style.zIndex; el.style.zIndex = String(3000 + (parseInt(cs0.zIndex, 10) || 0)); }
       var ox = cx == null ? 'center' : (cx - el.offsetLeft) + 'px ' + (cy - el.offsetTop) + 'px';
       el.style.transformOrigin = ox;
       var an = el.animate([{ rotate: '0deg' }, { rotate: (360 * turns) + 'deg' }], { duration: ms, easing: 'cubic-bezier(.25,.1,.2,1)' });
-      var done = function () { el._rdSpin = false; el.style.transformOrigin = ''; };
+      var done = function () { el._rdSpin = false; el.style.transformOrigin = ''; if (el._rdZ != null) { el.style.zIndex = el._rdZ; el._rdZ = null; } };
       an.onfinish = done; an.oncancel = done;
     });
   }
@@ -496,12 +499,13 @@
     }
     if (TEST) {
       all('.tape').forEach(function (tp) {
-        wire([tp], function (fin) {
-          var an = tp.animate([
-            { transform: 'scaleX(1)', opacity: 1, offset: 0 },
-            { transform: 'scaleX(.06)', opacity: .2, offset: FOLD / TOT, easing: 'ease-in-out' },
-            { transform: 'scaleX(.06)', opacity: .2, offset: (FOLD + HOLD) / TOT, easing: 'ease-out' },
-            { transform: 'scaleX(1)', opacity: 1, offset: 1 }
+        var fl = document.createElement('span'); fl.className = 'rd-tflap'; fl.setAttribute('aria-hidden', 'true'); tp.appendChild(fl);
+        wire([tp], function (fin) {                       /* левый край разворачивается вправо поверх номера (тыльная сторона), держится, сворачивается обратно */
+          var an = fl.animate([
+            { transform: 'scaleX(0) skewY(-3deg)', offset: 0, easing: 'cubic-bezier(.45,0,.3,1)' },
+            { transform: 'scaleX(1) skewY(0deg)', offset: FOLD / TOT, easing: 'linear' },
+            { transform: 'scaleX(1) skewY(0deg)', offset: (FOLD + HOLD) / TOT, easing: 'cubic-bezier(.6,0,.4,1)' },
+            { transform: 'scaleX(0) skewY(-3deg)', offset: 1 }
           ], { duration: TOT });
           an.onfinish = an.oncancel = fin;
         });
@@ -517,23 +521,48 @@
       roll.style.cssText = 'background-image:url("' + (img.currentSrc || img.src) + '");width:' + pic.offsetWidth + 'px;height:' + pic.offsetHeight + 'px;clip-path:inset(0 ' + (100 - 22.6) + '% 0 0);transform-origin:' + Math.round(PIV * .55) + 'px ' + Math.round(pic.offsetHeight * .55) + 'px;';
       pic.insertBefore(roll, img);
       img.style.clipPath = 'inset(0 0 0 21.4%)'; img.style.transformOrigin = PIV + 'px 50%';
-      var picLeft = pic.offsetLeft;
+      /* «оборот»: левый рулон разворачивается и ложится поверх номера (тыльная сторона бумаги), держится ~3 с, сворачивается обратно */
+      var flap = document.createElement('div'); flap.className = 'rd-flap'; flap.setAttribute('aria-hidden', 'true');
+      flap.style.cssText = 'left:' + pic.offsetLeft + 'px;top:' + pic.offsetTop + 'px;width:' + pic.offsetWidth + 'px;height:' + pic.offsetHeight + 'px;clip-path:inset(0 0 0 21.4%);transform-origin:' + PIV + 'px 50%;transform:scaleX(0);';
+      pic.parentNode.appendChild(flap);
+      /* форма листа = вырезанная по контуру рваная полоса из картинки (белый фон → прозрачный), цвет — тыльная сторона бумаги */
+      (function (src) {
+        var im = new Image(); im.onload = function () {
+          try {
+            var cv = document.createElement('canvas'); cv.width = im.naturalWidth; cv.height = im.naturalHeight;
+            var cx = cv.getContext('2d'); cx.drawImage(im, 0, 0);
+            var d = cx.getImageData(0, 0, cv.width, cv.height), p = d.data;
+            for (var i = 0; i < p.length; i += 4) {
+              var l = Math.min(p[i], p[i + 1], p[i + 2]) / 255, a = (1 - l) * 6; a = a > 1 ? 1 : a < .04 ? 0 : a;
+              var y = ((i / 4) / cv.width) / cv.height, g = 236 - Math.round(y * 34);
+              p[i] = g; p[i + 1] = g; p[i + 2] = g - 4; p[i + 3] = Math.round(a * 255);
+            }
+            cx.putImageData(d, 0, 0);
+            flap.style.backgroundImage = 'url(' + cv.toDataURL('image/png') + ')';
+          } catch (err) { flap.style.display = 'none'; }
+        };
+        im.onerror = function () { flap.style.display = 'none'; };
+        im.src = src;
+      })(img.currentSrc || img.src);
       wire([pic].concat(rest), function (fin) {
-        var offs = [0, FOLD / TOT, (FOLD + HOLD) / TOT, 1], S = .03;
-        var fr = function (arr) { return arr.map(function (k, i) { var o = { offset: offs[i] }; for (var p in k) o[p] = k[p]; if (i === 0 || i === 2) o.easing = i === 0 ? 'ease-in-out' : 'ease-out'; return o; }); };
+        var offs = [0, FOLD / TOT, (FOLD + HOLD) / TOT, 1];
         var anims = [];
-        anims.push(img.animate(fr([{ transform: 'scaleX(1)', opacity: 1 }, { transform: 'scaleX(' + S + ')', opacity: 0 }, { transform: 'scaleX(' + S + ')', opacity: 0 }, { transform: 'scaleX(1)', opacity: 1 }]), { duration: TOT }));
-        rest.forEach(function (el) {
-          var org = parseFloat(getComputedStyle(el).transformOrigin) || 0;             /* px от левого края элемента */
-          var dx = (picLeft + PIV) - (el.offsetLeft + org), tx = dx * (1 - S);
-          anims.push(el.animate(fr([{ transform: 'translateX(0px) scaleX(1)', opacity: 1 }, { transform: 'translateX(' + tx.toFixed(1) + 'px) scaleX(' + S + ')', opacity: 0 }, { transform: 'translateX(' + tx.toFixed(1) + 'px) scaleX(' + S + ')', opacity: 0 }, { transform: 'translateX(0px) scaleX(1)', opacity: 1 }]), { duration: TOT }));
+        anims.push(flap.animate([
+          { transform: 'scaleX(0) skewY(-3deg)', opacity: 1, offset: 0, easing: 'cubic-bezier(.45,0,.3,1)' },
+          { transform: 'scaleX(1) skewY(0deg)', opacity: 1, offset: offs[1], easing: 'linear' },
+          { transform: 'scaleX(1) skewY(0deg)', opacity: 1, offset: offs[2], easing: 'cubic-bezier(.6,0,.4,1)' },
+          { transform: 'scaleX(0) skewY(-3deg)', opacity: 1, offset: 1 }
+        ], { duration: TOT }));
+        rest.forEach(function (el) {                                            /* номер прячется под листом, пока тот закрывает его */
+          anims.push(el.animate([
+            { opacity: 1, offset: 0 }, { opacity: 0, offset: offs[1] * .75 }, { opacity: 0, offset: offs[2] + (1 - offs[2]) * .35 }, { opacity: 1, offset: 1 }
+          ], { duration: TOT }));
         });
         anims.push(roll.animate([
           { transform: 'rotate(0deg) scale(1)', offset: 0, easing: 'ease-in-out' },
-          { transform: 'rotate(-7deg) scale(1.1)', offset: offs[1], easing: 'ease-in-out' },
-          { transform: 'rotate(-3deg) scale(1.1)', offset: .42, easing: 'ease-in-out' },
-          { transform: 'rotate(-8deg) scale(1.1)', offset: .66, easing: 'ease-in-out' },
-          { transform: 'rotate(-7deg) scale(1.1)', offset: offs[2], easing: 'ease-out' },
+          { transform: 'rotate(5deg) scale(1.06)', offset: offs[1], easing: 'ease-in-out' },
+          { transform: 'rotate(2deg) scale(1.06)', offset: .5, easing: 'ease-in-out' },
+          { transform: 'rotate(5deg) scale(1.06)', offset: offs[2], easing: 'ease-out' },
           { transform: 'rotate(0deg) scale(1)', offset: 1 }
         ], { duration: TOT }));
         anims[0].onfinish = anims[0].oncancel = fin;
