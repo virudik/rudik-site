@@ -218,7 +218,7 @@
     rdDogs: { src: '/video/reactions/dogs-react.mp4?v=1', ret: 7.458 },   /* в /test/ ключ тот же: dogs */
     /* долгое нажатие на собак — ложатся на спину, чешем пузико. Заглушка: src пустой → ничего не происходит.
        Подключить: src: '/video/reactions/dogs-belly.mp4?v=1' (кадр петли dogs-loop.mp4, как dogs-react), ret — кадр возврата */
-    rdDogsBelly: { src: '/img/dogs-belly-react.mp4?v=1', ret: 0.0 },
+    rdDogsBelly: { src: '/img/dogs-belly-react.mp4?v=2', ret: 0.0 },
   };
   var FADE_IN = 200, FADE_OUT = 450;
   function reactionCfg(key) {
@@ -424,8 +424,16 @@
   document.addEventListener('click', function (e) {
     var t = e.target; if (closest(t, 'a[href],button,input,.pswp')) return;
     if (Date.now() - lpDone < 500) { e.stopPropagation(); return; }   /* клик после долгого нажатия не считается */
-    var h = heroAt(e); if (h) playReaction(h.host, h.key);
+    var h = heroAt(e); if (h && playReaction(h.host, h.key) && h.key === 'rdDogs') bark();
   }, true);
+  /* лай при клике по собакам (звук только по клику — жест пользователя). CC0: SFXMint «Playful Dog Barking 41», audio/LICENSES.txt */
+  var barkA = null;
+  function bark() {
+    try {
+      if (!barkA) { barkA = new Audio(); var ogg = barkA.canPlayType('audio/ogg; codecs="opus"'); barkA.src = ogg ? '/audio/dog-bark.ogg?v=1' : '/audio/dog-bark.m4a?v=1'; barkA.volume = 0.45; }
+      barkA.currentTime = 0; var pp = barkA.play(); if (pp && pp.catch) pp.catch(function () {});
+    } catch (x) {}
+  }
   /* долгое нажатие (~600 мс, мышь и палец) на собак — реакция «пузико» */
   document.addEventListener('pointerdown', function (e) {
     var h = heroAt(e); if (!h || h.key !== 'rdDogs' || !reactionSrc('rdDogsBelly')) return;
@@ -595,7 +603,7 @@
   var RIDER_FX = window.RUDIK_RIDER_FX || {
     fall:    { ready: true,  webm: '/img/vitalik-fall.webm?v=1',    sbs: '/img/vitalik-fall-sbs.mp4?v=1',    w: 726, h: 574, x: 132, y: 81 },
     fall2:   { ready: true,  webm: '/img/vitalik-fall2.webm?v=1',   sbs: '/img/vitalik-fall2-sbs.mp4?v=1',   w: 722, h: 538, x: 94, y: 51 },   /* «дикое» падение */
-    wheelie: { ready: true,  webm: '/img/vitalik-wheelie.webm?v=1', sbs: '/img/vitalik-wheelie-sbs.mp4?v=1', w: 610, h: 492, x: 25, y: 43, move: true }
+    wheelie: { ready: true,  webm: '/img/vitalik-wheelie.webm?v=1', sbs: '/img/vitalik-wheelie-sbs.mp4?v=1', w: 610, h: 492, x: 25, y: 43, move: true, stopAt: 0.7, resumeAt: 6.75 }   /* встал на дыбы (0.7 с) — стоит; приземлился (6.75 с) — уезжает */
   };
   var RIDE_H = 260;                                                    /* высота мотоциклиста на странице, px — как у рыжей собаки (~270) */
   var UA = navigator.userAgent || '';
@@ -740,6 +748,7 @@
       retry: function (quiet) { if (dead) return; this.load(); tryPlay(quiet); if (bx && running) { draw(); tick(); } },
       isRunning: function () { return running; },
       fall: fStart, fallStop: fEnd, fallLoad: fLoad, isFalling: function () { return !!cur; }, has: function (n) { return !fx(n).dead; },
+      fxTime: function () { return cur ? cur.v.currentTime : -1; },
       moving: function () { return !!(cur && cur.cfg.move); },
       fallPause: function () { if (cur) cur.v.pause(); }, fallPlay: function () { if (cur) cur.v.play().catch(function () {}); }
     };
@@ -785,7 +794,13 @@
           if (run !== me || r._ride.isFalling()) return false;
           var mv = RIDER_FX[name] && RIDER_FX[name].move;
           if (!mv) me.pause();
-          if (!r._ride.fall(name, function () { if (run === me && !mv) me.play(); })) { if (!mv) me.play(); return false; }
+          var cf = RIDER_FX[name] || {}, iv = 0, st = 0;              /* stopAt/resumeAt: стоим на месте между этими моментами ролика */
+          if (!r._ride.fall(name, function () { clearInterval(iv); if (run === me && (!mv || st === 1)) me.play(); })) { if (!mv) me.play(); return false; }
+          if (mv && cf.stopAt != null) iv = setInterval(function () {
+            var tt = r._ride.fxTime(); if (tt < 0 || run !== me) { clearInterval(iv); return; }
+            if (st === 0 && tt >= cf.stopAt) { st = 1; me.pause(); }
+            if (st === 1 && tt >= (cf.resumeAt || 1e9)) { st = 2; me.play(); clearInterval(iv); }
+          }, 40);
           return true;
         }
         if (!go()) {                                                   /* ещё грузится — едем; если успеет догрузиться за 2,5 с — играем */
