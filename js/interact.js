@@ -420,30 +420,70 @@
     });
     return out;
   }
-  var lpDone = 0, lpT = 0, lpXY = null;
+  var lpEat = 0, lpFired = false, lpT = 0, lpXY = null;
   document.addEventListener('click', function (e) {
     var t = e.target; if (closest(t, 'a[href],button,input,.pswp')) return;
-    if (Date.now() - lpDone < 500) { e.stopPropagation(); return; }   /* клик после долгого нажатия не считается */
-    var h = heroAt(e); if (h && playReaction(h.host, h.key) && h.key === 'rdDogs') bark();
+    /* клик, завершающий долгое нажатие, гасим ОДИН раз (флаг сбрасывается), иначе раньше гасились все клики подряд */
+    if (lpEat) { var fresh = Date.now() - lpEat < 800; lpEat = 0; if (fresh) { e.stopPropagation(); e.preventDefault(); return; } }
+    var h = heroAt(e); if (h && playReaction(h.host, h.key) && h.key === 'rdDogs') bark(h.host);
   }, true);
-  /* лай при клике по собакам (звук только по клику — жест пользователя). CC0: SFXMint «Playful Dog Barking 41», audio/LICENSES.txt */
-  var barkA = null;
-  function bark() {
+  /* лай двух собак, синхронно с открытием пасти в dogs-react.mp4 (время ролика, с; подобрано по кадрам).
+     big — спаниель, small — белая. Сэмплы — обрезка и сдвиг тона CC0 SFXMint «Playful Dog Barking 41», audio/LICENSES.txt */
+  var BARKS = [[0.85, 'big'], [0.9, 'small'], [1.35, 'big'], [1.4, 'small'], [1.9, 'small'], [2.0, 'big'], [2.4, 'small'], [2.5, 'big'], [2.85, 'big'], [2.9, 'small'], [3.25, 'big'], [3.35, 'small']];
+  var AC = null, BUF = {}, barkRun = 0, ogg = null;
+  function barkUrl(k) { if (ogg === null) { try { ogg = !!new Audio().canPlayType('audio/ogg; codecs="opus"'); } catch (x) { ogg = false; } } return '/audio/dog-' + k + (ogg ? '.ogg' : '.m4a') + '?v=1'; }
+  function barkLoad() {
     try {
-      if (!barkA) { barkA = new Audio(); var ogg = barkA.canPlayType('audio/ogg; codecs="opus"'); barkA.src = ogg ? '/audio/dog-bark.ogg?v=1' : '/audio/dog-bark.m4a?v=1'; barkA.volume = 0.45; }
-      barkA.currentTime = 0; var pp = barkA.play(); if (pp && pp.catch) pp.catch(function () {});
+      if (!AC) { var C = window.AudioContext || window.webkitAudioContext; if (!C) return; AC = new C(); }
+      ['big', 'small'].forEach(function (k) {
+        if (BUF[k] !== undefined) return; BUF[k] = null;
+        fetch(barkUrl(k)).then(function (r) { return r.arrayBuffer(); }).then(function (a) {
+          return new Promise(function (ok, no) { AC.decodeAudioData(a, ok, no); });
+        }).then(function (b) { BUF[k] = b; }).catch(function () { delete BUF[k]; });
+      });
     } catch (x) {}
+  }
+  function barkOne(k) {
+    try {
+      if (AC && BUF[k]) {
+        var s = AC.createBufferSource(), g = AC.createGain(), pn = AC.createStereoPanner ? AC.createStereoPanner() : null;
+        s.buffer = BUF[k]; g.gain.value = k === 'big' ? 0.42 : 0.36; s.connect(g);
+        if (pn) { pn.pan.value = k === 'big' ? -0.25 : 0.3; g.connect(pn); pn.connect(AC.destination); } else g.connect(AC.destination);
+        s.start();
+      } else { var a = new Audio(barkUrl(k)); a.volume = 0.4; var pp = a.play(); if (pp && pp.catch) pp.catch(function () {}); }
+      window.__rdBarks = (window.__rdBarks || 0) + 1;
+    } catch (x) {}
+  }
+  function bark(host) {
+    var rv = host && host._rdVids && host._rdVids.rdDogs; if (!rv) return;
+    barkLoad(); if (AC && AC.state === 'suspended') try { AC.resume(); } catch (x) {}
+    var id = ++barkRun, i = 0, t0 = performance.now(), last = -1;
+    function tick() {
+      if (id !== barkRun) return;
+      var t = rv.currentTime;
+      if (t + 0.05 < last || performance.now() - t0 > 9000 || i >= BARKS.length) return;   /* ролик перемотан/закончился */
+      last = t;
+      while (i < BARKS.length && t >= BARKS[i][0] - 0.03) { if (t - BARKS[i][0] < 0.25) barkOne(BARKS[i][1]); i++; }
+      if (rv.requestVideoFrameCallback && !rv.paused) rv.requestVideoFrameCallback(tick); else requestAnimationFrame(tick);
+    }
+    tick();
   }
   /* долгое нажатие (~600 мс, мышь и палец) на собак — реакция «пузико» */
   document.addEventListener('pointerdown', function (e) {
-    var h = heroAt(e); if (!h || h.key !== 'rdDogs' || !reactionSrc('rdDogsBelly')) return;
-    lpXY = [e.clientX, e.clientY]; clearTimeout(lpT);
+    var h = heroAt(e); if (!h || h.key !== 'rdDogs') return;
+    barkLoad();
+    if (!reactionSrc('rdDogsBelly')) return;
+    lpXY = [e.clientX, e.clientY]; clearTimeout(lpT); lpFired = false;
     getReactVid(h.host, 'rdDogsBelly', 'auto');
-    lpT = setTimeout(function () { lpT = 0; if (playReaction(h.host, 'rdDogsBelly')) lpDone = Date.now(); }, 600);
+    lpT = setTimeout(function () { lpT = 0; if (playReaction(h.host, 'rdDogsBelly')) lpFired = true; }, 600);
   }, { passive: true });
-  ['pointerup', 'pointercancel'].forEach(function (ev) { document.addEventListener(ev, function () { if (lpT) { clearTimeout(lpT); lpT = 0; } if (lpDone) lpDone = Date.now(); }, { passive: true }); });
+  ['pointerup', 'pointercancel'].forEach(function (ev) { document.addEventListener(ev, function () {
+    if (lpT) { clearTimeout(lpT); lpT = 0; }
+    if (lpFired) { lpFired = false; if (ev === 'pointerup') lpEat = Date.now(); }   /* съесть только клик этого нажатия */
+  }, { passive: true }); });
   document.addEventListener('pointermove', function (e) { if (lpT && lpXY && Math.abs(e.clientX - lpXY[0]) + Math.abs(e.clientY - lpXY[1]) > 14) { clearTimeout(lpT); lpT = 0; } }, { passive: true });
-  document.addEventListener('contextmenu', function (e) { if (heroAt(e) && heroAt(e).key === 'rdDogs' && reactionSrc('rdDogsBelly')) e.preventDefault(); });
+  document.addEventListener('contextmenu', function (e) { var h = heroAt(e); if (h && h.key === 'rdDogs') e.preventDefault(); });
+  document.addEventListener('selectstart', function (e) { var t = e.target; if (t && t.nodeType !== 1) t = t.parentNode; if (closest(t, '#rdDogs,.dogs')) e.preventDefault(); });
   function markHeroes() {
     Object.keys(HEROES).forEach(function (k) {
       var host = TEST ? document.querySelector('.dogs') : document.getElementById(k);
@@ -771,6 +811,11 @@
       if (t.foot) lane.style.bottom = '100%'; else lane.style.bottom = t.line + 'px';     /* футер: колёса стоят на верхней кромке плашки */
       lane.style.height = (t.h + 12) + 'px';
       t.host.appendChild(lane);
+      /* мотоциклист и все его ролики — над фотографиями: поднимаем слой полоски (и раздела, если он сам — контекст наложения) */
+      if (!TEST) t.host.style.zIndex = '1050';
+      if (!TEST) for (var pe = t.host.parentNode; pe && pe !== document.body && pe.nodeType === 1; pe = pe.parentNode) {
+        var pcs = getComputedStyle(pe); if (pcs.zIndex !== 'auto' && pcs.position !== 'static') { pe.style.zIndex = Math.max(+pcs.zIndex || 0, 50) + ''; pe.classList.add('rd-lane-up'); }
+      }
       var r = mkRider(lane, t.h), run = null, armed = true;
       function start() {
         var W = lane.clientWidth, rw = r.offsetWidth, dur = Math.max(3200, Math.min(5600, W * 4.1));
@@ -808,8 +853,25 @@
           (function poll() { if (my !== pend || !run || run !== me) return; if (go()) return; if (Date.now() - t0 < 2500) setTimeout(poll, 120); })();
         }
       }
+      /* долгое нажатие (550 мс, палец и мышь) — тоже падение (через раз обычное/дикое): на телефоне двойной тап зумит страницу.
+         Клик, которым закончилось долгое нажатие, гасится ровно один раз (флаг сбрасывается) */
+      var lastPT = 'mouse', lpR = 0, lpRXY = null, lpRFired = false, lpREat = 0;
+      function fallAlt() { var alt = (fallN++ % 2) && r._ride.has('fall2'); react(alt ? 'fall2' : 'fall'); }
+      r.addEventListener('pointerdown', function (e) {
+        lastPT = e.pointerType || 'mouse'; if (e.button > 0) return; lpRXY = [e.clientX, e.clientY]; lpRFired = false; clearTimeout(lpR);
+        lpR = setTimeout(function () { lpR = 0; lpRFired = true; if (clickT) { clearTimeout(clickT); clickT = 0; } fallAlt(); }, 550);
+      }, { passive: true });
+      document.addEventListener('pointermove', function (e) { if (lpR && lpRXY && Math.abs(e.clientX - lpRXY[0]) + Math.abs(e.clientY - lpRXY[1]) > 14) { clearTimeout(lpR); lpR = 0; } }, { passive: true });
+      ['pointerup', 'pointercancel'].forEach(function (ev) { document.addEventListener(ev, function () {
+        if (lpR) { clearTimeout(lpR); lpR = 0; }
+        if (lpRFired) { lpRFired = false; if (ev === 'pointerup') lpREat = Date.now(); }
+      }, { passive: true }); });
+      r.addEventListener('contextmenu', function (e) { e.preventDefault(); });
       r.addEventListener('click', function (e) {
         e.preventDefault(); e.stopPropagation();
+        if (lpREat) { var fr = Date.now() - lpREat < 800; lpREat = 0; if (fr) return; }
+        /* палец: двойного тапа нет (он остаётся родным зумом страницы) — тап сразу встаёт на заднее колесо, падение — долгим нажатием */
+        if (lastPT === 'touch') { if (r._ride.has('wheelie')) react('wheelie'); return; }
         if (clickT) { clearTimeout(clickT); clickT = 0;              /* двойной */
           var alt = (fallN++ % 2) && r._ride.has('fall2'); react(alt ? 'fall2' : 'fall'); return; }
         clickT = setTimeout(function () { clickT = 0; if (r._ride.has('wheelie')) react('wheelie'); }, 280);

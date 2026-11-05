@@ -89,7 +89,7 @@
   var EN = "qwertyuiop[]asdfghjkl;'zxcvbnm,.`", RU = 'йцукенгшщзхъфывапролджэячсмитьбюё';
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var mobile = Math.min(screen.width, innerWidth) <= 640;
-  var mode = null, cv = null, ctx = null, W = 0, H = 0, DPR = 1, parts = [], raf = 0, tint = null, last = 0, t0 = 0, dogImgs = null, extra = [], hiName = '';
+  var mode = null, cv = null, ctx = null, W = 0, H = 0, DPR = 1, parts = [], raf = 0, tint = null, last = 0, t0 = 0, dogImgs = null, extra = [], hiName = '', lit = false, tintT = 0, offBtn = null;
 
   function ensure() {
     if (cv) return;
@@ -291,7 +291,7 @@
         else if (p.k === 'c') { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.scale(1, Math.cos(p.sw * 2)); ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.strokeStyle = 'rgba(0,0,0,.15)'; ctx.lineWidth = .6; ctx.strokeRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore(); }
         else if (p.k === 'l') lilac(p); else egg(p);
       } else if (p.k === 's') {
-        ctx.globalAlpha = .45 + .45 * Math.sin(t * p.sp + p.ph); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.28); ctx.fill();
+        ctx.globalAlpha = .45 + .45 * Math.sin(t * p.sp + p.ph); ctx.fillStyle = lit ? '#7f95c4' : '#fff'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.28); ctx.fill();
       } else if (p.k === 'b') {
         p.x += p.vx * dt; if (p.x < -80 || p.x > W + 80) parts[i] = bat(); batShape(p, t);
       } else if (p.k === 'd') {
@@ -323,9 +323,32 @@
   /* ---------- DOM-эффекты: поздравление, «бегущая надпись», розыгрыш 1 апреля ---------- */
   function clearExtra() { extra.forEach(function (n) { if (n.parentNode) n.parentNode.removeChild(n); }); extra = []; document.documentElement.classList.remove('rd-prank'); }
   function greet(txt) {
-    var b = document.createElement('div'); b.className = 'rd-hi'; b.setAttribute('role', 'status'); b.textContent = txt; b.title = 'Скрыть';
+    var b = document.createElement('div'); b.className = 'rd-hi'; b.style.top = belowMenu() + 'px'; b.setAttribute('role', 'status'); b.textContent = txt; b.title = 'Скрыть';
     b.addEventListener('click', function () { b.classList.remove('on'); }); document.body.appendChild(b); extra.push(b);
     requestAnimationFrame(function () { b.classList.add('on'); }); setTimeout(function () { b.classList.remove('on'); }, 9000);
+  }
+  function belowMenu() {                                       /* поздравление — ниже верхнего меню */
+    var y = 14, mn = document.querySelector('#wb_element_instance0 .hmenu, #wb_element_instance0, header, .topbar, nav');
+    try { if (mn) { var r = mn.getBoundingClientRect(); if (r.bottom > 0 && r.top < 120) y = Math.max(y, Math.round(r.bottom) + 10); } } catch (e) {}
+    return Math.min(y, 140);
+  }
+  /* кнопка «Выключить праздник» над «Семья Рудик» */
+  function titleEl() { return document.querySelector('#wb_element_instance39') || document.querySelector('#wb_element_instance37, h1.t-home'); }
+  function offPill(m) {
+    if (!m) { if (offBtn) offBtn.classList.remove('on'); return; }
+    var t = titleEl(); if (!t) return;
+    if (!offBtn) {
+      offBtn = document.createElement('button'); offBtn.type = 'button'; offBtn.className = 'rd-holoff'; offBtn.textContent = 'Выключить праздник';
+      offBtn.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); set(null, 'user'); });
+      document.body.appendChild(offBtn); addEventListener('resize', placeOff, { passive: true });
+    }
+    offBtn.textContent = MODES[m].g === 'h' ? 'Выключить праздник' : 'Выключить режим';
+    placeOff(); requestAnimationFrame(function () { offBtn.classList.add('on'); });
+  }
+  function placeOff() {
+    var t = titleEl(); if (!t || !offBtn) return; var r = t.getBoundingClientRect();
+    offBtn.style.left = Math.round(r.left + scrollX + r.width / 2) + 'px';
+    offBtn.style.top = Math.max(2, Math.round(r.top + scrollY - 13)) + 'px';
   }
   function crawl() {
     var w = document.createElement('div'); w.className = 'rd-crawl'; w.setAttribute('aria-hidden', 'true');
@@ -343,9 +366,13 @@
     mode = m; clearExtra();
     if (how === 'user') { try { sessionStorage.setItem('rdMode', m || 'off'); } catch (e) {} }
     document.documentElement.setAttribute('data-rd-mode', m || '');
+    clearTimeout(tintT); offPill(m);
     if (!m) { stop(); if (cv) { ctx.clearRect(0, 0, W, H); cv.style.display = 'none'; tint.style.opacity = '0'; } if (how === 'user') toast('Обычный режим'); return; }
     var M = MODES[m]; ensure(); cv.style.display = ''; size(); setup(); t0 = performance.now(); stop();
+    /* затемнение — только первые ~10 с, затем плавно уходит (эффекты остаются, сайт снова светлый) */
+    clearTimeout(tintT); lit = false; tint.style.transition = 'opacity .6s'; document.documentElement.classList.remove('rd-fx-lit');
     tint.style.background = M.tint || 'transparent'; tint.style.opacity = M.tint ? '1' : '0';
+    if (M.tint) tintT = setTimeout(function () { tint.style.transition = 'opacity 3s ease'; tint.style.opacity = '0'; lit = true; document.documentElement.classList.add('rd-fx-lit'); }, reduce ? 4000 : 10000);
     if (reduce) frame(performance.now()); else run();
     M.L.forEach(function (o) { if (o[0] === 'crawl') crawl(); if (o[0] === 'prank') prank(); });
     if (M.hi) greet(m === 'bday' && hiName ? 'С днём рождения, ' + hiName + '!' : M.hi);
@@ -409,6 +436,17 @@
       el.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); menu && menu.classList.contains('on') ? closeMenu() : openMenu(el); });
     });
   }
+  /* долгое нажатие (600 мс) на «Семья Рудик» — тот же выбор режима. Клик, которым закончилось нажатие, гасим ровно один раз */
+  var tlT = 0, tlXY = null, tlEat = 0, tlFired = false;
+  function onTitle(e) { var t = titleEl(); if (!t) return false; var r = t.getBoundingClientRect(); return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom; }
+  document.addEventListener('pointerdown', function (e) {
+    if (e.button > 0 || !onTitle(e)) return; tlXY = [e.clientX, e.clientY]; tlFired = false; clearTimeout(tlT);
+    tlT = setTimeout(function () { tlT = 0; tlFired = true; openMenu(titleEl()); }, 600);
+  }, { passive: true });
+  document.addEventListener('pointermove', function (e) { if (tlT && tlXY && Math.abs(e.clientX - tlXY[0]) + Math.abs(e.clientY - tlXY[1]) > 14) { clearTimeout(tlT); tlT = 0; } }, { passive: true });
+  ['pointerup', 'pointercancel'].forEach(function (ev) { document.addEventListener(ev, function () { if (tlT) { clearTimeout(tlT); tlT = 0; } if (tlFired) { tlFired = false; if (ev === 'pointerup') tlEat = Date.now(); } }, { passive: true }); });
+  addEventListener('click', function (e) { if (tlEat) { var f = Date.now() - tlEat < 800; tlEat = 0; if (f) { e.stopPropagation(); e.preventDefault(); } } }, true);
+  document.addEventListener('contextmenu', function (e) { if (onTitle(e)) e.preventDefault(); });
   var inited = false;
   function init() {
     markCopy(); if (inited) return; inited = true;

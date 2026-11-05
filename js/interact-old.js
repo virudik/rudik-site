@@ -216,6 +216,9 @@
       /* после взлёта (out, с) корабль подменяется прозрачным спрайтом и летает по разделу; перед посадкой (in, с) снова подхватывает ролик */
       fly: { out: 1.25, in: 4.25, a: '/video/reactions/roskotmos-ship-fly-a.webp?v=1', b: '/video/reactions/roskotmos-ship-fly-b.webp?v=1' } },
     rdDogs: { src: '/video/reactions/dogs-react.mp4?v=1', ret: 7.458 },   /* в /test/ ключ тот же: dogs */
+    /* долгое нажатие на собак — ложатся на спину, чешем пузико. Заглушка: src пустой → ничего не происходит.
+       Подключить: src: '/video/reactions/dogs-belly.mp4?v=1' (кадр петли dogs-loop.mp4, как dogs-react), ret — кадр возврата */
+    rdDogsBelly: { src: '/img/dogs-belly-react.mp4?v=2', ret: 0.0 },
   };
   var FADE_IN = 200, FADE_OUT = 450;
   function reactionCfg(key) {
@@ -227,9 +230,9 @@
   function getReactVid(host, key, preload) {
     var c = reactionCfg(key); if (!c) return null;
     var loop = host.querySelector('video:not(.rd-react)'); if (!loop) return null;
-    var rv = host._rdVid;
+    var rvs = host._rdVids || (host._rdVids = {}), rv = rvs[key];
     if (!rv) {
-      rv = host._rdVid = document.createElement('video');
+      rv = rvs[key] = document.createElement('video');
       rv.className = loop.className + ' rd-react'; rv.muted = true; rv.defaultMuted = true; rv.playsInline = true;
       rv.setAttribute('playsinline', ''); rv.setAttribute('muted', ''); rv.preload = preload || 'auto';
       rv.setAttribute('aria-hidden', 'true'); rv.tabIndex = -1; rv.src = c.src; host.appendChild(rv);
@@ -417,10 +420,30 @@
     });
     return out;
   }
+  var lpDone = 0, lpT = 0, lpXY = null;
   document.addEventListener('click', function (e) {
     var t = e.target; if (closest(t, 'a[href],button,input,.pswp')) return;
-    var h = heroAt(e); if (h) playReaction(h.host, h.key);
-  });
+    if (Date.now() - lpDone < 500) { e.stopPropagation(); return; }   /* клик после долгого нажатия не считается */
+    var h = heroAt(e); if (h && playReaction(h.host, h.key) && h.key === 'rdDogs') bark();
+  }, true);
+  /* лай при клике по собакам (звук только по клику — жест пользователя). CC0: SFXMint «Playful Dog Barking 41», audio/LICENSES.txt */
+  var barkA = null;
+  function bark() {
+    try {
+      if (!barkA) { barkA = new Audio(); var ogg = barkA.canPlayType('audio/ogg; codecs="opus"'); barkA.src = ogg ? '/audio/dog-bark.ogg?v=1' : '/audio/dog-bark.m4a?v=1'; barkA.volume = 0.45; }
+      barkA.currentTime = 0; var pp = barkA.play(); if (pp && pp.catch) pp.catch(function () {});
+    } catch (x) {}
+  }
+  /* долгое нажатие (~600 мс, мышь и палец) на собак — реакция «пузико» */
+  document.addEventListener('pointerdown', function (e) {
+    var h = heroAt(e); if (!h || h.key !== 'rdDogs' || !reactionSrc('rdDogsBelly')) return;
+    lpXY = [e.clientX, e.clientY]; clearTimeout(lpT);
+    getReactVid(h.host, 'rdDogsBelly', 'auto');
+    lpT = setTimeout(function () { lpT = 0; if (playReaction(h.host, 'rdDogsBelly')) lpDone = Date.now(); }, 600);
+  }, { passive: true });
+  ['pointerup', 'pointercancel'].forEach(function (ev) { document.addEventListener(ev, function () { if (lpT) { clearTimeout(lpT); lpT = 0; } if (lpDone) lpDone = Date.now(); }, { passive: true }); });
+  document.addEventListener('pointermove', function (e) { if (lpT && lpXY && Math.abs(e.clientX - lpXY[0]) + Math.abs(e.clientY - lpXY[1]) > 14) { clearTimeout(lpT); lpT = 0; } }, { passive: true });
+  document.addEventListener('contextmenu', function (e) { if (heroAt(e) && heroAt(e).key === 'rdDogs' && reactionSrc('rdDogsBelly')) e.preventDefault(); });
   function markHeroes() {
     Object.keys(HEROES).forEach(function (k) {
       var host = TEST ? document.querySelector('.dogs') : document.getElementById(k);
@@ -575,7 +598,13 @@
      Safari/iOS не показывают альфу в webm → там mp4 «цвет слева | маска справа» склеивается на canvas (как космос в loops.js).
      Если видео не стартует (экономия трафика, автоплей запрещён, ошибка) — показываем статичный кадр того же байка. */
   var RIDE = { webm: '/img/vitalik-ride.webm?v=2', sbs: '/img/vitalik-ride-sbs.mp4?v=2', still: '/img/vitalik-ride-still.webp?v=2', w: 578, h: 440 };
-  var FALL = { webm: '/img/vitalik-fall.webm?v=1', sbs: '/img/vitalik-fall-sbs.mp4?v=1', w: 726, h: 574, x: 132, y: 81 };   /* падение: кадр проезда 578×440 лежит в нём с отступом x,y */
+  /* Реакции мотоциклиста. w,h — размер холста ролика; x,y — где в нём лежит кадр проезда 578×440; move — продолжать ехать во время ролика.
+     ready:false — ролика ещё нет (заглушка): просто едем дальше. Чтобы подключить — положить файлы и поставить ready:true (или window.RUDIK_RIDER_FX). */
+  var RIDER_FX = window.RUDIK_RIDER_FX || {
+    fall:    { ready: true,  webm: '/img/vitalik-fall.webm?v=1',    sbs: '/img/vitalik-fall-sbs.mp4?v=1',    w: 726, h: 574, x: 132, y: 81 },
+    fall2:   { ready: true,  webm: '/img/vitalik-fall2.webm?v=1',   sbs: '/img/vitalik-fall2-sbs.mp4?v=1',   w: 722, h: 538, x: 94, y: 51 },   /* «дикое» падение */
+    wheelie: { ready: true,  webm: '/img/vitalik-wheelie.webm?v=1', sbs: '/img/vitalik-wheelie-sbs.mp4?v=1', w: 610, h: 492, x: 25, y: 43, move: true, stopAt: 0.7, resumeAt: 6.75 }   /* встал на дыбы (0.7 с) — стоит; приземлился (6.75 с) — уезжает */
+  };
   var RIDE_H = 260;                                                    /* высота мотоциклиста на странице, px — как у рыжей собаки (~270) */
   var UA = navigator.userAgent || '';
   var NO_WEBM_ALPHA = /iP(hone|ad|od)/.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
@@ -648,55 +677,63 @@
         BLOCKED.add(api); if (running || !quiet) showWait(); armGesture();
       });
     }
-    /* ---- реакция на клик: падение (отдельное видео, грузится лениво при наведении/касании/клике) ---- */
-    var sc = h / RIDE.h, fw = Math.round(FALL.w * sc), fh = Math.round(FALL.h * sc);
-    var fbox = document.createElement('div'); fbox.className = 'rd-fall';
-    fbox.style.cssText = 'left:' + (-Math.round(FALL.x * sc)) + 'px;top:' + (-Math.round(FALL.y * sc)) + 'px;width:' + fw + 'px;height:' + fh + 'px';
-    var fv = document.createElement('video'); fv.muted = true; fv.defaultMuted = true; fv.playsInline = true; fv.preload = 'none';
-    fv.setAttribute('playsinline', ''); fv.setAttribute('muted', ''); fv.setAttribute('aria-hidden', 'true'); fv.tabIndex = -1;
-    var fcv = null, fctx = null, fbuf = null, fbx = null, fLoaded = false, fDead = false, falling = false, fOn = false;
-    if (NO_WEBM_ALPHA) {
-      fv.className = 'rd-rv-src'; fcv = document.createElement('canvas'); fcv.width = FALL.w; fcv.height = FALL.h; fctx = fcv.getContext('2d');
-      fbuf = document.createElement('canvas'); fbuf.width = FALL.w * 2; fbuf.height = FALL.h; fbx = fbuf.getContext('2d', { willReadFrequently: true });
-      fbox.appendChild(fv); fbox.appendChild(fcv);
-    } else fbox.appendChild(fv);
-    r.appendChild(fbox);
-    function fdraw() {
-      if (!fbx || fv.readyState < 2) return;
-      fbx.drawImage(fv, 0, 0, FALL.w * 2, FALL.h);
-      var c = fbx.getImageData(0, 0, FALL.w, FALL.h), a = fbx.getImageData(FALL.w, 0, FALL.w, FALL.h), d = c.data, m = a.data;
-      for (var i = 0, n = d.length; i < n; i += 4) d[i + 3] = m[i];
-      fctx.putImageData(c, 0, 0);
+    /* ---- реакции (падение, дикое падение, на заднем колесе): отдельные ролики, грузятся лениво ---- */
+    var sc = h / RIDE.h, FX = {}, cur = null;
+    function mkFx(cfg) {
+      var o = { cfg: cfg, loaded: false, dead: !cfg || !cfg.ready };
+      if (o.dead) return o;
+      var box = o.box = document.createElement('div'); box.className = 'rd-fall';
+      box.style.cssText = 'left:' + (-Math.round(cfg.x * sc)) + 'px;top:' + (-Math.round(cfg.y * sc)) + 'px;width:' + Math.round(cfg.w * sc) + 'px;height:' + Math.round(cfg.h * sc) + 'px';
+      var fv = o.v = document.createElement('video'); fv.muted = true; fv.defaultMuted = true; fv.playsInline = true; fv.preload = 'none';
+      fv.setAttribute('playsinline', ''); fv.setAttribute('muted', ''); fv.setAttribute('aria-hidden', 'true'); fv.tabIndex = -1;
+      if (NO_WEBM_ALPHA) {
+        fv.className = 'rd-rv-src'; o.cv = document.createElement('canvas'); o.cv.width = cfg.w; o.cv.height = cfg.h; o.ctx = o.cv.getContext('2d');
+        var bb = document.createElement('canvas'); bb.width = cfg.w * 2; bb.height = cfg.h; o.bx = bb.getContext('2d', { willReadFrequently: true });
+        box.appendChild(fv); box.appendChild(o.cv);
+      } else box.appendChild(fv);
+      r.appendChild(box);
+      fv.addEventListener('error', function () { o.dead = true; if (cur === o) fEnd(); });
+      fv.addEventListener('ended', function () { if (cur === o) fEnd(); });
+      return o;
     }
-    function ftick() { if (!falling || !fbx) return; fdraw(); if (fv.requestVideoFrameCallback) fv.requestVideoFrameCallback(ftick); else requestAnimationFrame(ftick); }
-    function fLoad() { if (fLoaded || fDead) return; fLoaded = true; fv.preload = 'auto'; fv.src = NO_WEBM_ALPHA ? FALL.sbs : FALL.webm; fv.load(); }
-    fv.addEventListener('error', function () { fDead = true; if (falling) fEnd(); });
+    function fx(name) { if (!(name in FX)) FX[name] = mkFx(RIDER_FX[name]); return FX[name]; }
+    function fdraw(o) {
+      if (!o.bx || o.v.readyState < 2) return; var w = o.cfg.w, hh = o.cfg.h;
+      o.bx.drawImage(o.v, 0, 0, w * 2, hh);
+      var c = o.bx.getImageData(0, 0, w, hh), a = o.bx.getImageData(w, 0, w, hh), d = c.data, m = a.data;
+      for (var i = 0, n = d.length; i < n; i += 4) d[i + 3] = m[i];
+      o.ctx.putImageData(c, 0, 0);
+    }
+    function ftick() { var o = cur; if (!o || !o.bx) return; fdraw(o); if (o.v.requestVideoFrameCallback) o.v.requestVideoFrameCallback(ftick); else requestAnimationFrame(ftick); }
+    function fLoad(name) { var o = fx(name); if (o.loaded || o.dead) return; o.loaded = true; o.v.preload = 'auto'; o.v.src = NO_WEBM_ALPHA ? o.cfg.sbs : o.cfg.webm; o.v.load(); }
     var onFallEnd = null;
+    function fClear(o) { r.classList.remove('rd-falling'); if (o && o.box) o.box.classList.remove('on'); if (r.parentNode) r.parentNode.classList.remove('rd-lane-fall'); }
     function fEnd() {
-      if (!falling) return; falling = false; r.classList.remove('rd-falling'); if (r.parentNode) r.parentNode.classList.remove('rd-lane-fall');
-      try { fv.pause(); } catch (e) {}
+      var o = cur; if (!o) return; cur = null; fClear(o);
+      try { o.v.pause(); } catch (e) {}
       try { v.currentTime = 0; } catch (e) {}
       if (running && !dead) tryPlay(false);
-      if (onFallEnd) onFallEnd();
+      var cb = onFallEnd; onFallEnd = null; if (cb) cb();
     }
-    fv.addEventListener('ended', fEnd);
-    /* стартуем падение только когда кадр готов — иначе просто едем дальше */
-    function fStart(cb) {
-      if (falling || fDead || dead || wait) return false;
-      fLoad();
-      if (fv.readyState < 3) { return false; }
-      falling = true; onFallEnd = cb;
-      try { fv.currentTime = 0; } catch (e) {}
-      var p; try { p = fv.play(); } catch (e) { p = null; }
+    /* стартуем ролик только когда он готов — иначе false (едем дальше) */
+    function fStart(name, cb) {
+      if (cur || dead || wait) return false;
+      var o = fx(name); if (o.dead) return false;
+      fLoad(name);
+      if (o.v.readyState < 3) return false;
+      cur = o; onFallEnd = cb;
+      try { o.v.currentTime = 0; } catch (e) {}
+      var p; try { p = o.v.play(); } catch (e) { p = null; }
       var shown = false;
-      function show() { if (shown || !falling) return; shown = true; r.classList.add('rd-falling'); if (r.parentNode) r.parentNode.classList.add('rd-lane-fall'); try { v.pause(); } catch (e) {} }
-      if (fbx) { fdraw(); ftick(); }
-      if (fv.requestVideoFrameCallback) fv.requestVideoFrameCallback(show); else setTimeout(show, 30);
-      if (p && p.catch) p.catch(function () { falling = false; onFallEnd = null; r.classList.remove('rd-falling'); if (r.parentNode) r.parentNode.classList.remove('rd-lane-fall'); cb && cb(true); });
+      function show() { if (shown || cur !== o) return; shown = true; o.box.classList.add('on'); r.classList.add('rd-falling'); if (r.parentNode) r.parentNode.classList.add('rd-lane-fall'); try { v.pause(); } catch (e) {} }
+      if (o.bx) { fdraw(o); ftick(); }
+      if (o.v.requestVideoFrameCallback) o.v.requestVideoFrameCallback(show); else setTimeout(show, 30);
+      if (p && p.catch) p.catch(function () { if (cur !== o) return; cur = null; onFallEnd = null; fClear(o); cb && cb(true); });
       return true;
     }
-    r.addEventListener('pointerenter', fLoad, { passive: true });
-    r.addEventListener('touchstart', fLoad, { passive: true });
+    function preloadAll() { ['fall', 'fall2', 'wheelie'].forEach(fLoad); }
+    r.addEventListener('pointerenter', preloadAll, { passive: true });
+    r.addEventListener('touchstart', preloadAll, { passive: true });
     v.addEventListener('error', fail);
     v.addEventListener('playing', function () { BLOCKED.delete(api); if (running) hideWait(); });
     r._ride = api = {
@@ -710,8 +747,10 @@
       rewind: function () { if (!dead && loaded) { try { v.currentTime = 0; } catch (e) {} } },
       retry: function (quiet) { if (dead) return; this.load(); tryPlay(quiet); if (bx && running) { draw(); tick(); } },
       isRunning: function () { return running; },
-      fall: fStart, fallLoad: fLoad, isFalling: function () { return falling; },
-      fallPause: function () { if (falling) fv.pause(); }, fallPlay: function () { if (falling) fv.play().catch(function () {}); }
+      fall: fStart, fallStop: fEnd, fallLoad: fLoad, isFalling: function () { return !!cur; }, has: function (n) { return !fx(n).dead; },
+      fxTime: function () { return cur ? cur.v.currentTime : -1; },
+      moving: function () { return !!(cur && cur.cfg.move); },
+      fallPause: function () { if (cur) cur.v.pause(); }, fallPlay: function () { if (cur) cur.v.play().catch(function () {}); }
     };
     lane.appendChild(r); return r;
   }
@@ -738,7 +777,7 @@
         lane.classList.add('go'); r._ride.rewind(); r._ride.play();
         var me = r.animate([{ transform: 'translateX(' + (-rw - 10) + 'px)' }, { transform: 'translateX(' + (W + 10) + 'px)' }], { duration: dur, easing: 'cubic-bezier(.2,.35,.8,.7)' });
         run = me;
-        me.onfinish = me.oncancel = function () { if (run !== me) return; run = null; lane.classList.remove('go'); r._ride.pause(); };
+        me.onfinish = me.oncancel = function () { if (run !== me) return; run = null; if (r._ride.isFalling()) r._ride.fallStop(); lane.classList.remove('go'); r._ride.pause(); };
       }
       /* клик по полоске (и по всей плашке футера, кроме ссылок/иконок) — проезд ещё раз; если он уже идёт — стартует заново */
       function again() {
@@ -746,30 +785,44 @@
         armed = false; start();
       }
       var watch = t.host;                                            /* за чем следим: за самой полоской, а не за всем (высоким) разделом */
-      /* клик/тап по самому едущему мотоциклисту — он падает, ругается, поднимает байк и едет дальше */
-      var pend = 0;
-      r.addEventListener('click', function (e) {
-        e.preventDefault(); e.stopPropagation();
+      /* по едущему мотоциклисту: один клик — на заднее колесо (wheelie), двойной — падение (через раз обычное / дикое) */
+      var pend = 0, clickT = 0, fallN = 0;
+      function react(name) {
         if (!run || r._ride.isFalling()) return;
         var me = run;
         function go() {
           if (run !== me || r._ride.isFalling()) return false;
-          me.pause();
-          if (!r._ride.fall(function () { if (run === me) me.play(); })) { me.play(); return false; }
+          var mv = RIDER_FX[name] && RIDER_FX[name].move;
+          if (!mv) me.pause();
+          var cf = RIDER_FX[name] || {}, iv = 0, st = 0;              /* stopAt/resumeAt: стоим на месте между этими моментами ролика */
+          if (!r._ride.fall(name, function () { clearInterval(iv); if (run === me && (!mv || st === 1)) me.play(); })) { if (!mv) me.play(); return false; }
+          if (mv && cf.stopAt != null) iv = setInterval(function () {
+            var tt = r._ride.fxTime(); if (tt < 0 || run !== me) { clearInterval(iv); return; }
+            if (st === 0 && tt >= cf.stopAt) { st = 1; me.pause(); }
+            if (st === 1 && tt >= (cf.resumeAt || 1e9)) { st = 2; me.play(); clearInterval(iv); }
+          }, 40);
           return true;
         }
-        if (!go()) {                                                   /* ещё грузится — едем; если успеет догрузиться за 2,5 с — падаем */
-          r._ride.fallLoad(); var my = ++pend, t0 = Date.now();
+        if (!go()) {                                                   /* ещё грузится — едем; если успеет догрузиться за 2,5 с — играем */
+          r._ride.fallLoad(name); var my = ++pend, t0 = Date.now();
           (function poll() { if (my !== pend || !run || run !== me) return; if (go()) return; if (Date.now() - t0 < 2500) setTimeout(poll, 120); })();
         }
+      }
+      r.addEventListener('click', function (e) {
+        e.preventDefault(); e.stopPropagation();
+        if (clickT) { clearTimeout(clickT); clickT = 0;              /* двойной */
+          var alt = (fallN++ % 2) && r._ride.has('fall2'); react(alt ? 'fall2' : 'fall'); return; }
+        clickT = setTimeout(function () { clickT = 0; if (r._ride.has('wheelie')) react('wheelie'); }, 280);
       });
+      r.addEventListener('dblclick', function (e) { e.preventDefault(); e.stopPropagation(); try { getSelection().removeAllRanges(); } catch (x) {} });
+      r.addEventListener('mousedown', function (e) { if (e.detail > 1) e.preventDefault(); });   /* двойной клик не выделяет страницу */
       if (t.hit) {
         var hit = document.createElement('div'); hit.className = 'rd-hit'; hit.setAttribute('aria-hidden', 'true'); t.host.appendChild(hit); watch = hit;
         hit.addEventListener('click', function (e) { e.preventDefault(); again(); });
       }
       if (t.click) {
         t.host.classList.add('rd-hitfoot');
-        t.host.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('a, button, input, textarea, select, label, [role="button"]')) return; again(); });
+        t.host.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('a, button, input, textarea, select, label, [role="button"], .rd-copy')) return; again(); });
       }
       var top = t.foot ? 160 : Math.min(t.h + 36, Math.round(innerHeight * .5)), bot = t.foot ? 40 : TEST ? 60 : Math.min(130, Math.round(innerHeight * .25));   /* /test/: последний раздел упирается в низ страницы */
       inView(watch, function (v) { if (v) r._ride.load(); }, { threshold: 0, rootMargin: '700px 0px' });   /* подгружаем заранее */

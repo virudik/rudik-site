@@ -1,1 +1,2 @@
 dog-bark: SFXMint "Playful Dog Barking 41", CC0 1.0, https://sfxmint.com/sounds/animal-dog-bark-41
+dog-small.*, dog-big.*: derived (trimmed single bark, pitch-shifted) from dog-bark.ogg — SFXMint «Playful Dog Barking 41», CC0.
