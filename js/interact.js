@@ -542,12 +542,54 @@
   }
 
   /* ---------- Виталик на Yamaha V-Max 1200 проезжает по разделителю от начала до конца ---------- */
-  var RIDER = '/img/vitalik-vmax.webp?v=2';
+  /* Анимация: зацикленное видео с прозрачностью (img/vitalik-ride.webm, VP9+alpha — Chrome, Edge, Firefox).
+     Safari/iOS не показывают альфу в webm → там mp4 «цвет слева | маска справа» склеивается на canvas (как космос в loops.js).
+     Если видео не стартует (экономия трафика, автоплей запрещён, ошибка) — показываем статичный кадр того же байка. */
+  var RIDE = { webm: '/img/vitalik-ride.webm?v=1', sbs: '/img/vitalik-ride-sbs.mp4?v=1', still: '/img/vitalik-ride-still.webp?v=1', w: 394, h: 300 };
+  var UA = navigator.userAgent || '';
+  var NO_WEBM_ALPHA = /iP(hone|ad|od)/.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
+                      (/Safari\//.test(UA) && !/Chrome|Chromium|CriOS|Edg|OPR|Android|Firefox|FxiOS/.test(UA));
   function mkRider(lane, h) {
-    var r = document.createElement('div'); r.className = 'rd-rider'; r.style.height = h + 'px'; r.style.width = Math.round(h * 312 / 300) + 'px';
-    var im = document.createElement('img'); im.src = RIDER; im.alt = ''; im.draggable = false; im.decoding = 'async';
-    var dust = document.createElement('i'); dust.className = 'rd-dust';
-    r.appendChild(dust); r.appendChild(im); lane.appendChild(r); return r;
+    var r = document.createElement('div'); r.className = 'rd-rider'; r.style.height = h + 'px'; r.style.width = Math.round(h * RIDE.w / RIDE.h) + 'px';
+    var dust = document.createElement('i'); dust.className = 'rd-dust'; r.appendChild(dust);
+    var v = document.createElement('video'); v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true; v.preload = 'none'; v.setAttribute('playsinline', ''); v.setAttribute('muted', '');
+    v.setAttribute('aria-hidden', 'true'); v.tabIndex = -1; v.disableRemotePlayback = true;
+    var cv = null, ctx = null, bx = null, buf = null, running = false, loaded = false, dead = false;
+    if (NO_WEBM_ALPHA) {
+      v.className = 'rd-rv-src';
+      cv = document.createElement('canvas'); cv.className = 'rd-rv'; cv.width = RIDE.w; cv.height = RIDE.h; ctx = cv.getContext('2d');
+      buf = document.createElement('canvas'); buf.width = RIDE.w * 2; buf.height = RIDE.h; bx = buf.getContext('2d', { willReadFrequently: true });
+      r.appendChild(v); r.appendChild(cv);
+    } else { v.className = 'rd-rv'; r.appendChild(v); }
+    function draw() {
+      if (!bx || v.readyState < 2) return;
+      bx.drawImage(v, 0, 0, RIDE.w * 2, RIDE.h);
+      var c = bx.getImageData(0, 0, RIDE.w, RIDE.h), a = bx.getImageData(RIDE.w, 0, RIDE.w, RIDE.h), d = c.data, m = a.data;
+      for (var i = 0, n = d.length; i < n; i += 4) d[i + 3] = m[i];
+      ctx.putImageData(c, 0, 0);
+    }
+    function tick() {
+      if (!running || !bx) return;
+      draw();
+      if (v.requestVideoFrameCallback) v.requestVideoFrameCallback(tick); else requestAnimationFrame(tick);
+    }
+    function fail() {
+      if (dead) return; dead = true; running = false; try { v.pause(); } catch (e) {}
+      [v, cv].forEach(function (n) { if (n && n.parentNode) n.parentNode.removeChild(n); });
+      var im = document.createElement('img'); im.className = 'rd-still'; im.src = RIDE.still; im.alt = ''; im.draggable = false; im.decoding = 'async'; r.appendChild(im);
+    }
+    v.addEventListener('error', fail);
+    r._ride = {
+      load: function () { if (loaded || dead) return; loaded = true; v.src = NO_WEBM_ALPHA ? RIDE.sbs : RIDE.webm; v.load(); },
+      play: function () {
+        if (dead) return; this.load(); running = true;
+        var p = v.play(); if (p && p.catch) p.catch(fail);
+        if (bx) { draw(); tick(); }
+      },
+      pause: function () { running = false; if (!dead) v.pause(); },
+      rewind: function () { if (!dead && loaded) { try { v.currentTime = 0; } catch (e) {} } }
+    };
+    lane.appendChild(r); return r;
   }
   function initRiders() {
     if (reduce) return;
@@ -558,20 +600,26 @@
       [38, 74, 92, 105, 127, 201, 9001].forEach(function (n) { var el = document.getElementById('wb_element_instance' + n); if (el) targets.push({ host: el, h: 148, line: 14 }); });
     }
     targets.forEach(function (t) {
+      if (t.host.querySelector(':scope > .rd-lane')) return;            /* init() вызывается дважды (DOMContentLoaded и load) */
       var lane = document.createElement('div'); lane.className = 'rd-lane'; lane.setAttribute('aria-hidden', 'true');
       lane.style.bottom = t.line + 'px'; lane.style.height = (t.h + 12) + 'px';
       t.host.appendChild(lane);
       var r = mkRider(lane, t.h), run = null, armed = true;
       function start() {
         var W = lane.clientWidth, rw = r.offsetWidth, dur = Math.max(3200, Math.min(5200, W * 4.1));
-        lane.classList.add('go');
+        lane.classList.add('go'); r._ride.rewind(); r._ride.play();
         run = r.animate([{ transform: 'translateX(' + (-rw - 10) + 'px)' }, { transform: 'translateX(' + (W + 10) + 'px)' }], { duration: dur, easing: 'cubic-bezier(.2,.35,.8,.7)' });
-        run.onfinish = run.oncancel = function () { run = null; lane.classList.remove('go'); };
+        run.onfinish = run.oncancel = function () { run = null; lane.classList.remove('go'); r._ride.pause(); };
       }
+      inView(t.host, function (v) { if (v) r._ride.load(); }, { threshold: 0, rootMargin: '700px 0px' });   /* подгружаем заранее */
       inView(t.host, function (v) {
-        if (v) { if (run) run.play(); else if (armed) { armed = false; start(); } }
-        else { if (run) run.pause(); else armed = true; }
+        if (v) { if (run) { run.play(); r._ride.play(); } else if (armed) { armed = false; start(); } }
+        else { if (run) { run.pause(); r._ride.pause(); } else armed = true; }
       }, { threshold: 0, rootMargin: '-160px 0px -130px 0px' });
+      document.addEventListener('visibilitychange', function () {
+        if (!run) return; if (document.hidden) { run.pause(); r._ride.pause(); } else if (host_visible()) { run.play(); r._ride.play(); }
+        function host_visible() { var b = t.host.getBoundingClientRect(); return b.bottom > 130 && b.top < innerHeight - 160; }
+      });
     });
   }
 
