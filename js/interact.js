@@ -799,7 +799,8 @@
           var alt = (fallN++ % 2) && r._ride.has('fall2'); react(alt ? 'fall2' : 'fall'); return; }
         clickT = setTimeout(function () { clickT = 0; if (r._ride.has('wheelie')) react('wheelie'); }, 280);
       });
-      r.addEventListener('dblclick', function (e) { e.preventDefault(); e.stopPropagation(); });
+      r.addEventListener('dblclick', function (e) { e.preventDefault(); e.stopPropagation(); try { getSelection().removeAllRanges(); } catch (x) {} });
+      r.addEventListener('mousedown', function (e) { if (e.detail > 1) e.preventDefault(); });   /* двойной клик не выделяет страницу */
       if (t.hit) {
         var hit = document.createElement('div'); hit.className = 'rd-hit'; hit.setAttribute('aria-hidden', 'true'); t.host.appendChild(hit); watch = hit;
         hit.addEventListener('click', function (e) { e.preventDefault(); again(); });

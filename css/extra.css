@@ -251,7 +251,7 @@ body.ii-in .ii-fab:hover { transform:translateY(-2px); }
 .rd-lane.go { visibility:visible; }
 .rd-rider { position:absolute; left:0; bottom:0; will-change:transform; }
 .rd-lane.go { z-index:5; }
-.rd-lane.go .rd-rider { pointer-events:auto; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.rd-lane.go .rd-rider { pointer-events:auto; cursor:pointer; -webkit-user-select:none; user-select:none; -webkit-tap-highlight-color:transparent; }
 .rd-lane.rd-lane-fall { overflow:visible; }
 .rd-rider .rd-fall { position:absolute; visibility:hidden; pointer-events:none; }
 .rd-rider .rd-fall video, .rd-rider .rd-fall canvas:not(.rd-rv-src) { display:block; width:100%; height:100%; }
