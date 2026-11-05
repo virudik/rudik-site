@@ -326,3 +326,6 @@ body.ii-in .ii-fab:hover { transform:translateY(-2px); }
 .rd-hitfoot a, .rd-hitfoot button { cursor:pointer; }
 /* тонкая линия над футером убрана: на её месте воздух, чтобы мотоциклисту хватило места над тёмной плашкой */
 .ii-line { border:0; margin:0; height:136px; width:100%; }
+/* автоплей заблокирован: пока видео не заиграло, показываем кадр-заглушку (повторные попытки — в interact.js) */
+.rd-rider.rd-wait .rd-rv, .rd-rider.rd-wait canvas.rd-rv { opacity:0; }
+.rd-rider .rd-still-wait { position:absolute; left:0; top:0; }

@@ -550,6 +550,21 @@
   var UA = navigator.userAgent || '';
   var NO_WEBM_ALPHA = /iP(hone|ad|od)/.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
                       (/Safari\//.test(UA) && !/Chrome|Chromium|CriOS|Edg|OPR|Android|Firefox|FxiOS/.test(UA));
+  var BLOCKED = []; BLOCKED.add = function (x) { if (this.indexOf(x) < 0) this.push(x); }; BLOCKED.has = function (x) { return this.indexOf(x) >= 0; };
+  BLOCKED.delete = function (x) { var i = this.indexOf(x); if (i >= 0) this.splice(i, 1); };
+  var gestureArmed = false, lastTry = 0;
+  /* первое касание / клик / клавиша / скролл: в обработчике жеста браузер разрешает play(), поэтому повторяем для всех заблокированных;
+     скролл — тихая повторная попытка (на случай, если политика автоплея сменилась) */
+  function onGesture(e) {
+    if (!BLOCKED.length) return;
+    var now = Date.now(); if (e.type === 'scroll' && now - lastTry < 700) return; lastTry = now;
+    BLOCKED.slice().forEach(function (x) { x.retry(!x.isRunning()); });
+  }
+  function armGesture() {
+    if (gestureArmed) return; gestureArmed = true;
+    ['pointerdown', 'touchstart', 'touchend', 'keydown', 'click', 'wheel'].forEach(function (ev) { document.addEventListener(ev, onGesture, { passive: true, capture: true }); });
+    window.addEventListener('scroll', onGesture, { passive: true });
+  }
   function mkRider(lane, h) {
     var r = document.createElement('div'); r.className = 'rd-rider'; r.style.height = h + 'px'; r.style.width = Math.round(h * RIDE.w / RIDE.h) + 'px';
     var dust = document.createElement('i'); dust.className = 'rd-dust'; r.appendChild(dust);
@@ -574,21 +589,48 @@
       draw();
       if (v.requestVideoFrameCallback) v.requestVideoFrameCallback(tick); else requestAnimationFrame(tick);
     }
+    /* окончательный запасной вариант: формат не поддерживается / файл не грузится — навсегда статичный кадр */
     function fail() {
-      if (dead) return; dead = true; running = false; try { v.pause(); } catch (e) {}
-      [v, cv].forEach(function (n) { if (n && n.parentNode) n.parentNode.removeChild(n); });
+      if (dead) return; dead = true; running = false; BLOCKED.delete(api); try { v.pause(); } catch (e) {}
+      [v, cv, wait].forEach(function (n) { if (n && n.parentNode) n.parentNode.removeChild(n); });
+      r.classList.remove('rd-wait');
       var im = document.createElement('img'); im.className = 'rd-still'; im.src = RIDE.still; im.alt = ''; im.draggable = false; im.decoding = 'async'; r.appendChild(im);
     }
+    /* автоплей запрещён (iOS «Режим энергосбережения», экономия трафика): пока видео не заиграло, показываем кадр-заглушку,
+       а play() повторяем при каждом проезде, при скролле/появлении в зоне видимости и по первому касанию/клику/клавише */
+    var wait = null, api = null;
+    function showWait() {
+      if (wait || dead) return;
+      wait = document.createElement('img'); wait.className = 'rd-still rd-still-wait'; wait.src = RIDE.still; wait.alt = ''; wait.draggable = false; wait.decoding = 'async';
+      r.classList.add('rd-wait'); r.appendChild(wait);
+    }
+    function hideWait() { if (wait && wait.parentNode) wait.parentNode.removeChild(wait); wait = null; r.classList.remove('rd-wait'); }
+    function tryPlay(quiet) {
+      if (dead) return;
+      var p; try { p = v.play(); } catch (e) { p = null; }
+      if (!p || !p.then) { hideWait(); BLOCKED.delete(api); return; }
+      p.then(function () {
+        BLOCKED.delete(api);
+        if (quiet && !running) { try { v.pause(); } catch (e) {} } else hideWait();
+      }, function (err) {
+        if (err && err.name === 'AbortError') return;                  /* прервали сами (pause/load) — не ошибка */
+        if (err && err.name === 'NotSupportedError') { fail(); return; }
+        BLOCKED.add(api); if (running || !quiet) showWait(); armGesture();
+      });
+    }
     v.addEventListener('error', fail);
-    r._ride = {
+    v.addEventListener('playing', function () { BLOCKED.delete(api); if (running) hideWait(); });
+    r._ride = api = {
       load: function () { if (loaded || dead) return; loaded = true; v.src = NO_WEBM_ALPHA ? RIDE.sbs : RIDE.webm; v.load(); },
       play: function () {
         if (dead) return; this.load(); running = true;
-        var p = v.play(); if (p && p.catch) p.catch(fail);
+        if (v.paused || BLOCKED.has(api)) tryPlay(false);
         if (bx) { draw(); tick(); }
       },
       pause: function () { running = false; if (!dead) v.pause(); },
-      rewind: function () { if (!dead && loaded) { try { v.currentTime = 0; } catch (e) {} } }
+      rewind: function () { if (!dead && loaded) { try { v.currentTime = 0; } catch (e) {} } },
+      retry: function (quiet) { if (dead) return; this.load(); tryPlay(quiet); if (bx && running) { draw(); tick(); } },
+      isRunning: function () { return running; }
     };
     lane.appendChild(r); return r;
   }

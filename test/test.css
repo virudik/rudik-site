@@ -307,3 +307,5 @@ section{position:relative;padding-bottom:216px}
 @keyframes rd-ride-shake{from{translate:0 0;rotate:.5deg}to{translate:0 -2px;rotate:-.7deg}}
 @keyframes rd-dust{0%{opacity:.75;scale:.5 .6;translate:14px 0}100%{opacity:0;scale:1.5 1;translate:-60px -8px}}
 @media(prefers-reduced-motion:reduce){.rd-lane,.rd-bones{display:none}}
+.rd-rider.rd-wait .rd-rv,.rd-rider.rd-wait canvas.rd-rv{opacity:0}
+.rd-rider .rd-still-wait{position:absolute;left:0;top:0}
