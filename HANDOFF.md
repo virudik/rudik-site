@@ -81,3 +81,8 @@
 ## ship-1105e (2026-11-05, MSK)
 - Merged batch-1105e (cf13e03) into main: wheelie stands then rides after landing, dog bark (audio/dog-bark.ogg|m4a, CC0), belly video v2, js/modes.js holiday/birthday modes (copyright chooser, typed words, ?mode=, ?date=).
 - Versions: interact.js v14, modes.js v2, extra.css v20, test.css v20 across root + 11 copies + /test/. Backups: *-old.
+
+## ship-1105f (2026-11-05, MSK)
+- Merged batch-1105f (15a7086) into main: long-press no longer swallows later clicks (lpEat one-shot), synced two-dog bark, rider long-press fall, cosmonaut/satellite fly-apart + rejoin, holiday-off pill (.rd-holoff), title long-press mode menu, tint fades after 10 s, greeting below menu.
+- Space sprites over the calendar iframe in page_10: #rdSpace z610 / #rdSats z605 > calendar wb_element_instance34 z583 (same wb_main context); pointer-events only on .sp-hit ovals and .rd-sats img.
+- Versions: interact.js v15, modes.js v3, satellites.js v4, extra.css v22, test.css v21. Backups: *-old.
