@@ -58,6 +58,15 @@
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var cv = document.querySelector('#rdSpace canvas.sp-c'); if (!cv || !cv.getContext || !document.body.animate) return;
   var space = document.getElementById('rdSpace'), busy = false;
+  /* над встроенным календарём (iframe) клики до документа не доходят — поэтому на сами фигуры кладём два невидимых
+     овала с pointer-events:auto (только они; слой #rdSpace и canvas остаются pointer-events:none, календарь вокруг кликается) */
+  (function () {
+    var host = cv.parentNode; if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+    [['sp-hit sp-hit-c', 8, 32, 37, 55], ['sp-hit sp-hit-s', 41, 22, 55, 64]].forEach(function (h) {
+      var d = document.createElement('div'); d.className = h[0]; d.setAttribute('aria-hidden', 'true');
+      d.style.cssText = 'left:' + h[1] + '%;top:' + h[2] + '%;width:' + h[3] + '%;height:' + h[4] + '%;'; host.appendChild(d);
+    });
+  })();
   /* граница частей (доли кадра): космонавт слева, с гаечным ключом чуть правее в нижней половине */
   function isCosmo(fx, fy) { return fx < (fy > 0.44 ? 0.46 : 0.39); }
   function clip(c, cosmo) {
@@ -69,6 +78,7 @@
   function hit(e) {
     var r = cv.getBoundingClientRect(); if (!r.width || e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) return null;
     var fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
+    if (e.target && e.target.classList && e.target.classList.contains('sp-hit')) return { r: r, cosmo: e.target.classList.contains('sp-hit-c') ? true : isCosmo(fx, fy) && false };
     try {
       var x = Math.round(fx * cv.width), y = Math.round(fy * cv.height), R = 6;
       var d = cv.getContext('2d').getImageData(Math.max(0, x - R), Math.max(0, y - R), R * 2 + 1, R * 2 + 1).data, mx = 0;
