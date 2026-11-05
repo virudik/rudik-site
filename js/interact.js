@@ -575,6 +575,7 @@
      Safari/iOS не показывают альфу в webm → там mp4 «цвет слева | маска справа» склеивается на canvas (как космос в loops.js).
      Если видео не стартует (экономия трафика, автоплей запрещён, ошибка) — показываем статичный кадр того же байка. */
   var RIDE = { webm: '/img/vitalik-ride.webm?v=2', sbs: '/img/vitalik-ride-sbs.mp4?v=2', still: '/img/vitalik-ride-still.webp?v=2', w: 578, h: 440 };
+  var FALL = { webm: '/img/vitalik-fall.webm?v=1', sbs: '/img/vitalik-fall-sbs.mp4?v=1', w: 726, h: 574, x: 132, y: 81 };   /* падение: кадр проезда 578×440 лежит в нём с отступом x,y */
   var RIDE_H = 260;                                                    /* высота мотоциклиста на странице, px — как у рыжей собаки (~270) */
   var UA = navigator.userAgent || '';
   var NO_WEBM_ALPHA = /iP(hone|ad|od)/.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
@@ -647,6 +648,55 @@
         BLOCKED.add(api); if (running || !quiet) showWait(); armGesture();
       });
     }
+    /* ---- реакция на клик: падение (отдельное видео, грузится лениво при наведении/касании/клике) ---- */
+    var sc = h / RIDE.h, fw = Math.round(FALL.w * sc), fh = Math.round(FALL.h * sc);
+    var fbox = document.createElement('div'); fbox.className = 'rd-fall';
+    fbox.style.cssText = 'left:' + (-Math.round(FALL.x * sc)) + 'px;top:' + (-Math.round(FALL.y * sc)) + 'px;width:' + fw + 'px;height:' + fh + 'px';
+    var fv = document.createElement('video'); fv.muted = true; fv.defaultMuted = true; fv.playsInline = true; fv.preload = 'none';
+    fv.setAttribute('playsinline', ''); fv.setAttribute('muted', ''); fv.setAttribute('aria-hidden', 'true'); fv.tabIndex = -1;
+    var fcv = null, fctx = null, fbuf = null, fbx = null, fLoaded = false, fDead = false, falling = false, fOn = false;
+    if (NO_WEBM_ALPHA) {
+      fv.className = 'rd-rv-src'; fcv = document.createElement('canvas'); fcv.width = FALL.w; fcv.height = FALL.h; fctx = fcv.getContext('2d');
+      fbuf = document.createElement('canvas'); fbuf.width = FALL.w * 2; fbuf.height = FALL.h; fbx = fbuf.getContext('2d', { willReadFrequently: true });
+      fbox.appendChild(fv); fbox.appendChild(fcv);
+    } else fbox.appendChild(fv);
+    r.appendChild(fbox);
+    function fdraw() {
+      if (!fbx || fv.readyState < 2) return;
+      fbx.drawImage(fv, 0, 0, FALL.w * 2, FALL.h);
+      var c = fbx.getImageData(0, 0, FALL.w, FALL.h), a = fbx.getImageData(FALL.w, 0, FALL.w, FALL.h), d = c.data, m = a.data;
+      for (var i = 0, n = d.length; i < n; i += 4) d[i + 3] = m[i];
+      fctx.putImageData(c, 0, 0);
+    }
+    function ftick() { if (!falling || !fbx) return; fdraw(); if (fv.requestVideoFrameCallback) fv.requestVideoFrameCallback(ftick); else requestAnimationFrame(ftick); }
+    function fLoad() { if (fLoaded || fDead) return; fLoaded = true; fv.preload = 'auto'; fv.src = NO_WEBM_ALPHA ? FALL.sbs : FALL.webm; fv.load(); }
+    fv.addEventListener('error', function () { fDead = true; if (falling) fEnd(); });
+    var onFallEnd = null;
+    function fEnd() {
+      if (!falling) return; falling = false; r.classList.remove('rd-falling'); if (r.parentNode) r.parentNode.classList.remove('rd-lane-fall');
+      try { fv.pause(); } catch (e) {}
+      try { v.currentTime = 0; } catch (e) {}
+      if (running && !dead) tryPlay(false);
+      if (onFallEnd) onFallEnd();
+    }
+    fv.addEventListener('ended', fEnd);
+    /* стартуем падение только когда кадр готов — иначе просто едем дальше */
+    function fStart(cb) {
+      if (falling || fDead || dead || wait) return false;
+      fLoad();
+      if (fv.readyState < 3) { return false; }
+      falling = true; onFallEnd = cb;
+      try { fv.currentTime = 0; } catch (e) {}
+      var p; try { p = fv.play(); } catch (e) { p = null; }
+      var shown = false;
+      function show() { if (shown || !falling) return; shown = true; r.classList.add('rd-falling'); if (r.parentNode) r.parentNode.classList.add('rd-lane-fall'); try { v.pause(); } catch (e) {} }
+      if (fbx) { fdraw(); ftick(); }
+      if (fv.requestVideoFrameCallback) fv.requestVideoFrameCallback(show); else setTimeout(show, 30);
+      if (p && p.catch) p.catch(function () { falling = false; onFallEnd = null; r.classList.remove('rd-falling'); if (r.parentNode) r.parentNode.classList.remove('rd-lane-fall'); cb && cb(true); });
+      return true;
+    }
+    r.addEventListener('pointerenter', fLoad, { passive: true });
+    r.addEventListener('touchstart', fLoad, { passive: true });
     v.addEventListener('error', fail);
     v.addEventListener('playing', function () { BLOCKED.delete(api); if (running) hideWait(); });
     r._ride = api = {
@@ -659,7 +709,9 @@
       pause: function () { running = false; if (!dead) v.pause(); },
       rewind: function () { if (!dead && loaded) { try { v.currentTime = 0; } catch (e) {} } },
       retry: function (quiet) { if (dead) return; this.load(); tryPlay(quiet); if (bx && running) { draw(); tick(); } },
-      isRunning: function () { return running; }
+      isRunning: function () { return running; },
+      fall: fStart, fallLoad: fLoad, isFalling: function () { return falling; },
+      fallPause: function () { if (falling) fv.pause(); }, fallPlay: function () { if (falling) fv.play().catch(function () {}); }
     };
     lane.appendChild(r); return r;
   }
@@ -694,6 +746,23 @@
         armed = false; start();
       }
       var watch = t.host;                                            /* за чем следим: за самой полоской, а не за всем (высоким) разделом */
+      /* клик/тап по самому едущему мотоциклисту — он падает, ругается, поднимает байк и едет дальше */
+      var pend = 0;
+      r.addEventListener('click', function (e) {
+        e.preventDefault(); e.stopPropagation();
+        if (!run || r._ride.isFalling()) return;
+        var me = run;
+        function go() {
+          if (run !== me || r._ride.isFalling()) return false;
+          me.pause();
+          if (!r._ride.fall(function () { if (run === me) me.play(); })) { me.play(); return false; }
+          return true;
+        }
+        if (!go()) {                                                   /* ещё грузится — едем; если успеет догрузиться за 2,5 с — падаем */
+          r._ride.fallLoad(); var my = ++pend, t0 = Date.now();
+          (function poll() { if (my !== pend || !run || run !== me) return; if (go()) return; if (Date.now() - t0 < 2500) setTimeout(poll, 120); })();
+        }
+      });
       if (t.hit) {
         var hit = document.createElement('div'); hit.className = 'rd-hit'; hit.setAttribute('aria-hidden', 'true'); t.host.appendChild(hit); watch = hit;
         hit.addEventListener('click', function (e) { e.preventDefault(); again(); });
@@ -705,11 +774,12 @@
       var top = t.foot ? 160 : Math.min(t.h + 36, Math.round(innerHeight * .5)), bot = t.foot ? 40 : TEST ? 60 : Math.min(130, Math.round(innerHeight * .25));   /* /test/: последний раздел упирается в низ страницы */
       inView(watch, function (v) { if (v) r._ride.load(); }, { threshold: 0, rootMargin: '700px 0px' });   /* подгружаем заранее */
       inView(watch, function (v) {
+        if (r._ride.isFalling()) { if (v) r._ride.fallPlay(); else r._ride.fallPause(); return; }
         if (v) { if (run) { run.play(); r._ride.play(); } else if (armed) { armed = false; start(); } }
         else { if (run) { run.pause(); r._ride.pause(); } else armed = true; }
       }, { threshold: 0, rootMargin: '-' + top + 'px 0px -' + bot + 'px 0px' });
       document.addEventListener('visibilitychange', function () {
-        if (!run) return; if (document.hidden) { run.pause(); r._ride.pause(); } else if (host_visible()) { run.play(); r._ride.play(); }
+        if (!run) return; if (r._ride.isFalling()) { if (document.hidden) r._ride.fallPause(); else r._ride.fallPlay(); return; } if (document.hidden) { run.pause(); r._ride.pause(); } else if (host_visible()) { run.play(); r._ride.play(); }
         function host_visible() { var b = watch.getBoundingClientRect(); return b.bottom > top && b.top < innerHeight - bot; }
       });
     });

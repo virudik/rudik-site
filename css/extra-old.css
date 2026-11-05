@@ -1,0 +1,348 @@
+/* ---- правки поверх конструктора ---- */
+/* подменю: непрозрачное, поверх заголовков */
+.menu-landing ul ul, #wb_header ul ul, .wb_header_fixed ul ul { background:rgba(255,255,255,.84) !important; -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); box-shadow:0 6px 18px rgba(0,0,0,.18); z-index:99999; }
+.menu-landing li ul { z-index:99999; }
+.wb_header_fixed { z-index:99998 !important; }
+
+
+/* футер: иконки и копирайт — одна центрированная строка */
+#wb_footer .wb_cont_inner { display:flex; flex-wrap:nowrap; justify-content:center; align-items:center; gap:22px; height:72px !important; position:relative; }
+#wb_footer { height:72px !important; }
+#wb_footer > .wb_cont_bg { background-color:#151515 !important; box-shadow:0 0 0 100vmax #151515; clip-path:inset(0 -100vmax); }
+#wb_footer .wb_element { position:static !important; top:auto !important; left:auto !important; margin:0 !important; flex:0 0 auto; }
+#wb_footer .wb_element_picture { width:30px !important; min-width:30px !important; height:30px !important; min-height:30px !important; display:block; }
+#wb_footer .wb_element_picture img { width:30px !important; height:30px !important; object-fit:contain; border-radius:0; }
+#wb_footer #wb_element_instance53 { border-radius:50% !important; }
+#wb_footer #wb_element_instance2 { order:-1; width:auto !important; min-width:0 !important; white-space:nowrap; margin-right:14px !important; }
+#wb_footer #wb_element_instance53{order:1} #wb_footer #wb_element_instance52{order:2} #wb_footer #wb_element_instance6{order:3}
+#wb_footer #wb_element_instance5{order:4} #wb_footer #wb_element_instance4{order:5} #wb_footer #wb_element_instance3{order:6}
+#wb_footer #wb_element_instance234 { display:none !important; }
+
+/* ИИшница: красные квадраты */
+.ii-sq { display:flex; align-items:center; justify-content:center; box-sizing:border-box; width:230px; height:120px; background:#ff0000;
+  border-radius:0 0 5px 5px; text-decoration:none; color:#fff; font:normal normal 42px Myriad Set Pro,Lucida Grande,Helvetica Neue,Verdana,sans-serif; line-height:48px; text-transform:uppercase; transition:.15s; }
+.ii-sq:hover { background:#c80000; color:#fff; }
+
+/* сетка по проектам */
+#iiFlow { box-sizing:border-box; padding:0 26px; }
+#iiFlow .rg { max-width:940px; margin:0 auto; }
+.ii-more { margin:46px auto 0; width:290px; }
+.ii-more .wb_button { width:290px; height:30px; font-family:Georgia,serif; font-size:18px; border:1px solid #000; color:#000; text-decoration:none; background:transparent; }
+.ii-more .wb_button > span { font-weight:bold; }
+.ii-more .wb_button:hover { background:#000; color:#fff; }
+.ii-line { margin:36px 1px 0; border-top:4px solid #303030; width:990px; max-width:100%; }
+
+/* Мои видео */
+.rv { max-width:970px; margin:56px auto 0; position:relative; }
+.rv-anchor { position:absolute; top:-70px; }
+.rv-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px 20px; margin-top:22px; }
+.rv-card { position:relative; }
+.rv-card .rv-t { font:bold 18px/26px 'Open Sans',sans-serif; color:#1F1209; text-align:center; margin:0 0 6px; }
+.rv-box { position:relative; height:320px; background:#111; color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.rv-box iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+.rv-box .rv-play { width:0;height:0;border-left:34px solid rgba(255,255,255,.85);border-top:21px solid transparent;border-bottom:21px solid transparent; margin-bottom:16px; }
+.rv-box .rv-soon { font:normal 20px 'Open Sans',sans-serif; letter-spacing:.08em; text-transform:lowercase; opacity:.8; }
+
+.rv h2.wb-stl-heading2 { font-size:26px; line-height:34px; font-weight:bold; }
+.rv-box video { position:absolute; inset:0; width:100%; height:100%; background:#000; object-fit:contain; }
+
+/* ---- t172u ---- */
+/* 1) меню: в одну строку на любом экране, не «съезжает» ИИШНИЦА */
+#wb_element_instance0 { left:0 !important; width:100% !important; min-width:0 !important; }
+#wb_element_instance0 > ul { white-space:nowrap !important; }
+#wb_element_instance0 > ul > li { margin:0 5px !important; white-space:nowrap; }
+#wb_element_instance0 li a { padding:20px 7px !important; font-size:20px !important; white-space:nowrap !important; }
+/* 2) выпадающее меню «Виталик»: по наведению, фокусу и тапу (класс .over ставит main.js) */
+#wb_element_instance0 li ul li a { padding:12px 18px !important; font-size:18px !important; }
+#wb_element_instance0 li ul { min-width:100%; }
+#wb_element_instance0 .hmenu li.over > ul, #wb_element_instance0 .hmenu li:focus-within > ul { display:block; }
+@media (hover:hover) { #wb_element_instance0 .hmenu > li:hover > ul { display:block; } }
+
+/* 3) собаки по верхней рамке календаря (белый фон видео «вычитается» multiply, линии под лапами нет) */
+#rdDogs { top:778px; left:10px; width:970px; height:320px; z-index:585; overflow:hidden; pointer-events:none; background:transparent; mix-blend-mode:multiply; }
+#rdDogs .rd-dogs-v { position:absolute; left:50%; margin-left:-290px; bottom:-12px; width:580px; height:320px; display:block; background:#fff; }
+
+/* 7) космос: Ресурс-П и космонавт летают поверх всего раздела «РАБОТА» (чистая прозрачность, canvas) */
+#rdSpace { top:0; left:0; width:100%; min-width:980px; height:1440px; z-index:610; overflow:hidden; pointer-events:none; }
+#rdSpace .sp-x { position:absolute; left:0; top:0; will-change:transform; animation:sp-x 34s ease-in-out infinite alternate; }
+#rdSpace .sp-y { will-change:transform; animation:sp-y 53s ease-in-out infinite alternate; }
+#rdSpace .sp-c { display:block; width:460px; height:287px; pointer-events:none;
+  filter:drop-shadow(0 0 1.5px rgba(0,0,0,.55)) drop-shadow(0 4px 7px rgba(0,0,0,.30)); }
+#rdSpace .rd-alpha-v { position:absolute; left:0; top:0; width:2px; height:2px; opacity:0; pointer-events:none; }
+@keyframes sp-x { from { transform:translateX(-30px); } to { transform:translateX(550px); } }
+@keyframes sp-y { from { transform:translateY(-10px); } to { transform:translateY(1170px); } }
+@media (max-width:700px) { #rdSpace .sp-c { width:320px; height:200px; } @keyframes sp-x { from { transform:translateX(-20px); } to { transform:translateX(690px); } } }
+
+/* фото-видео (замена картинок): геометрия берётся из правил #id video */
+video.rd-photo { display:block; cursor:pointer; object-fit:fill; background:#fff; }
+
+/* 4) ПРОМТЫ справа, другой цвет */
+#iiPromts .ii-sq { background:#ff8a00; }
+#iiPromts .ii-sq:hover { background:#d96f00; }
+
+/* плавное переливание цвета у всех цветных прямоугольников-заголовков и кнопок */
+@keyframes rd-hue { from { filter:hue-rotate(0deg); } to { filter:hue-rotate(360deg); } }
+@keyframes rd-black { 0%,100% { background-color:#000; } 25% { background-color:#2a0a4a; } 50% { background-color:#0a2f4a; } 75% { background-color:#0a3a22; } }
+#wb_element_instance56 > .wb_shp, #wb_element_instance91 > .wb_shp, #wb_element_instance106 > .wb_shp, #wb_element_instance109 > .wb_shp,
+#wb_element_instance192 > .wb_shp, #wb_element_instance205 > .wb_shp, #wb_element_instance227 > .wb_shp, #iiPromts .ii-sq { animation:rd-hue 24s linear infinite; }
+#wb_element_instance91 > .wb_shp { animation-delay:-4s; } #wb_element_instance106 > .wb_shp { animation-delay:-8s; }
+#wb_element_instance109 > .wb_shp { animation-delay:-12s; } #wb_element_instance192 > .wb_shp { animation-delay:-16s; }
+#wb_element_instance205 > .wb_shp { animation-delay:-20s; } #wb_element_instance227 > .wb_shp { animation-delay:-2s; }
+#iiPromts .ii-sq { animation-delay:-14s; }
+#wb_element_instance39 > .wb_shp { animation:rd-black 24s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  #wb_element_instance39 > .wb_shp, #wb_element_instance56 > .wb_shp, #wb_element_instance91 > .wb_shp, #wb_element_instance106 > .wb_shp,
+  #wb_element_instance109 > .wb_shp, #wb_element_instance192 > .wb_shp, #wb_element_instance205 > .wb_shp, #wb_element_instance227 > .wb_shp,
+  #iiPromts .ii-sq, #rdSpace .sp-x, #rdSpace .sp-y { animation:none !important; }
+}
+
+/* фото с котом: белое поле над головой не перекрывает соседние элементы */
+#wb_element_instance57 { mix-blend-mode:multiply; }
+
+/* ИИшница: портфолио + кнопка «Заказать» (Telegram) */
+.ii-hero { text-align:center; margin:6px auto 34px; max-width:760px; }
+.ii-lead { font:normal 21px/30px 'Open Sans',Arial,sans-serif; color:#1F1209; margin:0 0 22px; }
+.ii-order { display:inline-flex; align-items:center; justify-content:center; gap:12px; box-sizing:border-box; padding:17px 38px; border-radius:50px;
+  background:#229ED9; color:#fff !important; font:bold 24px/1 'Open Sans',Arial,sans-serif; text-decoration:none !important; letter-spacing:.01em;
+  box-shadow:0 8px 22px rgba(34,158,217,.45); transition:transform .15s, background .15s, box-shadow .15s; }
+.ii-order svg { width:30px; height:30px; flex:none; fill:#fff; }
+.ii-order:hover { background:#1b87b9; transform:translateY(-2px); box-shadow:0 12px 26px rgba(34,158,217,.55); }
+.ii-order:active { transform:none; }
+.ii-note { font:normal 15px/22px 'Open Sans',Arial,sans-serif; color:#6b5b4e; margin:12px 0 0; }
+.ii-chips { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:24px; }
+.ii-chips a { display:block; padding:8px 16px; border:2px solid #d50000; border-radius:30px; color:#d50000; font:bold 15px/1 'Open Sans',Arial,sans-serif; text-transform:uppercase; text-decoration:none; transition:.15s; }
+.ii-chips a:hover { background:#d50000; color:#fff; }
+.rg h3 { scroll-margin-top:20px; }
+#iiFlow .rg a { border-radius:12px; box-shadow:0 5px 16px rgba(0,0,0,.22); }
+#iiFlow .rg a:hover { box-shadow:0 10px 24px rgba(0,0,0,.32); }
+.ii-cta2 { margin:54px auto 0; max-width:820px; padding:30px 26px 32px; text-align:center; border-radius:18px; background:#1b2330; color:#fff; box-shadow:0 8px 26px rgba(0,0,0,.3); }
+.ii-cta2 b { display:block; font:bold 28px/36px 'Open Sans',Arial,sans-serif; margin-bottom:6px; }
+.ii-cta2 p { font:normal 18px/26px 'Open Sans',Arial,sans-serif; margin:0 0 20px; color:#d6deea; }
+.ii-fab { position:fixed; left:18px; bottom:18px; z-index:9000; padding:14px 26px; font-size:20px; opacity:0; visibility:hidden; transform:translateY(20px); transition:opacity .25s, transform .25s, visibility .25s; }
+.ii-fab svg { width:24px; height:24px; }
+body.ii-in .ii-fab { opacity:1; visibility:visible; transform:none; }
+body.ii-in .ii-fab:hover { transform:translateY(-2px); }
+@media (prefers-reduced-motion: reduce) { .ii-order, .ii-fab { transition:none; } }
+
+/* Алина: оживлённые фото (видео = ровно видимая область рамки; геометрия = размер рамки) */
+#wb_element_instance221 video.rd-photo { width:308px; height:440px; position:static; left:0; top:0; max-width:none; }
+#wb_element_instance219 video.rd-photo { width:315px; height:440px; position:static; left:0; top:0; max-width:none; }
+#wb_element_instance220 video.rd-photo { width:311px; height:440px; position:static; left:0; top:0; max-width:none; }
+#wb_element_instance222 video.rd-photo { width:308px; height:440px; position:static; left:0; top:0; max-width:none; }
+#wb_element_instance223 video.rd-photo { width:314px; height:440px; position:static; left:0; top:0; max-width:none; }
+#wb_element_instance224 video.rd-photo { width:311px; height:440px; position:static; left:0; top:0; max-width:none; }
+#wb_element_instance225 video.rd-photo { width:240px; height:178px; position:static; left:0; top:0; max-width:none; }
+#wb_element_instance213 video.rd-photo { width:501px; height:190px; position:static; left:0; top:0; max-width:none; }
+
+/* танцующий Виталик между кнопками «ИИшница» и «Промты» */
+#iiDance video, #iiDetective video, #iiShip video { display:block; width:100%; height:100%; object-fit:contain; background:#fff; pointer-events:none; }
+
+/* плашка «Делаю ИИ-видео и ИИ-фото на заказ» справа от «Семья Рудик» → раздел ИИшница */
+#aiCallout { top:22px; left:262px; width:520px; height:72px; z-index:650; }
+#aiCallout a { position:relative; display:block; box-sizing:border-box; height:72px; padding:9px 20px 0 24px; background:#fff; border:2px solid #000; border-radius:8px; color:#000; text-decoration:none; font-family:Arial,Helvetica,sans-serif; line-height:1.2; transition:background .2s,color .2s; }
+#aiCallout a::before { content:""; position:absolute; left:-12px; top:26px; width:0; height:0; border:10px solid transparent; border-right:10px solid #000; border-left:0; }
+#aiCallout a::after { content:""; position:absolute; left:-8px; top:28px; width:0; height:0; border:8px solid transparent; border-right:8px solid #fff; border-left:0; transition:border-right-color .2s; }
+#aiCallout b { display:block; font-size:24px; font-weight:700; white-space:nowrap; }
+#aiCallout i { display:inline-block; font-style:normal; }
+#aiCallout span { display:block; margin-top:3px; font-size:17px; color:#555; white-space:nowrap; transition:color .2s; }
+#aiCallout a:hover, #aiCallout a:focus-visible { background:#000; color:#fff; }
+#aiCallout a:hover::after, #aiCallout a:focus-visible::after { border-right-color:#000; }
+#aiCallout a:hover span, #aiCallout a:focus-visible span { color:#ddd; }
+@media (prefers-reduced-motion: no-preference) {
+  #aiCallout i { animation:ai-nudge 2.6s ease-in-out infinite; }
+  @keyframes ai-nudge { 0%,60%,100% { transform:translateX(0); } 75% { transform:translateX(7px); } 90% { transform:translateX(2px); } }
+}
+
+/* ===== batch-1104 ===== */
+/* подпись «Алина» под верхним фото: у ссылки была высота 1px (у «Маши» и «Виталика» — 60px) */
+#wb_element_instance45 { min-height:60px; height:60px; }
+/* копирайт внизу страницы живёт как логотипы справа: плавает и время от времени «подмигивает» */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rd-copy { 0%,28%,78%,100%{rotate:0deg;scale:1} 34%{rotate:-3deg;scale:1.07} 42%{rotate:2.6deg;scale:1.07} 50%{rotate:-2deg;scale:1.05} 58%{rotate:1deg;scale:1.02} 66%{rotate:-.4deg;scale:1} }
+  #wb_element_instance2 p { transform-origin:0 50%; animation:ia-float 6.8s ease-in-out -2.4s infinite, rd-copy 9s ease-in-out -4s infinite; }
+}
+/* плитки разделов и герои: подсказка, что на них можно нажать */
+.rd-tile, .rd-react-ready, .rd-zoom { cursor:pointer; }
+.rd-zoom { cursor:zoom-in; }
+/* ролики-реакции героев (подключаются из window.RUDIK_REACTIONS; без роликов ничего не делают) */
+.rd-react { position:absolute; left:0; top:0; opacity:0; pointer-events:none; transition:opacity .2s linear; will-change:opacity; }
+.rd-react.on { opacity:1; }
+/* полноэкранный просмотр: «живая» версия фото и ссылка на оригинал */
+.rd-lb-slide { position:absolute; left:0; top:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:44px 0; box-sizing:border-box; }
+.rd-lb-slide video { max-width:100%; max-height:100%; display:block; background:#000; box-shadow:0 0 30px rgba(0,0,0,.5); }
+.rd-lb-orig { position:absolute; left:50%; bottom:12px; transform:translateX(-50%); padding:6px 14px; border-radius:16px; background:rgba(0,0,0,.55); color:#fff; font:600 13px/1.2 'Open Sans',sans-serif; text-decoration:none; white-space:nowrap; }
+.rd-lb-orig:hover { background:rgba(213,0,0,.85); color:#fff; }
+.rd-lb-orig[hidden] { display:none; }
+/* пустой блок Skype-кнопки лежал поверх фото Виталика и ловил клики; ссылки в нём остаются кликабельными */
+#wb_element_instance76 { pointer-events:none; }
+#wb_element_instance76 a { pointer-events:auto; }
+
+/* ===== batch-1104: календари ===== */
+/* Заголовки «график» лежали поверх тулбара календаря и перехватывали клики (кнопки «Сегодня», стрелки, «Месяц» не нажимались) */
+#wb_element_instance36, #wb_element_instance104 { pointer-events:none; }
+/* --- верхний календарь: «настенный календарь на спирали» в стиле сайта (чёрная рамка, красная тень, Arima Madurai) --- */
+#wb_element_instance34 { overflow:visible !important; }
+#wb_element_instance34 iframe { display:block; box-sizing:border-box; border-radius:16px; box-shadow:0 0 0 3px #303030; background:#f0f4f9; }
+#wb_element_instance34::before { content:""; position:absolute; left:22px; right:22px; top:-12px; height:24px; z-index:3; pointer-events:none;
+  background:radial-gradient(ellipse 4px 11px at 50% 50%, #303030 0 68%, transparent 74%) 0 0/32px 24px repeat-x; }
+#wb_element_instance34::after { content:""; position:absolute; left:22px; right:22px; top:-12px; height:24px; z-index:4; pointer-events:none;
+  background:radial-gradient(ellipse 1.6px 5px at 50% 50%, #fff 0 80%, transparent 90%) 0 0/32px 24px repeat-x; }
+#wb_element_instance36 h1 { font:normal bold 30px/36px 'Trebuchet MS',Arial,sans-serif; color:#111; letter-spacing:1px; text-shadow:none; text-transform:lowercase; }
+/* --- календарь в «Работе»: космос (тёмная инверсия + звёздное поле + свечение), клики и функции те же --- */
+#wb_element_instance103 { overflow:visible !important; }
+#wb_element_instance103 > div { position:relative; z-index:2; mix-blend-mode:screen; }
+#wb_element_instance103 iframe { display:block; box-sizing:border-box; border-radius:18px;
+  filter:invert(.93) hue-rotate(180deg) saturate(1.9) contrast(1.2) brightness(1.02); }
+#wb_element_instance103::before { content:""; position:absolute; inset:-10px; z-index:1; pointer-events:none; border-radius:28px;
+  background:
+    radial-gradient(1.6px 1.6px at 12% 18%, #fff 0 60%, transparent 100%), radial-gradient(1.2px 1.2px at 27% 64%, #cde 0 60%, transparent 100%),
+    radial-gradient(1.8px 1.8px at 41% 33%, #fff 0 60%, transparent 100%), radial-gradient(1.2px 1.2px at 58% 82%, #fed 0 60%, transparent 100%),
+    radial-gradient(1.6px 1.6px at 73% 22%, #fff 0 60%, transparent 100%), radial-gradient(1.2px 1.2px at 86% 58%, #cde 0 60%, transparent 100%),
+    radial-gradient(1.4px 1.4px at 94% 90%, #fff 0 60%, transparent 100%), radial-gradient(1px 1px at 5% 88%, #fff 0 60%, transparent 100%),
+    radial-gradient(ellipse 40% 55% at 82% 18%, rgba(130,60,255,.45), transparent 70%), radial-gradient(ellipse 45% 60% at 14% 82%, rgba(0,160,255,.35), transparent 70%),
+    linear-gradient(140deg, #04061a 0%, #0d0a2e 50%, #031a36 100%);
+  background-size:430px 290px,430px 290px,430px 290px,430px 290px,430px 290px,430px 290px,430px 290px,430px 290px,100% 100%,100% 100%,100% 100%;
+  box-shadow:0 0 0 2px rgba(150,190,255,.75), 0 0 26px 4px rgba(80,130,255,.65), 0 0 70px 12px rgba(150,70,255,.35); }
+#wb_element_instance103 .rd-planet { position:absolute; right:46px; top:-58px; width:104px; height:62px; z-index:5; padding:0; border:0; margin:0; cursor:pointer; -webkit-appearance:none; appearance:none; -webkit-tap-highlight-color:transparent;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 104 62'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.35' cy='.3' r='.8'%3E%3Cstop offset='0' stop-color='%23ffd9a0'/%3E%3Cstop offset='.55' stop-color='%23d9822b'/%3E%3Cstop offset='1' stop-color='%23552a0a'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cellipse cx='52' cy='34' rx='50' ry='11' fill='none' stroke='%23e8c88a' stroke-width='3' opacity='.55' transform='rotate(-14 52 34)'/%3E%3Ccircle cx='52' cy='34' r='20' fill='url(%23g)'/%3E%3Cpath d='M2 38 Q52 56 102 30' fill='none' stroke='%23e8c88a' stroke-width='3.5' transform='rotate(-14 52 34)' opacity='.95' clip-path='inset(50% 0 0 0)'/%3E%3C/svg%3E") center/contain no-repeat; filter:drop-shadow(0 0 8px rgba(255,190,110,.6)); }
+@media (prefers-reduced-motion: no-preference) {
+  #wb_element_instance103::before { animation:rd-space-glow 9s ease-in-out infinite alternate; }
+  #wb_element_instance103 .rd-planet { animation:rd-planet 14s ease-in-out infinite; }
+  @keyframes rd-space-glow { from { box-shadow:0 0 0 2px rgba(150,190,255,.6), 0 0 22px 3px rgba(80,130,255,.5), 0 0 60px 8px rgba(150,70,255,.28); } to { box-shadow:0 0 0 2px rgba(190,170,255,.85), 0 0 34px 6px rgba(110,150,255,.8), 0 0 90px 16px rgba(170,80,255,.45); } }
+  @keyframes rd-planet { 0%,100% { translate:0 0; rotate:-3deg; } 50% { translate:-14px 5px; rotate:4deg; } }
+}
+#wb_element_instance104 h1, #wb_element_instance104 h1 span { color:#fff !important; text-shadow:0 0 6px #7fb0ff, 0 0 18px #6a5cff, 0 0 34px #b04cff; letter-spacing:2px; }
+/* реакция корабля: ракета улетает за верхний край кадра — мягко растворяем её у краёв вместо жёсткого среза */
+#iiShip { overflow:hidden; }
+#iiShip video.rd-react { -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 7.5%, #000 100%); mask-image:linear-gradient(to bottom, transparent 0, #000 7.5%, #000 100%); }
+#rdDogs .rd-dogs-v.rd-react { top:auto; } /* как у петли: прижата bottom:-12px, иначе реакция съезжала на 12px вверх */
+
+/* ===== batch-1105 ===== */
+/* герои раздела ИИшница чуть крупнее (собаки без изменений); белый фон роликов «вычитается» multiply, чтобы увеличенные рамки не закрывали кнопки */
+#iiDance { top:-66px !important; left:216px !important; width:561px !important; height:290px !important; mix-blend-mode:multiply; }
+#iiDetective { top:284px !important; left:4px !important; width:189px !important; height:241px !important; }
+#iiShip { top:276px !important; left:800px !important; width:189px !important; height:264px !important; }
+/* корабль после клика улетает: прозрачный спрайт летает по разделу и возвращается в ролик */
+.rd-fly { position:absolute; z-index:900; pointer-events:none; will-change:transform; }
+.rd-fly img { position:absolute; left:0; top:0; width:100%; height:100%; display:block; -webkit-user-select:none; user-select:none; }
+/* планета календаря «Работа» — кнопка: обычный вид / космос */
+#wb_element_instance103 .rd-planet:hover, #wb_element_instance103 .rd-planet:focus-visible { scale:1.1; outline:none; }
+#wb_element_instance103 .rd-planet { transition:scale .2s ease; }
+#wb_element_instance103.rd-plain > div { mix-blend-mode:normal; }
+#wb_element_instance103.rd-plain iframe { filter:none; }
+#wb_element_instance103.rd-plain::before { opacity:0; }
+#wb_element_instance104.rd-plain h1, #wb_element_instance104.rd-plain h1 span { color:rgba(0,0,0,1) !important; text-shadow:none; letter-spacing:normal; }
+/* косточки над календарём */
+.rd-bones { position:absolute; left:0; top:0; right:0; bottom:0; overflow:hidden; border-radius:16px; pointer-events:none; z-index:6; --bw:900px; }
+.rd-bone { position:absolute; left:0; display:block; animation:rd-bone-x 10s ease-in-out infinite alternate; }
+.rd-bone-y { display:block; animation:rd-bone-y 2.6s ease-in-out infinite alternate; }
+.rd-bone-i { display:block; background:center/contain no-repeat; animation:rd-bone-spin 3s linear infinite; filter:drop-shadow(0 2px 2px rgba(0,0,0,.35)); }
+.rd-bones.rd-off * { animation-play-state:paused; }
+@keyframes rd-bone-x { from { translate:-4px 0; } to { translate:var(--bw) 0; } }
+@keyframes rd-bone-y { from { translate:0 -16px; } to { translate:0 16px; } }
+@keyframes rd-bone-spin { to { rotate:360deg; } }
+/* оторванная страница с номером: рулон слева отдельный слой, полоса сворачивается к нему */
+#wb_element_instance40, #wb_element_instance62 { overflow:visible !important; }
+.rd-roll { position:absolute; left:0; top:0; background-size:100% 100%; background-repeat:no-repeat; pointer-events:none; will-change:transform; }
+.rd-curlable { cursor:pointer; }
+.rd-flap { position:absolute; z-index:530; background-size:100% 100%; background-repeat:no-repeat; pointer-events:none; will-change:transform; filter:drop-shadow(0 2px 3px rgba(0,0,0,.4)); }
+/* Виталик на Yamaha V-Max 1200 проезжает по разделителю */
+.rd-lane { position:absolute; left:0; right:0; overflow:hidden; pointer-events:none; z-index:3; visibility:hidden; }
+.rd-lane.go { visibility:visible; }
+.rd-rider { position:absolute; left:0; bottom:0; will-change:transform; }
+.rd-rider::before { content:''; position:absolute; left:6%; right:0; bottom:-4px; height:20px; border-radius:50%; background:radial-gradient(closest-side, rgba(0,0,0,.34), transparent); }
+.rd-rider .rd-rv { position:relative; display:block; width:100%; height:100%; pointer-events:none; }
+.rd-rider .rd-rv-src { position:absolute; left:0; top:0; width:2px; height:2px; opacity:0; pointer-events:none; }
+.rd-rider .rd-still { position:relative; display:block; width:100%; height:100%; transform-origin:30% 92%; animation:rd-ride-shake .26s ease-in-out infinite alternate; }
+.rd-dust { position:absolute; left:-12px; bottom:2px; width:92px; height:36px; border-radius:50%; background:radial-gradient(closest-side, rgba(150,140,120,.6), transparent); filter:blur(3px); animation:rd-dust .5s ease-out infinite; }
+@keyframes rd-ride-shake { from { translate:0 0; rotate:.5deg; } to { translate:0 -2px; rotate:-.7deg; } }
+@keyframes rd-dust { 0% { opacity:.75; scale:.5 .6; translate:14px 0; } 100% { opacity:0; scale:1.5 1; translate:-60px -8px; } }
+/* больше воздуха между разделами: разделитель опущен, чтобы под мотоцикл хватило места, снизу добавлено расстояние */
+#wb_element_instance38 { top:2114px !important; }
+#wb_main #page_7 { height:2180px !important; }
+#wb_main #page_7e { height:1990px !important; }
+#wb_element_instance74 { top:1971px !important; }
+#wb_main #page_1 { height:2037px !important; }
+#wb_main #page_1e { height:2037px !important; }
+#wb_element_instance92 { top:2590px !important; }
+#wb_main #page_2 { height:2656px !important; }
+#wb_main #page_2e { height:2656px !important; }
+#wb_element_instance105 { top:1610px !important; }
+#wb_main #page_10 { height:1676px !important; }
+#wb_main #page_10e { height:1676px !important; }
+#wb_element_instance127 { top:11595px !important; }
+#wb_main #page_4 { height:11661px !important; }
+#wb_main #page_4e { height:11661px !important; }
+#wb_element_instance201 { top:1352px !important; }
+#wb_main #page_8 { height:1418px !important; }
+#wb_element_instance9001 { top:2810px !important; }
+#wb_main #page_9 { height:2876px !important; }
+/* разделитель «Раньше увлекался съёмками» (#162) стоит посреди страницы: под мотоцикл ему нужно ещё ~200px воздуха, всё ниже (до #127) сдвинуто вниз */
+#wb_element_instance162 { top:4860px !important; }
+#wb_element_instance132 { top:4914px !important; }
+#wb_element_instance133 { top:4914px !important; }
+#wb_element_instance158 { top:4974px !important; }
+#wb_element_instance129 { top:5044px !important; }
+#wb_element_instance130 { top:5044px !important; }
+#wb_element_instance131 { top:5044px !important; }
+#wb_element_instance134 { top:5364px !important; }
+#wb_element_instance135 { top:5364px !important; }
+#wb_element_instance136 { top:5784px !important; }
+#wb_element_instance137 { top:5784px !important; }
+#wb_element_instance138 { top:6014px !important; }
+#wb_element_instance139 { top:6264px !important; }
+#wb_element_instance140 { top:6264px !important; }
+#wb_element_instance141 { top:6684px !important; }
+#wb_element_instance142 { top:6684px !important; }
+#wb_element_instance143 { top:7084px !important; }
+#wb_element_instance144 { top:7084px !important; }
+#wb_element_instance146 { top:7084px !important; }
+#wb_element_instance145 { top:7594px !important; }
+#wb_element_instance151 { top:8354px !important; }
+#wb_element_instance149 { top:8424px !important; }
+#wb_element_instance150 { top:8424px !important; }
+#wb_element_instance147 { top:8764px !important; }
+#wb_element_instance148 { top:8764px !important; }
+#wb_element_instance152 { top:9104px !important; }
+#wb_element_instance153 { top:9194px !important; }
+#wb_element_instance154 { top:9294px !important; }
+#wb_element_instance161 { top:9350px !important; }
+#wb_element_instance156 { top:9494px !important; }
+#wb_element_instance155 { top:9564px !important; }
+#wb_element_instance157 { top:9564px !important; }
+#wb_element_instance159 { top:9920px !important; }
+#wb_element_instance160 { top:9920px !important; }
+#wb_element_instance183 { top:10280px !important; }
+#wb_element_instance188 { top:10320px !important; }
+#wb_element_instance187 { top:10380px !important; }
+#wb_element_instance189 { top:10380px !important; }
+#wb_element_instance190 { top:10380px !important; }
+#wb_element_instance182 { top:10670px !important; }
+#wb_element_instance184 { top:10670px !important; }
+#wb_element_instance185 { top:11020px !important; }
+#wb_element_instance186 { top:11020px !important; }
+/* мотоциклист побольше (≈ рыжая собака): клик по полоске (и по плашке футера) — проезд ещё раз */
+.rd-hit { position:absolute; left:0; right:0; top:-9px; bottom:-9px; z-index:4; cursor:pointer; -webkit-user-select:none; user-select:none; -webkit-tap-highlight-color:transparent; }
+.rd-hitfoot { cursor:pointer; }
+.rd-hitfoot a, .rd-hitfoot button { cursor:pointer; }
+/* тонкая линия над футером убрана: на её месте воздух, чтобы мотоциклисту хватило места над тёмной плашкой */
+.ii-line { border:0; margin:0; height:136px; width:100%; }
+/* автоплей заблокирован: пока видео не заиграло, показываем кадр-заглушку (повторные попытки — в interact.js) */
+.rd-rider.rd-wait .rd-rv, .rd-rider.rd-wait canvas.rd-rv { opacity:0; }
+.rd-rider .rd-still-wait { position:absolute; left:0; top:0; }
+
+/* ===== batch-1105d ===== */
+/* ИИшница: после перехода из меню голова танцующего Виталика не прячется под меню (якорь выше — больше зазор над разделом) */
+#page_3_anchor { top:-160px !important; }
+/* Алина: логотип YouTube выше Likee (белый фон Likee не закрывает логотип) */
+#wb_element_instance46 { z-index:617 !important; }
+#wb_element_instance214 { z-index:834 !important; }
+/* календарь «Работа»: на телефоне (layout 992) звёздное свечение не упирается в левый край экрана */
+#wb_element_instance103 { left:28px !important; width:936px !important; min-width:0 !important; }
+#wb_element_instance103 > div, #wb_element_instance103 iframe { width:100% !important; }
+/* планета: увеличенная зона касания (кнопка ~104×62 → ~170×130), на тач-экранах и сама побольше */
+#wb_element_instance103 .rd-planet::after { content:""; position:absolute; inset:-34px -32px -30px -32px; }
+@media (pointer:coarse) {
+  #wb_element_instance103 .rd-planet { width:132px; height:79px; right:34px; top:-68px; touch-action:manipulation; }
+  #wb_element_instance103 .rd-planet::after { inset:-40px -36px -34px -36px; }
+}

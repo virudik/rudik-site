@@ -250,6 +250,14 @@ body.ii-in .ii-fab:hover { transform:translateY(-2px); }
 .rd-lane { position:absolute; left:0; right:0; overflow:hidden; pointer-events:none; z-index:3; visibility:hidden; }
 .rd-lane.go { visibility:visible; }
 .rd-rider { position:absolute; left:0; bottom:0; will-change:transform; }
+.rd-lane.go { z-index:5; }
+.rd-lane.go .rd-rider { pointer-events:auto; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.rd-lane.rd-lane-fall { overflow:visible; }
+.rd-rider .rd-fall { position:absolute; visibility:hidden; pointer-events:none; }
+.rd-rider .rd-fall video, .rd-rider .rd-fall canvas:not(.rd-rv-src) { display:block; width:100%; height:100%; }
+.rd-rider .rd-fall .rd-rv-src { position:absolute; width:2px; height:2px; opacity:0; }
+.rd-rider.rd-falling .rd-fall { visibility:visible; }
+.rd-rider.rd-falling > .rd-rv, .rd-rider.rd-falling::before, .rd-rider.rd-falling .rd-dust { visibility:hidden; }
 .rd-rider::before { content:''; position:absolute; left:6%; right:0; bottom:-4px; height:20px; border-radius:50%; background:radial-gradient(closest-side, rgba(0,0,0,.34), transparent); }
 .rd-rider .rd-rv { position:relative; display:block; width:100%; height:100%; pointer-events:none; }
 .rd-rider .rd-rv-src { position:absolute; left:0; top:0; width:2px; height:2px; opacity:0; pointer-events:none; }
