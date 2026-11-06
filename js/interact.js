@@ -495,6 +495,42 @@
   };
 
 
+  /* ---------- ИИшница: обычная навигация запускает три старые реакции ---------- */
+  var iiNavTimer = 0, iiNavPlayedAt = 0;
+  function isIishnicaDestination(href) {
+    if (!href) return false;
+    try {
+      var u = new URL(href, location.href);
+      if (u.origin !== location.origin) return false;
+      var hash = decodeURIComponent((u.hash || '').replace(/^#/, '')).toLowerCase();
+      var path = decodeURIComponent(u.pathname || '').toLowerCase();
+      return hash === 'иишница' || /\/иишница(?:\/|\/index\.html)?$/.test(path);
+    } catch (err) { return false; }
+  }
+  function playIishnicaHeroes() {
+    iiNavTimer = 0;
+    if (TEST || reduce || Date.now() - iiNavPlayedAt < 1600) return;
+    iiNavPlayedAt = Date.now();
+    ['iiDance', 'iiShip', 'iiDetective'].forEach(function (id) {
+      if (document.getElementById(id)) window.RUDIK_PLAY_REACTION(id);
+    });
+  }
+  function scheduleIishnicaHeroes() {
+    if (TEST || reduce || iiNavTimer || Date.now() - iiNavPlayedAt < 1600) return;
+    iiNavTimer = setTimeout(playIishnicaHeroes, 650);
+  }
+  document.addEventListener('click', function (e) {
+    var a = closest(e.target, 'a[href]');
+    if (a && isIishnicaDestination(a.href)) scheduleIishnicaHeroes();
+  }, true);
+  window.addEventListener('hashchange', function () {
+    if (isIishnicaDestination(location.href)) scheduleIishnicaHeroes();
+  });
+  /* В /test/ ссылка открывает основную страницу /иишница/, запуск произойдёт там. */
+  if (!TEST && isIishnicaDestination(location.href)) {
+    window.addEventListener('load', scheduleIishnicaHeroes);
+  }
+
   /* ================= batch-1105 ================= */
   function svgUrl(svg) { return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")'; }
   function inView(el, cb, opts) {
