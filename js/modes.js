@@ -348,7 +348,7 @@
   function placeOff() {
     var t = titleEl(); if (!t || !offBtn) return; var r = t.getBoundingClientRect();
     offBtn.style.left = Math.round(r.left + scrollX + r.width / 2) + 'px';
-    offBtn.style.top = Math.max(2, Math.round(r.top + scrollY - 13)) + 'px';
+    offBtn.style.top = Math.max(2, Math.round(r.top + scrollY - offBtn.offsetHeight - 8)) + 'px';
   }
   function crawl() {
     var w = document.createElement('div'); w.className = 'rd-crawl'; w.setAttribute('aria-hidden', 'true');
