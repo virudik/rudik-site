@@ -62,6 +62,14 @@ ok('phone tap is wheelie, not a double-tap fall', /lastPT === 'touch'\) \{ if \(
 ok('long-press 550ms falls', /setTimeout\(function \(\) \{ lpR = 0; lpRFired = true;[\s\S]*fallAlt\(\); \}, 550\)/.test(interact));
 ok('viewport does not lock zoom', /width=device-width, initial-scale=1/.test(test) && !/maximum-scale|user-scalable=no/.test(test));
 
+ok('ИИшница menu triggers existing triple reactions',
+  /function scheduleIishnicaHeroes\(\)/.test(interact) &&
+  /window\.RUDIK_PLAY_REACTION\(id\)/.test(interact) &&
+  /\['iiDance', 'iiShip', 'iiDetective'\]/.test(interact));
+copies.concat(['test/index.html']).forEach(function (rel) {
+  ok(rel + ' loads interact.js?v=16', /\/js\/interact\.js\?v=16/.test(read(rel)));
+});
+
 var vids = read('js/videos-data.js');
 ok('videos-data has Матиз and Котмонавты', /title:\s*'Матиз'/.test(vids) && /title:\s*'Котмонавты'[\s\S]*?file:\s*'\/video\/kotmonavty\.mp4'/.test(vids));
 
