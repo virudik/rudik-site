@@ -394,3 +394,6 @@ html body { transition:transform .9s cubic-bezier(.5,0,.3,1); }
 @media (prefers-reduced-motion: reduce) { .rd-holoff { transition:none; } }
 .rd-lane .rd-rider, .rd-lane .rd-rider * { -webkit-touch-callout:none; -webkit-user-select:none; user-select:none; }
 #rdSpace .sp-hit { position:absolute; pointer-events:auto; border-radius:50%; cursor:pointer; background:transparent; -webkit-tap-highlight-color:transparent; -webkit-touch-callout:none; user-select:none; z-index:1; }
+
+/* ИИшница: красная плитка, реакции только по клику. */
+#page_3 #wb_element_instance227, #page_3 #wb_element_instance231 { cursor: pointer; }

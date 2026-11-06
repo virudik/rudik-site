@@ -62,12 +62,16 @@ ok('phone tap is wheelie, not a double-tap fall', /lastPT === 'touch'\) \{ if \(
 ok('long-press 550ms falls', /setTimeout\(function \(\) \{ lpR = 0; lpRFired = true;[\s\S]*fallAlt\(\); \}, 550\)/.test(interact));
 ok('viewport does not lock zoom', /width=device-width, initial-scale=1/.test(test) && !/maximum-scale|user-scalable=no/.test(test));
 
-ok('ИИшница menu triggers existing triple reactions',
-  /function scheduleIishnicaHeroes\(\)/.test(interact) &&
-  /window\.RUDIK_PLAY_REACTION\(id\)/.test(interact) &&
-  /\['iiDance', 'iiShip', 'iiDetective'\]/.test(interact));
+ok('ИИшница: only red tile click triggers 3 existing reactions',
+  interact.includes('function playIishnicaHeroesFromTile(e)') &&
+  interact.includes("closest(e.target, '#wb_element_instance227, #wb_element_instance231')") &&
+  interact.includes("document.addEventListener('click', playIishnicaHeroesFromTile, true)") &&
+  interact.includes("['iiDance', 'iiShip', 'iiDetective']") &&
+  !interact.includes('scheduleIishnicaHeroes') &&
+  !interact.includes("addEventListener('hashchange'"));
+
 copies.concat(['test/index.html']).forEach(function (rel) {
-  ok(rel + ' loads interact.js?v=16', /\/js\/interact\.js\?v=16/.test(read(rel)));
+  ok(rel + ' loads interact.js?v=17', /\/js\/interact\.js\?v=17/.test(read(rel)));
 });
 
 var vids = read('js/videos-data.js');
