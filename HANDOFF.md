@@ -84,5 +84,10 @@
 
 ## ship-1105f (2026-11-05, MSK)
 - Merged batch-1105f (15a7086) into main: long-press no longer swallows later clicks (lpEat one-shot), synced two-dog bark, rider long-press fall, cosmonaut/satellite fly-apart + rejoin, holiday-off pill (.rd-holoff), title long-press mode menu, tint fades after 10 s, greeting below menu.
-- Space sprites over the calendar iframe in page_10: #rdSpace z610 / #rdSats z605 > calendar wb_element_instance34 z583 (same wb_main context); pointer-events only on .sp-hit ovals and .rd-sats img.
+- Space sprites over the calendar iframe in page_10: #rdSpace z610 / #rdSats z605 sit above the work calendar `#wb_element_instance103` (z467). `#wb_element_instance34` (z583) is the home calendar on page_7 and is not covered by the sprites. pointer-events only on `.sp-hit` ovals and `.rd-sats img`.
 - Versions: interact.js v15, modes.js v3, satellites.js v4, extra.css v22, test.css v21. Backups: *-old.
+
+## sync-1106 (2026-11-06) · /test/ догоняет клик космонавта
+- Контент разделов Главная…Видео, петли, календари `hl=ru`, дни рождения (Виталик 10.08, Маша 05.04, Алина 26.10), «Мои видео», ссылки и тёмная тема уже совпадали с main. ИИшница на /test/ сознательно ссылкой на основной сайт, без встраивания героев page_3.
+- Дыра: `satellites.js` искал только `#rdSpace`, а в /test/ кадр лежит в `.spacev`. Клик по космонавту и Ресурс-П ничего не делал. Теперь тот же разлёт ищется и в `.spacev`; овалы садятся на сам кадр (`.sp-stage`), не на всю широкую полосу. Покойная вёрстка баннера не меняется. Три спутника по-прежнему кликабельны поверх календаря «Работа», слой `.rd-sats` клики пропускает.
+- Корневые копии `index.html` не трогались. Ветка `#rdSpace` в общем `satellites.js` прежняя; на /test/ кэш `satellites.js?v=5`, `test.css?v=22`. Проверка: `node test/check-sync.js`.

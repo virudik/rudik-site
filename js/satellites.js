@@ -56,8 +56,37 @@
    возвращаются ДРУГ К ДРУГУ на свою общую орбиту (орбита .sp-x/.sp-y всё это время идёт). */
 (function () {
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var cv = document.querySelector('#rdSpace canvas.sp-c'); if (!cv || !cv.getContext || !document.body.animate) return;
-  var space = document.getElementById('rdSpace'), busy = false;
+  /* основной сайт: #rdSpace. /test/: космонавт в баннере .spacev, без отдельного слоя над календарём */
+  var cv = document.querySelector('#rdSpace canvas.sp-c');
+  var space = document.getElementById('rdSpace');
+  var testBox = false;
+  if (!cv) {
+    cv = document.querySelector('.spacev canvas.sp-c');
+    space = cv && (cv.closest('#work') || cv.closest('section'));
+    testBox = !!cv;
+  }
+  if (!cv || !space || !cv.getContext || !document.body.animate) return;
+  var busy = false;
+  /* в /test/ баннер шире кадра: овалы в процентах родителя должны совпасть с картинкой, а не со всей полосой */
+  if (testBox) {
+    var pre = cv.getBoundingClientRect(), box = cv.parentNode.getBoundingClientRect();
+    if (pre.width > 20 && (box.width - pre.width > 12 || box.height - pre.height > 12)) {
+      var wrap = document.createElement('div');
+      wrap.className = 'sp-stage';
+      cv.parentNode.insertBefore(wrap, cv);
+      wrap.appendChild(cv);
+      cv.style.width = '100%';
+      cv.style.height = '100%';
+      var fit = function () {
+        var sv = cv.closest('.spacev'); if (!sv) return;
+        var h = sv.clientHeight, w = Math.min(sv.clientWidth, h * (cv.width / cv.height));
+        wrap.style.width = w + 'px';
+        wrap.style.height = (w * cv.height / cv.width) + 'px';
+      };
+      fit();
+      window.addEventListener('resize', fit);
+    }
+  }
   /* над встроенным календарём (iframe) клики до документа не доходят — поэтому на сами фигуры кладём два невидимых
      овала с pointer-events:auto (только они; слой #rdSpace и canvas остаются pointer-events:none, календарь вокруг кликается) */
   (function () {
@@ -104,6 +133,7 @@
     function part(cosmo) {
       var c = document.createElement('canvas'); c.width = cv.width; c.height = cv.height; c.className = cv.className;
       c.style.cssText = 'position:absolute;left:' + cv.offsetLeft + 'px;top:' + cv.offsetTop + 'px;margin:0;pointer-events:none;';
+      if (testBox) { c.style.width = cv.offsetWidth + 'px'; c.style.height = cv.offsetHeight + 'px'; }
       host.appendChild(c); return { c: c, x: c.getContext('2d'), cosmo: cosmo };
     }
     var A = part(true), B = part(false), run = true;
@@ -113,6 +143,15 @@
       requestAnimationFrame(paint);
     }
     paint(); cv.style.opacity = '0';
+    /* /test/: баннер обрезает вылет, а календарь ниже рисуется поверх. На время полёта отпускаем обрезку и поднимаем баннер */
+    var saved = [];
+    if (testBox) {
+      var banner = cv.closest('.spacev');
+      for (var n = host; n && n !== space.parentNode; n = n.parentNode) {
+        if (getComputedStyle(n).overflow !== 'visible') { saved.push([n, 'overflow', n.style.overflow]); n.style.overflow = 'visible'; }
+      }
+      if (banner) { saved.push([banner, 'zIndex', banner.style.zIndex]); banner.style.zIndex = '8'; }
+    }
     var T = 4600, T1 = 1100 / T, T2 = 1700 / T, me = h.cosmo ? A : B, other = h.cosmo ? B : A;
     function fly(el, dx, dy, bank) {
       var far = dx.toFixed(1) + 'px ' + dy.toFixed(1) + 'px';
@@ -125,7 +164,10 @@
     var bank = (sx >= 0 ? 1 : -1) * 12;
     var a = fly(me.c, tx, ty, bank);
     fly(other.c, -tx * .35, -ty * .35, -bank * .6);
-    var end = function () { if (!run) return; run = false; cv.style.opacity = ''; A.c.remove(); B.c.remove(); busy = false; };
+    var end = function () {
+      if (!run) return; run = false; cv.style.opacity = ''; A.c.remove(); B.c.remove(); busy = false;
+      saved.forEach(function (s) { s[0].style[s[1]] = s[2]; });
+    };
     a.onfinish = a.oncancel = end; setTimeout(end, T + 500);
   }, true);
 })();

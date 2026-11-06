@@ -152,6 +152,8 @@ section{padding:34px 0 26px;border-bottom:1px solid var(--line)}
 .spacev .lv{border-radius:0}
 .spacev{position:relative;display:flex;justify-content:center;align-items:center}
 .spacev .sp-c{display:block;height:100%;width:auto;max-width:100%;pointer-events:none}
+.spacev .sp-stage{position:relative;display:inline-block;line-height:0;flex:0 0 auto;max-width:100%}
+.spacev .sp-hit{position:absolute;pointer-events:auto;border-radius:50%;cursor:pointer;background:transparent;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;user-select:none;z-index:2}
 .spacev .rd-alpha-v{position:absolute;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none}
 .logos{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:14px;margin:16px 0}
 .logos a{display:grid;place-items:center;padding:10px 16px;border-radius:14px;background:#fff}
