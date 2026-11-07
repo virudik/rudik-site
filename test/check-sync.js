@@ -43,7 +43,7 @@ ok('both calendars hl=ru', (main.match(/hl=ru/g) || []).length >= 2 && (test.mat
   ok('loop on both: ' + src, main.indexOf(src) >= 0 && test.indexOf(src) >= 0);
 });
 ok('spoon loop is current masha-loop.mp4?v=5', /masha-loop\.mp4\?v=5/.test(test));
-ok('videos-data shared', /videos-data\.js\?v=3/.test(main) && /videos-data\.js\?v=3/.test(test));
+ok('videos-data shared', /videos-data\.js\?v=4/.test(main) && /videos-data\.js\?v=4/.test(test));
 ok('test links ИИшница out, does not embed iiDance', test.indexOf('id="iiDance"') < 0 && /href="\/иишница\/"/.test(test));
 ok('main still has iiDance/iiDetective/iiShip', /id="iiDance"/.test(main) && /id="iiDetective"/.test(main) && /id="iiShip"/.test(main));
 
@@ -87,7 +87,7 @@ ok('Канцлер Серёгиус one single title, no duplicates',
   (vids.match(/title:\s*'Канцлер Серёгиус'/g) || []).length === 1 &&
   !/title:\s*'(Канцлер|Серёгиус)'/.test(vids));
 ok('Rutube iframe and fallback link enabled',
-  /if \(v\.rutube\)/.test(read('js/rudik.js')) &&
+  /if \(v\.rutube && v\.review !== 'pending'\)/.test(read('js/rudik.js')) &&
   /rf\.loading = 'lazy'/.test(read('js/rudik.js')) &&
   /Открыть на Rutube/.test(read('js/rudik.js')));
 ok('TV-submenu linked to nested video section',
@@ -98,10 +98,48 @@ ok('Unassigned cards preserved: Матиз, Кот-детектив, Роско�
 copies.forEach(function (rel) {
   var html = read(rel);
   ok(rel + ' loads the new portfolio and navigation code',
-    /\/js\/videos-data\.js\?v=3/.test(html) &&
-    /\/js\/rudik\.js\?v=3/.test(html) &&
+    /\/js\/videos-data\.js\?v=4/.test(html) &&
+    /\/js\/rudik\.js\?v=4/.test(html) &&
     /\/js\/clean-urls\.js\?v=2/.test(html));
 });
+
+
+// Портфолио: проверяем РЕАЛЬНЫЙ порядок, а не только строки в исходнике.
+var vm = require('vm');
+var renderGrid = { children: [], appendChild: function (c) { this.children.push(c); } };
+var renderDocument = {
+  getElementById: function (id) { return id === 'iiVideoGrid' ? renderGrid : null; },
+  createElement: function (type) { return {
+    type: type, children: [], appendChild: function (c) { this.children.push(c); },
+    setAttribute: function () {}
+  }; },
+  addEventListener: function () {}, querySelectorAll: function () { return []; }
+};
+var renderWindow = { addEventListener: function () {} };
+vm.runInNewContext(vids + '\n' + read('js/rudik.js'),
+  { document: renderDocument, window: renderWindow, setTimeout: function () {} });
+var names = renderGrid.children.map(function (card) { return card.children[0].textContent; });
+var ranks = names.map(function (name) {
+  var v = renderWindow.RUDIK_VIDEOS.find(function (x) { return x.title === name; });
+  if (v.file || v.youtube || (v.rutube && v.review !== 'pending')) return 0;
+  if (v.rutube || v.review === 'pending') return 1;
+  return 2;
+});
+ok('Video cards unique after merging twice-named films',
+  names.length === 14 && new Set(names).size === 14 &&
+  names.filter(function (x) { return x.includes('Очень Странный Дед Мороз'); }).length === 1 &&
+  names.filter(function (x) { return x.includes('Звёздные войны в деревне'); }).length === 1);
+ok('Local Alina and ЗВ MP4 preserved inside their merged cards',
+  /title: 'Алина — Очень Странный Дед Мороз[\s\S]*?file: '\/video\/alina-ny\.mp4'/.test(vids) &&
+  /title: 'Звёздные войны в деревне \(ЗВ\)'[\s\S]*?file: '\/video\/zv\.mp4'/.test(vids));
+ok('Loaded videos, then pending Rutube review, then скоро',
+  ranks.every(function (v, i) { return i === 0 || v >= ranks[i - 1]; }) &&
+  ranks.filter(function (v) { return v === 0; }).length === 6 &&
+  ranks.filter(function (v) { return v === 1; }).length === 1 &&
+  ranks.filter(function (v) { return v === 2; }).length === 7);
+ok('Pending Rutube IDs not falsely labeled as confirmed moderation',
+  /Публикация на Rutube проверяется/.test(read('js/rudik.js')) &&
+  !/На модерации/.test(read('js/videos-data.js')));
 
 console.log(fail ? '\n' + fail + ' failed' : '\nall checks passed');
 process.exit(fail ? 1 : 0);
