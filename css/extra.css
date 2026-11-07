@@ -397,3 +397,7 @@ html body { transition:transform .9s cubic-bezier(.5,0,.3,1); }
 
 /* ИИшница: красная плитка, реакции только по клику. */
 #page_3 #wb_element_instance227, #page_3 #wb_element_instance231 { cursor: pointer; }
+
+/* Запасная ссылка на Rutube, если браузер блокирует встроенный плеер. */
+.rv-card .rv-source { display:block; font:600 13px/18px 'Open Sans',sans-serif; margin:5px 0 2px; color:#315da6; text-align:right; text-decoration:underline; text-underline-offset:2px; }
+.rv-card .rv-source:hover, .rv-card .rv-source:focus-visible { color:#a42a86; }

@@ -57,7 +57,9 @@
     if (!known(slug)) return;
     e.preventDefault();
     var inMenu = !!link.closest('.menu-landing');
-    if (!inMenu) { e.stopPropagation(); jump(slug, true); }   // меню прокручивает само (main.js), остальным помогаем
+    // «Видео со мной» — вложенный #видео (не .wb_page_anchor).
+    // main.js не прокручивает к нему из подменю, здесь помогаем явно.
+    if (!inMenu || slug === 'видео') { e.stopPropagation(); jump(slug, true); }
     var p = pathFor(slug);
     if (decodeURIComponent(location.pathname) !== p || location.hash) { history.pushState({ s: slug }, '', p); hit(p); }
   }, true);
