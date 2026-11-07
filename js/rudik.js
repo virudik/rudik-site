@@ -1,38 +1,59 @@
 (function () {
   var grid = document.getElementById('iiVideoGrid');
   if (grid) {
-    (window.RUDIK_VIDEOS || []).forEach(function (v) {
+    var items = (window.RUDIK_VIDEOS || []).slice();
+    function group(v) {
+      if (v.file || (v.rutube && v.review !== 'pending') || v.youtube) return 0;
+      if (v.rutube || v.review === 'pending') return 1;
+      return 2;
+    }
+    // Стабильная группировка: доступные → ожидающие проверки → «скоро».
+    items.sort(function (a, b) { return group(a) - group(b); });
+    items.forEach(function (v) {
       var c = document.createElement('div'); c.className = 'rv-card';
       var t = document.createElement('div'); t.className = 'rv-t'; t.textContent = v.title; c.appendChild(t);
       var b = document.createElement('div'); b.className = 'rv-box';
-      var source = null;
-      if (v.rutube) {
-        // Для Shorts Rutube также предоставляет горизонтальный embed-плеер.
+      var source = null, note = null;
+      if (v.file && (!v.rutube || v.review === 'pending')) {
+        // Пока внешний дубль недоступен, проигрываем существующий локальный MP4.
+        var vd = document.createElement('video');
+        vd.controls = true; vd.preload = 'none'; vd.setAttribute('playsinline', '');
+        if (v.poster) vd.poster = v.poster;
+        vd.src = v.file; vd.title = v.title; b.appendChild(vd);
+      } else if (v.rutube && v.review !== 'pending') {
         var rf = document.createElement('iframe');
         rf.src = 'https://rutube.ru/play/embed/' + v.rutube;
         rf.title = 'Смотреть на Rutube: ' + v.title;
         rf.allow = 'clipboard-write; autoplay; fullscreen';
         rf.allowFullscreen = true; rf.loading = 'lazy';
         rf.setAttribute('frameborder', '0'); b.appendChild(rf);
-        source = document.createElement('a');
-        source.href = 'https://rutube.ru/' + (v.shorts ? 'shorts/' : 'video/') + v.rutube + '/';
-        source.textContent = 'Открыть на Rutube';
-        source.className = 'rv-source';
-        source.target = '_blank'; source.rel = 'noopener noreferrer';
-      } else if (v.file) {
-        var vd = document.createElement('video');
-        vd.controls = true; vd.preload = 'none'; vd.setAttribute('playsinline', '');
-        if (v.poster) vd.poster = v.poster;
-        vd.src = v.file; vd.title = v.title; b.appendChild(vd);
       } else if (v.youtube) {
         var f = document.createElement('iframe');
         f.src = '//www.youtube.com/embed/' + v.youtube + '?controls=1' + (v.start ? '&start=' + v.start : '');
         f.title = v.title; f.allowFullscreen = true; b.appendChild(f);
+      } else if (v.rutube && v.review === 'pending') {
+        var wait = document.createElement('div');
+        wait.className = 'rv-pending';
+        wait.textContent = 'Публикация на Rutube проверяется';
+        b.appendChild(wait);
       } else {
         b.innerHTML = '<div class="rv-play"></div><div class="rv-soon">скоро</div>';
       }
       c.appendChild(b);
-      if (source) c.appendChild(source);
+      if (v.rutube && v.review === 'pending') {
+        note = document.createElement('div');
+        note.className = 'rv-check';
+        note.textContent = 'Ссылка на Rutube пока не подтверждена';
+        c.appendChild(note);
+      }
+      if (v.rutube) {
+        source = document.createElement('a');
+        source.href = 'https://rutube.ru/' + (v.shorts ? 'shorts/' : 'video/') + v.rutube + '/';
+        source.textContent = v.review === 'pending' ? 'Проверить на Rutube' : 'Открыть на Rutube';
+        source.className = 'rv-source';
+        source.target = '_blank'; source.rel = 'noopener noreferrer';
+        c.appendChild(source);
+      }
       grid.appendChild(c);
     });
   }

@@ -401,3 +401,7 @@ html body { transition:transform .9s cubic-bezier(.5,0,.3,1); }
 /* Запасная ссылка на Rutube, если браузер блокирует встроенный плеер. */
 .rv-card .rv-source { display:block; font:600 13px/18px 'Open Sans',sans-serif; margin:5px 0 2px; color:#315da6; text-align:right; text-decoration:underline; text-underline-offset:2px; }
 .rv-card .rv-source:hover, .rv-card .rv-source:focus-visible { color:#a42a86; }
+
+/* «Мои видео»: ожидание подтверждения Rutube — выше заглушек «скоро». */
+.rv-box .rv-pending { color:#fff; font:600 18px/1.45 'Open Sans',sans-serif; text-align:center; padding:20px; }
+.rv-card .rv-check { color:#715e23; font:500 12px/1.4 'Open Sans',sans-serif; margin-top:4px; }
