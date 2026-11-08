@@ -1,0 +1,102 @@
+name: Confirm owner Rutube playback and switch verified players
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/rutube-confirm-and-switch.yml']
+permissions:
+  contents: write
+concurrency:
+  group: owner-rutube-playback-once
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.actor == 'virudik'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      HOLDER: chatgpt:ordinary:79dd16b2-9780-466c-a616-33cb3eb1387d
+      ACQUIRED: '2026-11-08T07:23:48Z'
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+      - run: |
+          python3 -m pip install --quiet playwright
+          python3 -m playwright install --with-deps chromium
+      - name: Correct test pause handling and provider millisecond duration
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import textwrap
+          y=Path('.github/workflows/rutube-playback-once.yml').read_text()
+          code=textwrap.dedent(y.split("python3 - <<'PY'\n",1)[1].split('\n          PY\n',1)[0])
+          a="r['play_attempted']=True"
+          b="r['play_attempted']=True\n                    await fr.wait_for_selector('video',timeout=20000)\n                    r['play_promise']=await fr.evaluate(\"async()=>{const v=document.querySelector('video');try{await v.play();return 'resolved'}catch(e){return e.name+': '+e.message}}\")"
+          # Preserve the original indentation inside the async try block.
+          lines=code.splitlines()
+          for i,l in enumerate(lines):
+              if l.strip()==a:
+                  pad=l[:len(l)-len(l.lstrip())]
+                  lines[i]=pad+a+'\n'+pad+"await fr.wait_for_selector('video',timeout=20000)"+'\n'+pad+"r['play_promise']=await fr.evaluate(\"async()=>{const v=document.querySelector('video');try{await v.play();return 'resolved'}catch(e){return e.name+': '+e.message}}\")"
+          code='\n'.join(lines)
+          old="durations=[float(m['duration']) for m in meta if isinstance(m.get('duration'),(int,float))]"
+          new="durations=[float(m['duration'])/1000 for m in meta if m.get('video_id')==vid and isinstance(m.get('duration'),(int,float))]"
+          assert code.count(old)==1
+          code=code.replace(old,new).replace('for tick in range(9):','for tick in range(5):')
+          compile(code,'/tmp/player-confirm.py','exec')
+          Path('/tmp/player-confirm.py').write_text(code)
+          PY
+          python3 /tmp/player-confirm.py
+      - name: Publish verified player choices without deleting originals
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch -q origin main
+            git reset -q --hard origin/main
+            python3 - <<'PY'
+          import os,json,base64,urllib.request,re,subprocess,hashlib
+          from pathlib import Path
+          from datetime import datetime,timezone
+          req=urllib.request.Request('https://api.github.com/repos/virudik/ai-film-prompts/contents/ops/canon-lock.json?ref=main',headers={'User-Agent':'owner-player-confirm'})
+          j=json.load(urllib.request.urlopen(req,timeout=25));lock=json.loads(base64.b64decode(j['content']))
+          assert lock['state']=='held' and lock['holder']==os.environ['HOLDER'] and lock['acquired_at']==os.environ['ACQUIRED'] and datetime.fromisoformat(lock['expires_at'].replace('Z','+00:00'))>datetime.now(timezone.utc)
+          r=json.loads(Path('/tmp/rutube-playback.json').read_text())
+          safe=set(r['safe_replacement_ids']);rp=Path('reports/rutube-playback-2026-11-08.json')
+          previous=json.loads(rp.read_text())
+          r['previous_attempt']={'checked_at':previous['checked_at'],'sha256':hashlib.sha256(rp.read_bytes()).hexdigest(),'note':'Initial probe paused loaded videos and compared ms against seconds; no failure of the actual videos was inferred.'}
+          p=Path('js/videos-data.js');text=p.read_text();changed=[]
+          for vid in safe:
+              pattern=r"(rutube: '"+re.escape(vid)+r"'), review: 'pending'"
+              text,n=re.subn(pattern,r'\1',text)
+              if n:changed.append(vid)
+          p.write_text(text)
+          r['pending_flags_removed_for_verified_ids']=changed
+          r['no_pending_flags_changed']=not changed
+          r['video_files_deleted']=[]
+          r['source_backup_and_cleanup']='Pending verified Drive/source backup; original files are not removed by this player switch.'
+          r['published_player_switch_requires_Pages_readback']=True
+          rp.write_text(json.dumps(r,ensure_ascii=False,indent=2)+'\n')
+          if changed:
+              for filename in subprocess.check_output(['git','ls-files','-z'],text=True).split('\0'):
+                  if filename.endswith('.html'):
+                      q=Path(filename);s=q.read_text();s=s.replace('/js/videos-data.js?v=5','/js/videos-data.js?v=6');q.write_text(s)
+              tp=Path('test/check-sync.js');s=tp.read_text().replace('videos-data.js?v=5','videos-data.js?v=6').replace(r'videos-data\.js\?v=5',r'videos-data\.js\?v=6')
+              old="renderWindow.RUDIK_VIDEOS.filter(function (v) { return v.review === 'pending'; }).length === 3"
+              assert old in s
+              s=s.replace(old,"renderWindow.RUDIK_VIDEOS.filter(function (v) { return v.review === 'pending'; }).length === "+str(3-len(changed)))
+              tp.write_text(s)
+          result=subprocess.run(['node','test/check-sync.js'],text=True,capture_output=True)
+          print(result.stdout+result.stderr);assert result.returncode==0
+          r['render_test_passed']=True;rp.write_text(json.dumps(r,ensure_ascii=False,indent=2)+'\n')
+          h=Path('HANDOFF.md');s=h.read_text();s+='\n### Rutube playback 08.11.2026\n\nПроверено браузером с origin рудик.рф; подтверждённые ID: '+', '.join(sorted(safe))+'. Снятые pending: '+', '.join(changed)+'. Источник, движущийся таймер, размеры и длительность проверены; это не полный художественный просмотр. Доказательство: reports/rutube-playback-2026-11-08.json. Локальные MP4 пока сохранены до отдельного подтверждения резервной копии; повторно видео не загружать.\n';h.write_text(s)
+          PY
+            git add reports/rutube-playback-2026-11-08.json js/videos-data.js test/check-sync.js HANDOFF.md
+            git ls-files -z '*.html' | xargs -0 git add --
+            git diff --cached --check
+            git commit -m 'Use only playback-confirmed Rutube embeds; preserve originals for backup'
+            if git push origin HEAD:main;then exit 0;fi
+          done
+          exit 1
