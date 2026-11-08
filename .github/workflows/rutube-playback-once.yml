@@ -1,0 +1,121 @@
+name: Owner Rutube playback verification (once)
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/rutube-playback-once.yml']
+permissions:
+  contents: write
+concurrency:
+  group: owner-rutube-playback-once
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.actor == 'virudik'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Install public browser test runtime
+        run: |
+          python3 -m pip install --quiet playwright
+          python3 -m playwright install --with-deps chromium
+      - name: Inspect actual player on the published site origin
+        run: |
+          python3 - <<'PY'
+          import asyncio,json,hashlib,re
+          from pathlib import Path
+          from datetime import datetime,timezone
+          from urllib.parse import urlsplit
+          from playwright.async_api import async_playwright
+          SITE='https://xn--d1aigvp.xn--p1ai/'
+          IDS=['81a1e6150e98400ce7732b6da6bbc3e6','a260d16ec1ec08900d878aec655b62b0','bded60522d4d787ae2df31e8ebe5ad23','71a96d88e127f61acd8e49c3831b50d7','f28cf60c314b00eadc77d88f582e1be0','5c9529ad09a354eb24e7fec0030f8108']
+          def stamp():return datetime.now(timezone.utc).isoformat(timespec='seconds')
+          async def main():
+              async with async_playwright() as p:
+                  browser=await p.chromium.launch(args=['--autoplay-policy=no-user-gesture-required'])
+                  context=await browser.new_context(viewport={'width':1100,'height':800},locale='ru-RU')
+                  sem=asyncio.Semaphore(3)
+                  async def inspect(vid):
+                      async with sem:
+                          page=await context.new_page(); r={'video_id':vid,'checked_at':stamp(),'test_origin':SITE,'playback_observed':False,'content_identity_confirmed':False,'http_errors':[],'snapshots':[]}; meta=[]
+                          async def response(resp):
+                              u=resp.url
+                              if 'rutube' not in u:return
+                              if resp.status>=400:r['http_errors'].append({'status':resp.status,'url':urlsplit(u).netloc+urlsplit(u).path})
+                              if '/api/play/options/'+vid in u and resp.status==200:
+                                  try:
+                                      j=await resp.json();meta.append({k:j.get(k) for k in ['id','video_id','title','duration','is_adult','is_livestream'] if k in j})
+                                  except Exception:pass
+                          page.on('response',response)
+                          try:
+                              res=await page.goto(SITE,wait_until='domcontentloaded',timeout=30000)
+                              r['site_http_status']=res.status if res else None
+                              # Temporary test DOM only; no server/site files are changed.
+                              await page.evaluate('''(id)=>{document.body.innerHTML='';const f=document.createElement('iframe');f.id='ownerPlaybackTest';f.src='https://rutube.ru/play/embed/'+id;f.width='960';f.height='540';f.allow='autoplay; fullscreen';document.body.appendChild(f);}''',vid)
+                              fr=None
+                              for _ in range(12):
+                                  await page.wait_for_timeout(1000)
+                                  fr=next((f for f in page.frames if '/play/embed/'+vid in f.url),None)
+                                  if fr:break
+                              if not fr:raise RuntimeError('Embed frame did not load')
+                              await fr.wait_for_load_state('domcontentloaded',timeout=25000)
+                              clicked=False
+                              for pattern in ['Воспроизвести','Смотреть','Play','Включить']:
+                                  loc=fr.get_by_role('button',name=re.compile(pattern,re.I))
+                                  if await loc.count():
+                                      try:await loc.first.click(timeout=2500);clicked=True;break
+                                      except Exception:pass
+                              if not clicked:
+                                  await page.locator('#ownerPlaybackTest').click(position={'x':480,'y':270},timeout=5000)
+                              r['play_attempted']=True
+                              for tick in range(9):
+                                  await page.wait_for_timeout(3000)
+                                  snap=await fr.evaluate('''()=>({text:(document.body?.innerText||'').slice(0,3000),videos:[...document.querySelectorAll('video')].map(v=>({currentTime:v.currentTime,duration:Number.isFinite(v.duration)?v.duration:null,paused:v.paused,readyState:v.readyState,width:v.videoWidth,height:v.videoHeight,error:v.error?{code:v.error.code,message:v.error.message}:null,srcHashHint:v.currentSrc?new URL(v.currentSrc,location.href).pathname.slice(0,180):null}))})''')
+                                  r['snapshots'].append(snap)
+                                  if re.search('временно недоступно|видео удалено|видео недоступно|ошибка воспроизведения',snap['text'],re.I):break
+                              r['player_metadata']=meta
+                              samples=[v for s in r['snapshots'] for v in s['videos']]
+                              moving=any(b['currentTime']-a['currentTime']>=2 and a.get('srcHashHint')==b.get('srcHashHint') and b['width']>0 and b['readyState']>=2 for a,b in zip(samples,samples[1:]))
+                              r['playback_observed']=moving
+                              durations=[float(m['duration']) for m in meta if isinstance(m.get('duration'),(int,float))]
+                              r['content_identity_confirmed']=bool(moving and durations and any(v.get('duration') and any(abs(v['duration']-d)<2 for d in durations) for v in samples) and not any(re.search('реклама|advertisement',s['text'],re.I) for s in r['snapshots']))
+                              r['safe_for_automatic_replacement']=r['playback_observed'] and r['content_identity_confirmed']
+                              if not r['safe_for_automatic_replacement']:r['next_action']='Preserve existing source; public page title or iframe load alone is insufficient.'
+                          except Exception as e:r['error']={'type':type(e).__name__,'message':str(e)[:1000]}
+                          await page.close();return r
+                  results=await asyncio.gather(*(inspect(i) for i in IDS))
+                  await browser.close()
+                  report={'schema_version':1,'checked_at':stamp(),'scope':'Public Chromium iframe playback from actual published site origin; temporary DOM only; not Android/Safari acceptance','videos':results,'no_video_files_deleted':True,'no_pending_flags_changed':True,'no_login_upload_or_generation':True,'safe_replacement_ids':[r['video_id'] for r in results if r.get('safe_for_automatic_replacement')]}
+                  Path('/tmp/rutube-playback.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+                  print(json.dumps({'safe_replacement_ids':report['safe_replacement_ids'],'results':[{'id':r['video_id'],'playback':r['playback_observed'],'identity':r['content_identity_confirmed'],'error':r.get('error')} for r in results]},ensure_ascii=False))
+          asyncio.run(main())
+          PY
+      - name: Save diagnostic evidence under current writer lease
+        env:
+          HOLDER: chatgpt:ordinary:79dd16b2-9780-466c-a616-33cb3eb1387d
+          ACQUIRED: '2026-11-08T07:23:48Z'
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch -q origin main
+            git reset -q --hard origin/main
+            python3 - <<'PY'
+          import json,base64,urllib.request,os
+          from datetime import datetime,timezone
+          req=urllib.request.Request('https://api.github.com/repos/virudik/ai-film-prompts/contents/ops/canon-lock.json?ref=main',headers={'User-Agent':'owner-player-check'})
+          j=json.load(urllib.request.urlopen(req,timeout=25));l=json.loads(base64.b64decode(j['content']))
+          assert l['state']=='held' and l['holder']==os.environ['HOLDER'] and l['acquired_at']==os.environ['ACQUIRED'] and datetime.fromisoformat(l['expires_at'].replace('Z','+00:00'))>datetime.now(timezone.utc)
+          PY
+            mkdir -p reports
+            cp /tmp/rutube-playback.json reports/rutube-playback-2026-11-08.json
+            git add reports/rutube-playback-2026-11-08.json
+            git diff --cached --quiet && exit 0
+            git commit -m 'Record actual Rutube player observations; no fallback deletion'
+            if git push origin HEAD:main; then exit 0;fi
+          done
+          exit 1
