@@ -7,8 +7,12 @@
       if (v.rutube || v.review === 'pending') return 1;
       return 2;
     }
-    // Стабильная группировка: доступные → ожидающие проверки → «скоро».
-    items.sort(function (a, b) { return group(a) - group(b); });
+    // Явный порядок шести роликов владельца; остальные группируются по доступности.
+    items.sort(function (a, b) {
+      var ar = typeof a.order === 'number' ? a.order : 1000;
+      var br = typeof b.order === 'number' ? b.order : 1000;
+      return ar - br || group(a) - group(b);
+    });
     items.forEach(function (v) {
       var c = document.createElement('div'); c.className = 'rv-card';
       var t = document.createElement('div'); t.className = 'rv-t'; t.textContent = v.title; c.appendChild(t);

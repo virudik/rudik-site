@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "request_id": "owner-order-20261108",
+  "checked_at": "2026-11-08T07:29:13+00:00",
+  "source_head": "f6032b1000a6febf81f02e861611a97acd407320",
+  "holder": "chatgpt:ordinary:79dd16b2-9780-466c-a616-33cb3eb1387d",
+  "exact_first_six_rutube_ids": [
+    "81a1e6150e98400ce7732b6da6bbc3e6",
+    "a260d16ec1ec08900d878aec655b62b0",
+    "bded60522d4d787ae2df31e8ebe5ad23",
+    "71a96d88e127f61acd8e49c3831b50d7",
+    "f28cf60c314b00eadc77d88f582e1be0",
+    "5c9529ad09a354eb24e7fec0030f8108"
+  ],
+  "order_status": "code_and_render_regression_verified",
+  "publication_status": "requires_commit_and_Pages_readback",
+  "original_videos_data_sha256": "7a42b70351003054c56dbd30da708147d9219399a3845a1095eaa201599e09cd",
+  "html_cache_versions_updated": [
+    "index.html",
+    "prompts/index.html",
+    "test/index.html",
+    "алина/index.html",
+    "видео/index.html",
+    "виталик/index.html",
+    "иишница/index.html",
+    "маша/index.html",
+    "мои-видео/index.html",
+    "обо-мне/index.html",
+    "промты/index.html",
+    "работа/index.html",
+    "фото/index.html"
+  ],
+  "youtube_inventory_count": 13,
+  "tests": [
+    {
+      "command": [
+        "node",
+        "--check",
+        "js/rudik.js"
+      ],
+      "exit_code": 0,
+      "output_tail": ""
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        "js/videos-data.js"
+      ],
+      "exit_code": 0,
+      "output_tail": ""
+    },
+    {
+      "command": [
+        "node",
+        "test/check-sync.js"
+      ],
+      "exit_code": 0,
+      "output_tail": "s test.css?v=22\nok  test cosmonaut lives in .spacev, not #rdSpace\nok  test work calendar is .cal-space\nok  test home calendar is .cal-wall\nok  both calendars hl=ru\nok  loop on both: vitalik-tile-loop.mp4\nok  loop on both: masha-loop.mp4?v=5\nok  loop on both: alina-loop.mp4\nok  loop on both: dogs-loop.mp4?v=2\nok  loop on both: space-loop.mp4?v=2\nok  loop on both: fam2-loop.mp4?v=5\nok  loop on both: rainbow-loop.mp4?v=4\nok  spoon loop is current masha-loop.mp4?v=5\nok  videos-data shared\nok  test links ИИшница out, does not embed iiDance\nok  main still has iiDance/iiDetective/iiShip\nok  birthdays Виталик 08-10 Маша 04-05 Алина 10-26\nok  satellites bind #rdSpace first\nok  satellites also bind test .spacev\nok  test css positions hit ovals\nok  satellite images stay clickable\nok  satellite layer itself ignores clicks\nok  phone tap is wheelie, not a double-tap fall\nok  long-press 550ms falls\nok  viewport does not lock zoom\nok  ИИшница: only red tile click triggers 3 existing reactions\nok  index.html loads interact.js?v=17\nok  алина/index.html loads interact.js?v=17\nok  маша/index.html loads interact.js?v=17\nok  виталик/index.html loads interact.js?v=17\nok  иишница/index.html loads interact.js?v=17\nok  мои-видео/index.html loads interact.js?v=17\nok  обо-мне/index.html loads interact.js?v=17\nok  промты/index.html loads interact.js?v=17\nok  работа/index.html loads interact.js?v=17\nok  фото/index.html loads interact.js?v=17\nok  видео/index.html loads interact.js?v=17\nok  prompts/index.html loads interact.js?v=17\nok  test/index.html loads interact.js?v=17\nok  Rutube portfolio has six exact owner video IDs\nok  Канцлер Серёгиус one single title, no duplicates\nok  Rutube iframe and fallback link enabled\nok  TV-submenu linked to nested video section\nok  Unassigned cards preserved: Матиз, Кот-детектив, Роскосмос\nok  index.html loads the new portfolio and navigation code\nok  алина/index.html loads the new portfolio and navigation code\nok  маша/index.html loads the new portfolio and navigation code\nok  виталик/index.html loads the new portfolio and navigation code\nok  иишница/index.html loads the new portfolio and navigation code\nok  мои-видео/index.html loads the new portfolio and navigation code\nok  обо-мне/index.html loads the new portfolio and navigation code\nok  промты/index.html loads the new portfolio and navigation code\nok  работа/index.html loads the new portfolio and navigation code\nok  фото/index.html loads the new portfolio and navigation code\nok  видео/index.html loads the new portfolio and navigation code\nok  prompts/index.html loads the new portfolio and navigation code\nok  Video cards unique after merging twice-named films\nok  Local Alina and ЗВ MP4 preserved inside their merged cards\nok  Exact owner order: Открытка ОСД Котмонавты ЗВ Финансовые Алексей\nok  Remaining videos before remaining soon cards\nok  Explicit order preserves pending flags and all fourteen cards\nok  Pending Rutube IDs not falsely labeled as confirmed moderation\n\nall checks passed\n"
+    }
+  ],
+  "video_files_deleted": [],
+  "rutube_pending_changed": false,
+  "no_video_upload_or_generation": true
+}
