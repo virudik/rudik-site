@@ -1,0 +1,92 @@
+name: Remove backed-up replaced videos once
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/remove-backed-up-videos-once.yml']
+permissions:
+  contents: write
+concurrency:
+  group: owner-video-cleanup
+  cancel-in-progress: false
+jobs:
+  cleanup:
+    if: github.actor == 'virudik'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      HOLDER: chatgpt:ordinary:79dd16b2-9780-466c-a616-33cb3eb1387d
+      ACQUIRED: '2026-11-08T07:23:48Z'
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Remove only exact backed-up bytes and verify rendered cards
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch -q origin main
+            git reset -q --hard origin/main
+            python3 - <<'PY'
+          import os,json,hashlib,base64,urllib.request,subprocess
+          from pathlib import Path
+          from datetime import datetime,timezone
+          def get(url):
+              return json.load(urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'owner-verified-video-cleanup'}),timeout=25))
+          def lease():
+              j=get('https://api.github.com/repos/virudik/ai-film-prompts/contents/ops/canon-lock.json?ref=main');l=json.loads(base64.b64decode(j['content']))
+              assert l['state']=='held' and l['holder']==os.environ['HOLDER'] and l['acquired_at']==os.environ['ACQUIRED']
+              assert datetime.fromisoformat(l['expires_at'].replace('Z','+00:00'))>datetime.now(timezone.utc)
+          lease()
+          report=Path('reports/rutube-local-video-cleanup-2026-11-08.json')
+          assert not report.exists(), 'Already completed: no repeat cleanup'
+          published=get('https://api.github.com/repos/virudik/rudik-site/actions/runs/42460376108')
+          assert published['status']=='completed' and published['conclusion']=='success'
+          playback=json.loads(Path('reports/rutube-playback-2026-11-08.json').read_text())
+          backups=[{'path':'video/alina-ny.mp4','rutube_id':'a260d16ec1ec08900d878aec655b62b0','bytes':80129520,'sha256':'303ac81b53b1b3c9422cd367fc34298f8141845027937e8c8b2beecb8abd0649','drive_file_id':'1n3HydXflF8aKyHOxNsBcl_8uYo55zeiW','drive_zip_sha256':'a26a1d26177c889a7a743f909b4658f63505f89a7b8cef215b05cecd70871b34'}, {'path':'video/zv.mp4','rutube_id':'71a96d88e127f61acd8e49c3831b50d7','bytes':81783002,'sha256':'f4d1c5ba3369b8a2d00cba0d7883d3bbde56507d5400587629282364114f0364','drive_file_id':'1a0MybnYvDERSdUl8HJiky5gwR30cTnQt','drive_zip_sha256':'339c0c0c4677c6bbd8de76f28e9793b675ec28ccdbfa57484224a190cea0d415'}]
+          s=Path('js/videos-data.js').read_text()
+          for item in backups:
+              p=Path(item['path']);assert p.is_file()
+              raw=p.read_bytes();assert len(raw)==item['bytes'] and hashlib.sha256(raw).hexdigest()==item['sha256']
+              assert item['rutube_id'] in playback['safe_replacement_ids']
+              fragment="file: '/"+item['path']+"', "
+              assert s.count(fragment)==1
+              s=s.replace(fragment,'')
+              item.update(drive_readback_verified_at='2026-11-08T07:58:53+00:00',drive_url='https://drive.google.com/file/d/'+item['drive_file_id']+'/view',removed_from_current_tree=True)
+              p.unlink()
+          Path('js/videos-data.js').write_text(s)
+          tracked=subprocess.check_output(['git','ls-files','-z'],text=True).split('\0')
+          for name in tracked:
+              if name.endswith('.html'):
+                  p=Path(name);t=p.read_text();u=t.replace('/js/videos-data.js?v=6','/js/videos-data.js?v=7')
+                  if u!=t:p.write_text(u)
+          tp=Path('test/check-sync.js');t=tp.read_text().replace(r'videos-data\.js\?v=6',r'videos-data\.js\?v=7').replace('videos-data.js?v=6','videos-data.js?v=7')
+          start=t.index("ok('Local Alina and ЗВ MP4 preserved inside their merged cards'")
+          end=t.index('var ownerIds =',start)
+          t=t[:start]+"ok('Replaced original MP4 absent only after Drive backup and Rutube verification', !vids.includes('/video/alina-ny.mp4') && !vids.includes('/video/zv.mp4') && !fs.existsSync(path.join(root,'video/alina-ny.mp4')) && !fs.existsSync(path.join(root,'video/zv.mp4')));\n"+t[end:]
+          tp.write_text(t)
+          dangling=[]
+          for name in tracked:
+              if not name.endswith(('.html','.js','.css')) or name.startswith(('test/check-','reports/','.github/')):continue
+              p=Path(name)
+              if p.is_file():
+                  txt=p.read_text(errors='replace')
+                  if '/video/alina-ny.mp4' in txt or '/video/zv.mp4' in txt:dangling.append(name)
+          assert not dangling, 'Remaining runtime references: '+str(dangling)
+          run=subprocess.run(['node','test/check-sync.js'],text=True,capture_output=True)
+          print(run.stdout+run.stderr);assert run.returncode==0
+          result={'schema_version':1,'checked_at':datetime.now(timezone.utc).isoformat(timespec='seconds'),'holder':os.environ['HOLDER'],'owner_authorization':'08Nov: replace working Rutube players and remove local GitHub video copies','source_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'playback_evidence':'reports/rutube-playback-2026-11-08.json','prior_player_Pages_success':42460376108,'backup_folder':'https://drive.google.com/drive/folders/1OZy8tMRFsiiSCP8qN8rd7TLq-_lWKO5b','backups':backups,'removed_bytes':sum(i['bytes'] for i in backups),'remaining_runtime_references':dangling,'render_tests_passed':True,'git_history_rewritten':False,'other_videos_unchanged':True,'no_upload_or_generation':True}
+          report.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+          h=Path('HANDOFF.md');t=h.read_text();t+='\n### 08.11 — заменённые MP4 убраны из текущего сайта\n\nПосле фактического воспроизведения всех шести Rutube-видео и проверки обратного скачивания двух ZIP с Google Drive удалены только video/alina-ny.mp4 и video/zv.mp4 (161912522 байта). Ссылки заменены на уже проверенные Rutube-плееры, исходники сохранены в папке «Архив видео сайта»: https://drive.google.com/drive/folders/1OZy8tMRFsiiSCP8qN8rd7TLq-_lWKO5b. Доказательство с SHA: reports/rutube-local-video-cleanup-2026-11-08.json. Git-история не переписывалась; alina-school и все анимационные видео не трогались. Не возвращать удалённые файлы и не переносить их повторно. Cache videos-data v7; порядок владельца сохранён.\n';h.write_text(t)
+          lease()
+          PY
+            git add js/videos-data.js test/check-sync.js HANDOFF.md reports/rutube-local-video-cleanup-2026-11-08.json
+            git add -u -- video/alina-ny.mp4 video/zv.mp4
+            git ls-files -z '*.html' | xargs -0 git add --
+            git diff --cached --check
+            git commit -m 'Remove 161.9 MB of replaced site videos after verified Drive backups and Rutube playback'
+            if git push origin HEAD:main;then exit 0;fi
+          done
+          exit 1
