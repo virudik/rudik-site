@@ -1,0 +1,41 @@
+name: Export originals before Rutube cleanup
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/export-replaced-videos.yml']
+permissions:
+  contents: read
+jobs:
+  export:
+    if: github.actor == 'virudik'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Verify player evidence and preserve bytes
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,hashlib,shutil,subprocess
+          r=json.loads(Path('reports/rutube-playback-2026-11-08.json').read_text())
+          ids={'video/alina-ny.mp4':'a260d16ec1ec08900d878aec655b62b0','video/zv.mp4':'71a96d88e127f61acd8e49c3831b50d7'}
+          assert set(ids.values()).issubset(set(r['safe_replacement_ids']))
+          out=Path('/tmp/rudik-video-originals');out.mkdir(exist_ok=True)
+          items=[]
+          for name,vid in ids.items():
+              p=Path(name);assert p.is_file();b=p.read_bytes()
+              items.append({'path':name,'rutube_id':vid,'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()})
+              shutil.copy2(p,out/p.name)
+          (out/'manifest.json').write_text(json.dumps({'repository':'virudik/rudik-site','source_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'items':items,'purpose':'Exact original backup before removal from current website tree; no history rewrite.'},ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps(items))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rudik-video-originals
+          path: /tmp/rudik-video-originals/
+          retention-days: 7
+          compression-level: 0
+          if-no-files-found: error
