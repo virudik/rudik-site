@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-11-08T08:00:49+00:00",
+  "holder": "chatgpt:ordinary:79dd16b2-9780-466c-a616-33cb3eb1387d",
+  "owner_authorization": "08Nov: replace working Rutube players and remove local GitHub video copies",
+  "source_head": "34cd74797dda425de21eb69137caeeebb291d59c",
+  "playback_evidence": "reports/rutube-playback-2026-11-08.json",
+  "prior_player_Pages_success": 42460376108,
+  "backup_folder": "https://drive.google.com/drive/folders/1OZy8tMRFsiiSCP8qN8rd7TLq-_lWKO5b",
+  "backups": [
+    {
+      "path": "video/alina-ny.mp4",
+      "rutube_id": "a260d16ec1ec08900d878aec655b62b0",
+      "bytes": 80129520,
+      "sha256": "303ac81b53b1b3c9422cd367fc34298f8141845027937e8c8b2beecb8abd0649",
+      "drive_file_id": "1n3HydXflF8aKyHOxNsBcl_8uYo55zeiW",
+      "drive_zip_sha256": "a26a1d26177c889a7a743f909b4658f63505f89a7b8cef215b05cecd70871b34",
+      "drive_readback_verified_at": "2026-11-08T07:58:53+00:00",
+      "drive_url": "https://drive.google.com/file/d/1n3HydXflF8aKyHOxNsBcl_8uYo55zeiW/view",
+      "removed_from_current_tree": true
+    },
+    {
+      "path": "video/zv.mp4",
+      "rutube_id": "71a96d88e127f61acd8e49c3831b50d7",
+      "bytes": 81783002,
+      "sha256": "f4d1c5ba3369b8a2d00cba0d7883d3bbde56507d5400587629282364114f0364",
+      "drive_file_id": "1a0MybnYvDERSdUl8HJiky5gwR30cTnQt",
+      "drive_zip_sha256": "339c0c0c4677c6bbd8de76f28e9793b675ec28ccdbfa57484224a190cea0d415",
+      "drive_readback_verified_at": "2026-11-08T07:58:53+00:00",
+      "drive_url": "https://drive.google.com/file/d/1a0MybnYvDERSdUl8HJiky5gwR30cTnQt/view",
+      "removed_from_current_tree": true
+    }
+  ],
+  "removed_bytes": 161912522,
+  "remaining_runtime_references": [],
+  "render_tests_passed": true,
+  "git_history_rewritten": false,
+  "other_videos_unchanged": true,
+  "no_upload_or_generation": true
+}

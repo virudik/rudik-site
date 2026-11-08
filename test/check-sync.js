@@ -43,7 +43,7 @@ ok('both calendars hl=ru', (main.match(/hl=ru/g) || []).length >= 2 && (test.mat
   ok('loop on both: ' + src, main.indexOf(src) >= 0 && test.indexOf(src) >= 0);
 });
 ok('spoon loop is current masha-loop.mp4?v=5', /masha-loop\.mp4\?v=5/.test(test));
-ok('videos-data shared', /videos-data\.js\?v=6/.test(main) && /videos-data\.js\?v=6/.test(test));
+ok('videos-data shared', /videos-data\.js\?v=7/.test(main) && /videos-data\.js\?v=7/.test(test));
 ok('test links ИИшница out, does not embed iiDance', test.indexOf('id="iiDance"') < 0 && /href="\/иишница\/"/.test(test));
 ok('main still has iiDance/iiDetective/iiShip', /id="iiDance"/.test(main) && /id="iiDetective"/.test(main) && /id="iiShip"/.test(main));
 
@@ -98,7 +98,7 @@ ok('Unassigned cards preserved: Матиз, Кот-детектив, Роско�
 copies.forEach(function (rel) {
   var html = read(rel);
   ok(rel + ' loads the new portfolio and navigation code',
-    /\/js\/videos-data\.js\?v=6/.test(html) &&
+    /\/js\/videos-data\.js\?v=7/.test(html) &&
     /\/js\/rudik\.js\?v=5/.test(html) &&
     /\/js\/clean-urls\.js\?v=2/.test(html));
 });
@@ -129,9 +129,7 @@ ok('Video cards unique after merging twice-named films',
   names.length === 14 && new Set(names).size === 14 &&
   names.filter(function (x) { return x.includes('Очень Странный Дед Мороз'); }).length === 1 &&
   names.filter(function (x) { return x.includes('Звёздные войны в деревне'); }).length === 1);
-ok('Local Alina and ЗВ MP4 preserved inside their merged cards',
-  /title: 'Алина — Очень Странный Дед Мороз[\s\S]*?file: '\/video\/alina-ny\.mp4'/.test(vids) &&
-  /title: 'Звёздные войны в деревне \(ЗВ\)'[\s\S]*?file: '\/video\/zv\.mp4'/.test(vids));
+ok('Replaced original MP4 absent only after Drive backup and Rutube verification', !vids.includes('/video/alina-ny.mp4') && !vids.includes('/video/zv.mp4') && !fs.existsSync(path.join(root,'video/alina-ny.mp4')) && !fs.existsSync(path.join(root,'video/zv.mp4')));
 var ownerIds = ["81a1e6150e98400ce7732b6da6bbc3e6", "a260d16ec1ec08900d878aec655b62b0", "bded60522d4d787ae2df31e8ebe5ad23", "71a96d88e127f61acd8e49c3831b50d7", "f28cf60c314b00eadc77d88f582e1be0", "5c9529ad09a354eb24e7fec0030f8108"];
 var renderedIds = names.map(function (name) { return renderWindow.RUDIK_VIDEOS.find(function (x) { return x.title === name; }).rutube; });
 ok('Exact owner order: Открытка ОСД Котмонавты ЗВ Финансовые Алексей', JSON.stringify(renderedIds.slice(0, 6)) === JSON.stringify(ownerIds));
