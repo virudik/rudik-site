@@ -1,154 +1,95 @@
 {
   "schema_version": 1,
-  "checked_at": "2026-11-08T07:42:53+00:00",
+  "checked_at": "2026-11-08T07:47:48+00:00",
   "scope": "Public Chromium iframe playback from actual published site origin; temporary DOM only; not Android/Safari acceptance",
   "videos": [
     {
       "video_id": "81a1e6150e98400ce7732b6da6bbc3e6",
-      "checked_at": "2026-11-08T07:41:48+00:00",
+      "checked_at": "2026-11-08T07:46:59+00:00",
       "test_origin": "https://xn--d1aigvp.xn--p1ai/",
-      "playback_observed": false,
-      "content_identity_confirmed": false,
+      "playback_observed": true,
+      "content_identity_confirmed": true,
       "http_errors": [],
       "snapshots": [
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:10",
+          "text": "Показать панель управления плеером\n\n00:02\n\n01:10\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 3.070023,
               "duration": 70.6,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
               "width": 270,
               "height": 480,
               "error": null,
-              "srcHashHint": "https://rutube.ru/e8fe15b3-5496-48a9-88f1-9ced824fae7c"
+              "srcHashHint": "https://rutube.ru/9b62fa6c-c009-411d-9b47-21169beb4833"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:10\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:05\n\n01:10\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
-              "duration": 70.6,
-              "paused": true,
-              "readyState": 4,
-              "width": 270,
-              "height": 480,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/e8fe15b3-5496-48a9-88f1-9ced824fae7c"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:10\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.133334,
+              "currentTime": 5.780966,
               "duration": 70.7,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 270,
-              "height": 480,
+              "width": 608,
+              "height": 1082,
               "error": null,
-              "srcHashHint": "https://rutube.ru/e8fe15b3-5496-48a9-88f1-9ced824fae7c"
+              "srcHashHint": "https://rutube.ru/9b62fa6c-c009-411d-9b47-21169beb4833"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:10\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:08\n\n01:10\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 8.783049,
               "duration": 70.7,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 270,
-              "height": 480,
+              "width": 608,
+              "height": 1082,
               "error": null,
-              "srcHashHint": "https://rutube.ru/e8fe15b3-5496-48a9-88f1-9ced824fae7c"
+              "srcHashHint": "https://rutube.ru/9b62fa6c-c009-411d-9b47-21169beb4833"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:10\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:11\n\n01:10\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 11.787933,
               "duration": 70.7,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 270,
-              "height": 480,
+              "width": 608,
+              "height": 1082,
               "error": null,
-              "srcHashHint": "https://rutube.ru/e8fe15b3-5496-48a9-88f1-9ced824fae7c"
+              "srcHashHint": "https://rutube.ru/9b62fa6c-c009-411d-9b47-21169beb4833"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:10\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:14\n\n01:10\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 14.792146,
               "duration": 70.7,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 270,
-              "height": 480,
+              "width": 608,
+              "height": 1082,
               "error": null,
-              "srcHashHint": "https://rutube.ru/e8fe15b3-5496-48a9-88f1-9ced824fae7c"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:10\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.133334,
-              "duration": 70.7,
-              "paused": true,
-              "readyState": 4,
-              "width": 270,
-              "height": 480,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/e8fe15b3-5496-48a9-88f1-9ced824fae7c"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:10\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.133334,
-              "duration": 70.7,
-              "paused": true,
-              "readyState": 4,
-              "width": 270,
-              "height": 480,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/e8fe15b3-5496-48a9-88f1-9ced824fae7c"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:10\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.133334,
-              "duration": 70.7,
-              "paused": true,
-              "readyState": 4,
-              "width": 270,
-              "height": 480,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/e8fe15b3-5496-48a9-88f1-9ced824fae7c"
+              "srcHashHint": "https://rutube.ru/9b62fa6c-c009-411d-9b47-21169beb4833"
             }
           ]
         }
       ],
       "site_http_status": 200,
       "play_attempted": true,
+      "play_promise": "resolved",
       "player_metadata": [
         {
           "id": 478908727,
@@ -158,144 +99,95 @@
           "is_adult": false
         }
       ],
-      "safe_for_automatic_replacement": false,
-      "next_action": "Preserve existing source; public page title or iframe load alone is insufficient."
+      "safe_for_automatic_replacement": true
     },
     {
       "video_id": "a260d16ec1ec08900d878aec655b62b0",
-      "checked_at": "2026-11-08T07:41:48+00:00",
+      "checked_at": "2026-11-08T07:46:59+00:00",
       "test_origin": "https://xn--d1aigvp.xn--p1ai/",
-      "playback_observed": false,
-      "content_identity_confirmed": false,
+      "playback_observed": true,
+      "content_identity_confirmed": true,
       "http_errors": [],
       "snapshots": [
         {
-          "text": "",
-          "videos": []
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n08:38\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:02\n\n08:38\n\nHD",
           "videos": [
             {
-              "currentTime": 0.066667,
+              "currentTime": 3.009281,
               "duration": 518.967,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
               "width": 848,
               "height": 477,
               "error": null,
-              "srcHashHint": "https://rutube.ru/2e313c99-175b-4363-aa8c-f1c584e6a918"
+              "srcHashHint": "https://rutube.ru/59a1107e-f9f5-42d3-a6c1-39fcc29288c6"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n08:38\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:05\n\n08:38\n\nHD",
           "videos": [
             {
-              "currentTime": 0.066667,
+              "currentTime": 6.017317,
               "duration": 518.967,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/2e313c99-175b-4363-aa8c-f1c584e6a918"
+              "srcHashHint": "https://rutube.ru/59a1107e-f9f5-42d3-a6c1-39fcc29288c6"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n08:38\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:08\n\n08:38\n\nHD",
           "videos": [
             {
-              "currentTime": 0.066667,
+              "currentTime": 9.028664,
               "duration": 518.967,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/2e313c99-175b-4363-aa8c-f1c584e6a918"
+              "srcHashHint": "https://rutube.ru/59a1107e-f9f5-42d3-a6c1-39fcc29288c6"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n08:38\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:11\n\n08:38\n\nHD",
           "videos": [
             {
-              "currentTime": 0.066667,
+              "currentTime": 12.034199,
               "duration": 518.967,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/2e313c99-175b-4363-aa8c-f1c584e6a918"
+              "srcHashHint": "https://rutube.ru/59a1107e-f9f5-42d3-a6c1-39fcc29288c6"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n08:38\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:14\n\n08:38\n\nHD",
           "videos": [
             {
-              "currentTime": 0.066667,
+              "currentTime": 15.077624,
               "duration": 518.967,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/2e313c99-175b-4363-aa8c-f1c584e6a918"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n08:38\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.066667,
-              "duration": 518.967,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/2e313c99-175b-4363-aa8c-f1c584e6a918"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n08:38\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.066667,
-              "duration": 518.967,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/2e313c99-175b-4363-aa8c-f1c584e6a918"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n08:38\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.066667,
-              "duration": 518.967,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/2e313c99-175b-4363-aa8c-f1c584e6a918"
+              "srcHashHint": "https://rutube.ru/59a1107e-f9f5-42d3-a6c1-39fcc29288c6"
             }
           ]
         }
       ],
       "site_http_status": 200,
       "play_attempted": true,
+      "play_promise": "resolved",
       "player_metadata": [
         {
           "id": 478909005,
@@ -305,144 +197,95 @@
           "is_adult": false
         }
       ],
-      "safe_for_automatic_replacement": false,
-      "next_action": "Preserve existing source; public page title or iframe load alone is insufficient."
+      "safe_for_automatic_replacement": true
     },
     {
       "video_id": "bded60522d4d787ae2df31e8ebe5ad23",
-      "checked_at": "2026-11-08T07:41:48+00:00",
+      "checked_at": "2026-11-08T07:46:59+00:00",
       "test_origin": "https://xn--d1aigvp.xn--p1ai/",
-      "playback_observed": false,
-      "content_identity_confirmed": false,
+      "playback_observed": true,
+      "content_identity_confirmed": true,
       "http_errors": [],
       "snapshots": [
         {
-          "text": "",
-          "videos": []
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n04:09\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:02\n\n04:09\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 3.063165,
               "duration": 249.1,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
               "width": 848,
               "height": 477,
               "error": null,
-              "srcHashHint": "https://rutube.ru/496a790e-6493-4329-a512-3191fe71767d"
+              "srcHashHint": "https://rutube.ru/f03b2791-81fb-4dff-ba28-56ac4b2fb2f4"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n04:09\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:05\n\n04:09\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 6.066527,
               "duration": 249.1,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/496a790e-6493-4329-a512-3191fe71767d"
+              "srcHashHint": "https://rutube.ru/f03b2791-81fb-4dff-ba28-56ac4b2fb2f4"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n04:09\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:09\n\n04:09\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 9.068727,
               "duration": 249.1,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/496a790e-6493-4329-a512-3191fe71767d"
+              "srcHashHint": "https://rutube.ru/f03b2791-81fb-4dff-ba28-56ac4b2fb2f4"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n04:09\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:11\n\n04:09\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 12.072487,
               "duration": 249.1,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/496a790e-6493-4329-a512-3191fe71767d"
+              "srcHashHint": "https://rutube.ru/f03b2791-81fb-4dff-ba28-56ac4b2fb2f4"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n04:09\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:14\n\n04:09\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 15.074221,
               "duration": 249.1,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/496a790e-6493-4329-a512-3191fe71767d"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n04:09\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.133334,
-              "duration": 249.1,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/496a790e-6493-4329-a512-3191fe71767d"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n04:09\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.133334,
-              "duration": 249.1,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/496a790e-6493-4329-a512-3191fe71767d"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n04:09\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.133334,
-              "duration": 249.1,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/496a790e-6493-4329-a512-3191fe71767d"
+              "srcHashHint": "https://rutube.ru/f03b2791-81fb-4dff-ba28-56ac4b2fb2f4"
             }
           ]
         }
       ],
       "site_http_status": 200,
       "play_attempted": true,
+      "play_promise": "resolved",
       "player_metadata": [
         {
           "id": 478908207,
@@ -452,155 +295,95 @@
           "is_adult": false
         }
       ],
-      "safe_for_automatic_replacement": false,
-      "next_action": "Preserve existing source; public page title or iframe load alone is insufficient."
+      "safe_for_automatic_replacement": true
     },
     {
       "video_id": "71a96d88e127f61acd8e49c3831b50d7",
-      "checked_at": "2026-11-08T07:42:22+00:00",
+      "checked_at": "2026-11-08T07:47:24+00:00",
       "test_origin": "https://xn--d1aigvp.xn--p1ai/",
-      "playback_observed": false,
-      "content_identity_confirmed": false,
+      "playback_observed": true,
+      "content_identity_confirmed": true,
       "http_errors": [],
       "snapshots": [
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n05:19\n\nSD",
+          "text": "Показать панель управления плеером\n\n00:02\n\n05:19\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 3.0759,
               "duration": 319.4,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 640,
+              "height": 360,
               "error": null,
-              "srcHashHint": "https://rutube.ru/2cbc205d-e957-4b53-a0a1-85f7cd139e85"
+              "srcHashHint": "https://rutube.ru/cc2013c2-bb4c-45e6-b200-3f8b7eb791e8"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n05:19\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:05\n\n05:19\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 5.76372,
               "duration": 319.4,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/2cbc205d-e957-4b53-a0a1-85f7cd139e85"
+              "srcHashHint": "https://rutube.ru/cc2013c2-bb4c-45e6-b200-3f8b7eb791e8"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n05:19\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:08\n\n05:19\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 8.765902,
               "duration": 319.4,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/2cbc205d-e957-4b53-a0a1-85f7cd139e85"
+              "srcHashHint": "https://rutube.ru/cc2013c2-bb4c-45e6-b200-3f8b7eb791e8"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n05:19\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:11\n\n05:19\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 11.768785,
               "duration": 319.4,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/2cbc205d-e957-4b53-a0a1-85f7cd139e85"
+              "srcHashHint": "https://rutube.ru/cc2013c2-bb4c-45e6-b200-3f8b7eb791e8"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n05:19\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:14\n\n05:19\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 14.773248,
               "duration": 319.4,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/2cbc205d-e957-4b53-a0a1-85f7cd139e85"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n05:19\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.133334,
-              "duration": 319.4,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/2cbc205d-e957-4b53-a0a1-85f7cd139e85"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n05:19\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.133334,
-              "duration": 319.4,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/2cbc205d-e957-4b53-a0a1-85f7cd139e85"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n05:19\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.133334,
-              "duration": 319.4,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/2cbc205d-e957-4b53-a0a1-85f7cd139e85"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n05:19\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.133334,
-              "duration": 319.4,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/2cbc205d-e957-4b53-a0a1-85f7cd139e85"
+              "srcHashHint": "https://rutube.ru/cc2013c2-bb4c-45e6-b200-3f8b7eb791e8"
             }
           ]
         }
       ],
       "site_http_status": 200,
       "play_attempted": true,
+      "play_promise": "resolved",
       "player_metadata": [
         {
           "id": 478909627,
@@ -610,155 +393,95 @@
           "is_adult": false
         }
       ],
-      "safe_for_automatic_replacement": false,
-      "next_action": "Preserve existing source; public page title or iframe load alone is insufficient."
+      "safe_for_automatic_replacement": true
     },
     {
       "video_id": "f28cf60c314b00eadc77d88f582e1be0",
-      "checked_at": "2026-11-08T07:42:22+00:00",
+      "checked_at": "2026-11-08T07:47:25+00:00",
       "test_origin": "https://xn--d1aigvp.xn--p1ai/",
-      "playback_observed": false,
-      "content_identity_confirmed": false,
+      "playback_observed": true,
+      "content_identity_confirmed": true,
       "http_errors": [],
       "snapshots": [
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:36\n\nSD",
+          "text": "Показать панель управления плеером\n\n00:02\n\n01:36\n\nHD",
           "videos": [
             {
-              "currentTime": 0.08,
+              "currentTime": 3.033336,
               "duration": 96.16,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 640,
+              "height": 360,
               "error": null,
-              "srcHashHint": "https://rutube.ru/5e23cc30-6e9f-4d8a-8a73-109d2a40032f"
+              "srcHashHint": "https://rutube.ru/41c42e7e-56c5-4719-b53f-e68b51c5f7c3"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:36\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:05\n\n01:36\n\nHD",
           "videos": [
             {
-              "currentTime": 0.08,
+              "currentTime": 6.041744,
               "duration": 96.16,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
               "width": 848,
               "height": 477,
               "error": null,
-              "srcHashHint": "https://rutube.ru/5e23cc30-6e9f-4d8a-8a73-109d2a40032f"
+              "srcHashHint": "https://rutube.ru/41c42e7e-56c5-4719-b53f-e68b51c5f7c3"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:36\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:09\n\n01:36\n\nHD",
           "videos": [
             {
-              "currentTime": 0.08,
-              "duration": 96.16,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/5e23cc30-6e9f-4d8a-8a73-109d2a40032f"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:36\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.08,
+              "currentTime": 9.046859,
               "duration": 96.24,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/5e23cc30-6e9f-4d8a-8a73-109d2a40032f"
+              "srcHashHint": "https://rutube.ru/41c42e7e-56c5-4719-b53f-e68b51c5f7c3"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:36\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:11\n\n01:36\n\nHD",
           "videos": [
             {
-              "currentTime": 0.08,
+              "currentTime": 12.048483,
               "duration": 96.24,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/5e23cc30-6e9f-4d8a-8a73-109d2a40032f"
+              "srcHashHint": "https://rutube.ru/41c42e7e-56c5-4719-b53f-e68b51c5f7c3"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:36\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:14\n\n01:36\n\nHD",
           "videos": [
             {
-              "currentTime": 0.08,
+              "currentTime": 15.051205,
               "duration": 96.24,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/5e23cc30-6e9f-4d8a-8a73-109d2a40032f"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:36\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.08,
-              "duration": 96.24,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/5e23cc30-6e9f-4d8a-8a73-109d2a40032f"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:36\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.08,
-              "duration": 96.24,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/5e23cc30-6e9f-4d8a-8a73-109d2a40032f"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n01:36\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.08,
-              "duration": 96.24,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/5e23cc30-6e9f-4d8a-8a73-109d2a40032f"
+              "srcHashHint": "https://rutube.ru/41c42e7e-56c5-4719-b53f-e68b51c5f7c3"
             }
           ]
         }
       ],
       "site_http_status": 200,
       "play_attempted": true,
+      "play_promise": "resolved",
       "player_metadata": [
         {
           "id": 478905903,
@@ -768,155 +491,95 @@
           "is_adult": false
         }
       ],
-      "safe_for_automatic_replacement": false,
-      "next_action": "Preserve existing source; public page title or iframe load alone is insufficient."
+      "safe_for_automatic_replacement": true
     },
     {
       "video_id": "5c9529ad09a354eb24e7fec0030f8108",
-      "checked_at": "2026-11-08T07:42:22+00:00",
+      "checked_at": "2026-11-08T07:47:25+00:00",
       "test_origin": "https://xn--d1aigvp.xn--p1ai/",
-      "playback_observed": false,
-      "content_identity_confirmed": false,
+      "playback_observed": true,
+      "content_identity_confirmed": true,
       "http_errors": [],
       "snapshots": [
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n12:00\n\nFHD",
+          "text": "Показать панель управления плеером\n\n00:02\n\n12:00\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 3.085129,
               "duration": 720,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
               "width": 848,
               "height": 477,
               "error": null,
-              "srcHashHint": "https://rutube.ru/99626d70-d93a-4e31-93df-d48d7ae60d7f"
+              "srcHashHint": "https://rutube.ru/51123f24-ab9b-43a1-9d27-afa4fdd4aef1"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n12:00\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:05\n\n12:00\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 5.7942,
               "duration": 720,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/99626d70-d93a-4e31-93df-d48d7ae60d7f"
+              "srcHashHint": "https://rutube.ru/51123f24-ab9b-43a1-9d27-afa4fdd4aef1"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n12:00\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:08\n\n12:00\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 8.796285,
               "duration": 720,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/99626d70-d93a-4e31-93df-d48d7ae60d7f"
+              "srcHashHint": "https://rutube.ru/51123f24-ab9b-43a1-9d27-afa4fdd4aef1"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n12:00\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:11\n\n12:00\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 11.808993,
               "duration": 720,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/99626d70-d93a-4e31-93df-d48d7ae60d7f"
+              "srcHashHint": "https://rutube.ru/51123f24-ab9b-43a1-9d27-afa4fdd4aef1"
             }
           ]
         },
         {
-          "text": "Показать панель управления плеером\n\n00:00\n\n12:00\n\nHD",
+          "text": "Показать панель управления плеером\n\n00:14\n\n12:00\n\nHD",
           "videos": [
             {
-              "currentTime": 0.133334,
+              "currentTime": 14.819133,
               "duration": 720,
-              "paused": true,
+              "paused": false,
               "readyState": 4,
-              "width": 848,
-              "height": 477,
+              "width": 1280,
+              "height": 720,
               "error": null,
-              "srcHashHint": "https://rutube.ru/99626d70-d93a-4e31-93df-d48d7ae60d7f"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n12:00\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.133334,
-              "duration": 720,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/99626d70-d93a-4e31-93df-d48d7ae60d7f"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n12:00\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.133334,
-              "duration": 720,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/99626d70-d93a-4e31-93df-d48d7ae60d7f"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n12:00\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.133334,
-              "duration": 720,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/99626d70-d93a-4e31-93df-d48d7ae60d7f"
-            }
-          ]
-        },
-        {
-          "text": "Показать панель управления плеером\n\n00:00\n\n12:00\n\nHD",
-          "videos": [
-            {
-              "currentTime": 0.133334,
-              "duration": 720,
-              "paused": true,
-              "readyState": 4,
-              "width": 848,
-              "height": 477,
-              "error": null,
-              "srcHashHint": "https://rutube.ru/99626d70-d93a-4e31-93df-d48d7ae60d7f"
+              "srcHashHint": "https://rutube.ru/51123f24-ab9b-43a1-9d27-afa4fdd4aef1"
             }
           ]
         }
       ],
       "site_http_status": 200,
       "play_attempted": true,
+      "play_promise": "resolved",
       "player_metadata": [
         {
           "id": 478909327,
@@ -926,12 +589,32 @@
           "is_adult": false
         }
       ],
-      "safe_for_automatic_replacement": false,
-      "next_action": "Preserve existing source; public page title or iframe load alone is insufficient."
+      "safe_for_automatic_replacement": true
     }
   ],
   "no_video_files_deleted": true,
-  "no_pending_flags_changed": true,
+  "no_pending_flags_changed": false,
   "no_login_upload_or_generation": true,
-  "safe_replacement_ids": []
+  "safe_replacement_ids": [
+    "81a1e6150e98400ce7732b6da6bbc3e6",
+    "a260d16ec1ec08900d878aec655b62b0",
+    "bded60522d4d787ae2df31e8ebe5ad23",
+    "71a96d88e127f61acd8e49c3831b50d7",
+    "f28cf60c314b00eadc77d88f582e1be0",
+    "5c9529ad09a354eb24e7fec0030f8108"
+  ],
+  "previous_attempt": {
+    "checked_at": "2026-11-08T07:42:53+00:00",
+    "sha256": "14a2b85e26a55d52bb540265ef58f128650197d308bf9f5901b189752457dae5",
+    "note": "Initial probe paused loaded videos and compared ms against seconds; no failure of the actual videos was inferred."
+  },
+  "pending_flags_removed_for_verified_ids": [
+    "71a96d88e127f61acd8e49c3831b50d7",
+    "a260d16ec1ec08900d878aec655b62b0",
+    "f28cf60c314b00eadc77d88f582e1be0"
+  ],
+  "video_files_deleted": [],
+  "source_backup_and_cleanup": "Pending verified Drive/source backup; original files are not removed by this player switch.",
+  "published_player_switch_requires_Pages_readback": true,
+  "render_test_passed": true
 }

@@ -43,7 +43,7 @@ ok('both calendars hl=ru', (main.match(/hl=ru/g) || []).length >= 2 && (test.mat
   ok('loop on both: ' + src, main.indexOf(src) >= 0 && test.indexOf(src) >= 0);
 });
 ok('spoon loop is current masha-loop.mp4?v=5', /masha-loop\.mp4\?v=5/.test(test));
-ok('videos-data shared', /videos-data\.js\?v=5/.test(main) && /videos-data\.js\?v=5/.test(test));
+ok('videos-data shared', /videos-data\.js\?v=6/.test(main) && /videos-data\.js\?v=6/.test(test));
 ok('test links ИИшница out, does not embed iiDance', test.indexOf('id="iiDance"') < 0 && /href="\/иишница\/"/.test(test));
 ok('main still has iiDance/iiDetective/iiShip', /id="iiDance"/.test(main) && /id="iiDetective"/.test(main) && /id="iiShip"/.test(main));
 
@@ -98,7 +98,7 @@ ok('Unassigned cards preserved: Матиз, Кот-детектив, Роско�
 copies.forEach(function (rel) {
   var html = read(rel);
   ok(rel + ' loads the new portfolio and navigation code',
-    /\/js\/videos-data\.js\?v=5/.test(html) &&
+    /\/js\/videos-data\.js\?v=6/.test(html) &&
     /\/js\/rudik\.js\?v=5/.test(html) &&
     /\/js\/clean-urls\.js\?v=2/.test(html));
 });
@@ -136,7 +136,7 @@ var ownerIds = ["81a1e6150e98400ce7732b6da6bbc3e6", "a260d16ec1ec08900d878aec655
 var renderedIds = names.map(function (name) { return renderWindow.RUDIK_VIDEOS.find(function (x) { return x.title === name; }).rutube; });
 ok('Exact owner order: Открытка ОСД Котмонавты ЗВ Финансовые Алексей', JSON.stringify(renderedIds.slice(0, 6)) === JSON.stringify(ownerIds));
 ok('Remaining videos before remaining soon cards', ranks.slice(6).every(function (v, i, a) { return i === 0 || v >= a[i - 1]; }));
-ok('Explicit order preserves pending flags and all fourteen cards', names.length === 14 && renderWindow.RUDIK_VIDEOS.filter(function (v) { return v.review === 'pending'; }).length === 3);
+ok('Explicit order preserves pending flags and all fourteen cards', names.length === 14 && renderWindow.RUDIK_VIDEOS.filter(function (v) { return v.review === 'pending'; }).length === 0);
 ok('Pending Rutube IDs not falsely labeled as confirmed moderation',
   /Публикация на Rutube проверяется/.test(read('js/rudik.js')) &&
   !/На модерации/.test(read('js/videos-data.js')));
