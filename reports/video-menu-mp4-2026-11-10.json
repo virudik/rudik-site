@@ -1,0 +1,41 @@
+{
+  "checked_at": "2026-11-10T02:55:00Z",
+  "source": "origin/main",
+  "menu": {
+    "main": "Click on Виталик → видео closed the submenu and placed h2 «Видео со мной» 12px under the fixed menu (measured top 76px, menu height 64px). Path became /видео.",
+    "test": "Click on Видео scrolled at once to section #video. Heading «Видео» sat at 71px with the sticky bar ending at 59px. The line under it is «Видео со мной из того что шло по телику». Фото and Работа still open their own sections."
+  },
+  "mp4": {
+    "removed": [
+      {
+        "path": "video/alexey.mp4",
+        "bytes": 82218446,
+        "local_duration_s": 720.0,
+        "rutube_id": "5c9529ad09a354eb24e7fec0030f8108",
+        "rutube_title": "Алексей против тараканов",
+        "rutube_duration_s": 720,
+        "rutube_hidden": false,
+        "embed_ready_state": 4,
+        "referenced_by_site": false
+      }
+    ],
+    "kept": [
+      {
+        "path": "video/kotmonavty.mp4",
+        "bytes": 48332214,
+        "local_duration_s": 507.868,
+        "rutube_id": "bded60522d4d787ae2df31e8ebe5ad23",
+        "rutube_title": "Котмонавты росКОТмоса",
+        "rutube_duration_s": 249,
+        "rutube_hidden": false,
+        "referenced_by_site": false,
+        "reason": "Site card uses the Rutube player, but the public film is 249s and the file is 508s. Same title does not show they are the same cut, so the file stays."
+      },
+      {
+        "path": "video/alina-school.mp4",
+        "reason": "Still the playing source in js/videos-data.js. No working public Rutube replacement."
+      }
+    ],
+    "git_history_rewritten": false
+  }
+}

@@ -57,6 +57,8 @@
 #wb_element_instance0 li ul { min-width:100%; }
 #wb_element_instance0 .hmenu li.over > ul, #wb_element_instance0 .hmenu li:focus-within > ul { display:block; }
 @media (hover:hover) { #wb_element_instance0 .hmenu > li:hover > ul { display:block; } }
+/* клик «видео»: не оставлять выпавший список поверх заголовка */
+#wb_element_instance0.rd-menu-shut ul ul { display: none !important; }
 
 /* 3) собаки по верхней рамке календаря (белый фон видео «вычитается» multiply, линии под лапами нет) */
 #rdDogs { top:778px; left:10px; width:970px; height:320px; z-index:585; overflow:hidden; pointer-events:none; background:transparent; mix-blend-mode:multiply; }
