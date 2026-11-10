@@ -92,7 +92,15 @@ ok('Rutube iframe and fallback link enabled',
   /Открыть на Rutube/.test(read('js/rudik.js')));
 ok('TV-submenu linked to nested video section',
   /slug === 'видео'/.test(read('js/clean-urls.js')) &&
+  /rd-menu-shut/.test(read('js/clean-urls.js')) &&
+  /fixedBar\(\)/.test(read('js/clean-urls.js')) &&
+  /rd-menu-shut ul ul \{ display: none !important; \}/.test(read('css/extra.css')) &&
   /id="видео"/.test(main) && /Видео со мной/.test(main));
+ok('test Video click stays on the TV section under the sticky bar',
+  /getAttribute\('href'\) !== '#video'/.test(read('test/test.js')) &&
+  /function go\(y\)/.test(read('test/test.js')) &&
+  /id="video"/.test(test) && /Видео со мной из того что шло по телику/.test(test) &&
+  /\/test\/test\.js\?v=3/.test(test));
 ok('Unassigned cards preserved: Матиз, Кот-детектив, Роскосмос',
   ['Матиз', 'Кот-детектив', 'Роскосмос'].every(function (n) { return vids.includes("title: '" + n + "'"); }));
 copies.forEach(function (rel) {
@@ -100,7 +108,8 @@ copies.forEach(function (rel) {
   ok(rel + ' loads the new portfolio and navigation code',
     /\/js\/videos-data\.js\?v=7/.test(html) &&
     /\/js\/rudik\.js\?v=5/.test(html) &&
-    /\/js\/clean-urls\.js\?v=2/.test(html));
+    /\/js\/clean-urls\.js\?v=3/.test(html) &&
+    /\/css\/extra\.css\?v=23/.test(html));
 });
 
 
@@ -130,6 +139,9 @@ ok('Video cards unique after merging twice-named films',
   names.filter(function (x) { return x.includes('Очень Странный Дед Мороз'); }).length === 1 &&
   names.filter(function (x) { return x.includes('Звёздные войны в деревне'); }).length === 1);
 ok('Replaced original MP4 absent only after Drive backup and Rutube verification', !vids.includes('/video/alina-ny.mp4') && !vids.includes('/video/zv.mp4') && !fs.existsSync(path.join(root,'video/alina-ny.mp4')) && !fs.existsSync(path.join(root,'video/zv.mp4')));
+ok('Alexey MP4 removed: site uses Rutube and durations match', !vids.includes('alexey.mp4') && !fs.existsSync(path.join(root,'video/alexey.mp4')));
+ok('Kotmonavty MP4 kept while local and Rutube durations disagree', fs.existsSync(path.join(root,'video/kotmonavty.mp4')) && !vids.includes('kotmonavty.mp4'));
+ok('School film stays on the local file', vids.includes('/video/alina-school.mp4') && fs.existsSync(path.join(root,'video/alina-school.mp4')));
 var ownerIds = ["81a1e6150e98400ce7732b6da6bbc3e6", "a260d16ec1ec08900d878aec655b62b0", "bded60522d4d787ae2df31e8ebe5ad23", "71a96d88e127f61acd8e49c3831b50d7", "f28cf60c314b00eadc77d88f582e1be0", "5c9529ad09a354eb24e7fec0030f8108"];
 var renderedIds = names.map(function (name) { return renderWindow.RUDIK_VIDEOS.find(function (x) { return x.title === name; }).rutube; });
 ok('Exact owner order: Открытка ОСД Котмонавты ЗВ Финансовые Алексей', JSON.stringify(renderedIds.slice(0, 6)) === JSON.stringify(ownerIds));

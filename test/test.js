@@ -59,3 +59,51 @@
     up.addEventListener('click', function () { window.scrollTo({ top: 0 }); });
   }
 })();
+
+/* «Видео» ведёт в «Видео со мной», заголовок ниже закреплённой шапки.
+   Снимки «Фото» без заранее известной высоты сдвигают раздел уже после прыжка —
+   держим заголовок на месте, пока сетка не устоится. */
+(function () {
+  function bar() {
+    var header = document.querySelector('header.top');
+    return (header ? Math.round(header.getBoundingClientRect().height) : 58) + 12;
+  }
+  function yOf() {
+    var sec = document.getElementById('video');
+    if (!sec) return 0;
+    var h = sec.querySelector('h2') || sec;
+    return Math.max(0, Math.round(h.getBoundingClientRect().top + window.pageYOffset - bar()));
+  }
+  function go(y) {
+    var root = document.documentElement;
+    var prev = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    window.scrollTo(0, y);
+    root.style.scrollBehavior = prev;
+  }
+  var token = 0;
+  function settle() {
+    var mine = ++token;
+    var stable = 0;
+    var ticks = 0;
+    function step() {
+      if (mine !== token || location.hash !== '#video') return;
+      ticks++;
+      var y = yOf();
+      if (Math.abs(window.scrollY - y) > 3) { go(y); stable = 0; }
+      else stable++;
+      if (stable < 3 && ticks < 8) setTimeout(step, 80);
+    }
+    step();
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (a.getAttribute('href') !== '#video') { token++; return; }
+    e.preventDefault();
+    if (location.hash !== '#video') history.pushState(null, '', '#video');
+    go(yOf());
+    settle();
+  }, true);
+  if (location.hash === '#video') window.addEventListener('load', function () { go(yOf()); settle(); });
+})();

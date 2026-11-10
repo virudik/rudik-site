@@ -16,6 +16,14 @@
     return document.querySelector('a[name="' + enc + '"]') || document.querySelector('a[name="' + name + '"]');
   }
   function topOf(a) { return Math.max(0, Math.round(a.getBoundingClientRect().top + window.pageYOffset)); }
+  function fixedBar() {
+    var n = 0;
+    var header = document.getElementById('wb_header');
+    var menu = document.getElementById('wb_element_instance0');
+    if (header) n = Math.max(n, header.getBoundingClientRect().height);
+    if (menu) n = Math.max(n, menu.offsetHeight || 0);
+    return n;
+  }
   function hit(path) { try { if (window.ym && /(^|\.)(xn--d1aigvp\.xn--p1ai|рудик\.рф)$/.test(location.hostname)) ym(65929291, 'hit', location.origin + path); } catch (e) {} }
 
   var interacted = false;
@@ -24,7 +32,33 @@
   function jump(slug, smooth) {
     var a = findAnchor(slug); if (!a) return;
     var y = SECTIONS[slug] === '' ? 0 : topOf(a);
+    // «Видео со мной» сидит внутри раздела «Фото». Якорь сдвинут только на высоту
+    // шапки, а строка меню выше неё — заголовок уезжает под закреплённое меню.
+    if (slug === 'видео') {
+      var h2 = a.parentElement && a.parentElement.querySelector('h2');
+      var target = h2 || a;
+      y = Math.max(0, Math.round(target.getBoundingClientRect().top + window.pageYOffset - fixedBar() - 12));
+    }
     if (smooth) window.scrollTo({ top: y, behavior: 'smooth' }); else window.scrollTo(0, y);
+  }
+  function shutSubmenu(link) {
+    var menu = document.getElementById('wb_element_instance0');
+    if (!menu) return;
+    menu.classList.add('rd-menu-shut');
+    var overs = menu.querySelectorAll('li.over, li.over-out');
+    for (var i = 0; i < overs.length; i++) overs[i].classList.remove('over', 'over-out');
+    if (link && link.blur) link.blur();
+    var ae = document.activeElement;
+    if (ae && menu.contains(ae) && ae.blur) ae.blur();
+    if (!menu.matches(':hover')) { menu.classList.remove('rd-menu-shut'); return; }
+    function done(ev) {
+      if (ev && ev.type === 'pointerdown' && menu.contains(ev.target)) return;
+      menu.classList.remove('rd-menu-shut');
+      menu.removeEventListener('pointerleave', done);
+      document.removeEventListener('pointerdown', done, true);
+    }
+    menu.addEventListener('pointerleave', done);
+    document.addEventListener('pointerdown', done, true);
   }
   function landOn(slug) {
     jump(slug, false);
@@ -59,7 +93,13 @@
     var inMenu = !!link.closest('.menu-landing');
     // «Видео со мной» — вложенный #видео (не .wb_page_anchor).
     // main.js не прокручивает к нему из подменю, здесь помогаем явно.
-    if (!inMenu || slug === 'видео') { e.stopPropagation(); jump(slug, true); }
+    // Подменю «Виталик» держится на :hover и :focus-within и после клика
+    // перекрывает заголовок — закрываем его, пока указатель не уйдёт.
+    if (!inMenu || slug === 'видео') {
+      e.stopPropagation();
+      if (slug === 'видео') shutSubmenu(link);
+      jump(slug, true);
+    }
     var p = pathFor(slug);
     if (decodeURIComponent(location.pathname) !== p || location.hash) { history.pushState({ s: slug }, '', p); hit(p); }
   }, true);
