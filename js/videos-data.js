@@ -14,7 +14,7 @@ window.RUDIK_VIDEOS = [
     poster: '/video/zv.jpg',
     order: 4, rutube: '71a96d88e127f61acd8e49c3831b50d7' },
   { title: 'Котмонавты росКОТмоса', order: 3, rutube: 'bded60522d4d787ae2df31e8ebe5ad23' },
-  { title: 'Открытка', order: 1, rutube: '81a1e6150e98400ce7732b6da6bbc3e6', shorts: true },
+  { title: 'Открытка', subtitle: '(Новогоднее поздравление)', order: 1, rutube: '81a1e6150e98400ce7732b6da6bbc3e6', shorts: true },
   { title: 'Финансовые мультики против мошенников',
     order: 5, rutube: 'f28cf60c314b00eadc77d88f582e1be0' },
   { title: 'Канцлер Серёгиус' },

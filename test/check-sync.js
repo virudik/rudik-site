@@ -43,7 +43,7 @@ ok('both calendars hl=ru', (main.match(/hl=ru/g) || []).length >= 2 && (test.mat
   ok('loop on both: ' + src, main.indexOf(src) >= 0 && test.indexOf(src) >= 0);
 });
 ok('spoon loop is current masha-loop.mp4?v=5', /masha-loop\.mp4\?v=5/.test(test));
-ok('videos-data shared', /videos-data\.js\?v=7/.test(main) && /videos-data\.js\?v=7/.test(test));
+ok('videos-data shared', /videos-data\.js\?v=8/.test(main) && /videos-data\.js\?v=8/.test(test));
 ok('test links ИИшница out, does not embed iiDance', test.indexOf('id="iiDance"') < 0 && /href="\/иишница\/"/.test(test));
 ok('main still has iiDance/iiDetective/iiShip', /id="iiDance"/.test(main) && /id="iiDetective"/.test(main) && /id="iiShip"/.test(main));
 
@@ -100,14 +100,14 @@ ok('test Video click stays on the TV section under the sticky bar',
   /getAttribute\('href'\) !== '#video'/.test(read('test/test.js')) &&
   /function go\(y\)/.test(read('test/test.js')) &&
   /id="video"/.test(test) && /Видео со мной из того что шло по телику/.test(test) &&
-  /\/test\/test\.js\?v=3/.test(test));
+  /\/test\/test\.js\?v=4/.test(test));
 ok('Unassigned cards preserved: Матиз, Кот-детектив, Роскосмос',
   ['Матиз', 'Кот-детектив', 'Роскосмос'].every(function (n) { return vids.includes("title: '" + n + "'"); }));
 copies.forEach(function (rel) {
   var html = read(rel);
   ok(rel + ' loads the new portfolio and navigation code',
-    /\/js\/videos-data\.js\?v=7/.test(html) &&
-    /\/js\/rudik\.js\?v=5/.test(html) &&
+    /\/js\/videos-data\.js\?v=8/.test(html) &&
+    /\/js\/rudik\.js\?v=6/.test(html) &&
     /\/js\/clean-urls\.js\?v=3/.test(html) &&
     /\/css\/extra\.css\?v=23/.test(html));
 });
@@ -150,6 +150,24 @@ ok('Explicit order preserves pending flags and all fourteen cards', names.length
 ok('Pending Rutube IDs not falsely labeled as confirmed moderation',
   /Публикация на Rutube проверяется/.test(read('js/rudik.js')) &&
   !/На модерации/.test(read('js/videos-data.js')));
+
+// Подпись Открытки: отдельная строка в том же оформлении заголовка.
+var postcard = renderWindow.RUDIK_VIDEOS.find(function (v) { return v.rutube === '81a1e6150e98400ce7732b6da6bbc3e6'; });
+ok('Postcard keeps its title, first position and exact Rutube ID', postcard.title === 'Открытка' && postcard.order === 1 && postcard.shorts === true);
+ok('Only postcard receives the requested subtitle', postcard.subtitle === '(Новогоднее поздравление)' && renderWindow.RUDIK_VIDEOS.filter(function (v) { return v.subtitle; }).length === 1);
+function hasPostcardSubtitle(grid) {
+  var card = grid.children.find(function (c) { return c.children[0].textContent === 'Открытка'; });
+  if (!card) return false;
+  var title = card.children[0];
+  return title.className === 'rv-t' && title.children.length === 1 && title.children[0].type === 'div' && title.children[0].className === 'rv-subtitle' && title.children[0].textContent === '(Новогоднее поздравление)';
+}
+ok('Main renders postcard subtitle as a separate block under its title', hasPostcardSubtitle(renderGrid));
+var testGrid = { children: [], appendChild: function (c) { this.children.push(c); } };
+var testDocument = Object.assign({}, renderDocument, { getElementById: function (id) { return id === 'iiVideoGrid' ? testGrid : null; } });
+var testRenderer = read('test/test.js');
+testRenderer = testRenderer.slice(0, testRenderer.indexOf('})();') + 5);
+vm.runInNewContext(vids + '\n' + testRenderer, { document: testDocument, window: {} });
+ok('Test page renderer keeps the same separate postcard subtitle', hasPostcardSubtitle(testGrid));
 
 console.log(fail ? '\n' + fail + ' failed' : '\nall checks passed');
 process.exit(fail ? 1 : 0);

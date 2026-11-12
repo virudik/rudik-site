@@ -16,6 +16,10 @@
     items.forEach(function (v) {
       var c = document.createElement('div'); c.className = 'rv-card';
       var t = document.createElement('div'); t.className = 'rv-t'; t.textContent = v.title; c.appendChild(t);
+      if (v.subtitle) {
+        var subtitle = document.createElement('div'); subtitle.className = 'rv-subtitle';
+        subtitle.textContent = v.subtitle; t.appendChild(subtitle);
+      }
       var b = document.createElement('div'); b.className = 'rv-box';
       var source = null, note = null;
       if (v.file && (!v.rutube || v.review === 'pending')) {
