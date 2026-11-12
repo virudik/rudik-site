@@ -43,7 +43,7 @@ ok('both calendars hl=ru', (main.match(/hl=ru/g) || []).length >= 2 && (test.mat
   ok('loop on both: ' + src, main.indexOf(src) >= 0 && test.indexOf(src) >= 0);
 });
 ok('spoon loop is current masha-loop.mp4?v=5', /masha-loop\.mp4\?v=5/.test(test));
-ok('videos-data shared', /videos-data\.js\?v=8/.test(main) && /videos-data\.js\?v=8/.test(test));
+ok('videos-data shared', /videos-data\.js\?v=9/.test(main) && /videos-data\.js\?v=9/.test(test));
 ok('test links ИИшница out, does not embed iiDance', test.indexOf('id="iiDance"') < 0 && /href="\/иишница\/"/.test(test));
 ok('main still has iiDance/iiDetective/iiShip', /id="iiDance"/.test(main) && /id="iiDetective"/.test(main) && /id="iiShip"/.test(main));
 
@@ -100,13 +100,13 @@ ok('test Video click stays on the TV section under the sticky bar',
   /getAttribute\('href'\) !== '#video'/.test(read('test/test.js')) &&
   /function go\(y\)/.test(read('test/test.js')) &&
   /id="video"/.test(test) && /Видео со мной из того что шло по телику/.test(test) &&
-  /\/test\/test\.js\?v=4/.test(test));
+  /\/test\/test\.js\?v=5/.test(test));
 ok('Unassigned cards preserved: Матиз, Кот-детектив, Роскосмос',
   ['Матиз', 'Кот-детектив', 'Роскосмос'].every(function (n) { return vids.includes("title: '" + n + "'"); }));
 copies.forEach(function (rel) {
   var html = read(rel);
   ok(rel + ' loads the new portfolio and navigation code',
-    /\/js\/videos-data\.js\?v=8/.test(html) &&
+    /\/js\/videos-data\.js\?v=9/.test(html) &&
     /\/js\/rudik\.js\?v=6/.test(html) &&
     /\/js\/clean-urls\.js\?v=3/.test(html) &&
     /\/css\/extra\.css\?v=23/.test(html));
@@ -168,6 +168,25 @@ var testRenderer = read('test/test.js');
 testRenderer = testRenderer.slice(0, testRenderer.indexOf('})();') + 5);
 vm.runInNewContext(vids + '\n' + testRenderer, { document: testDocument, window: {} });
 ok('Test page renderer keeps the same separate postcard subtitle', hasPostcardSubtitle(testGrid));
+
+
+var detective = renderWindow.RUDIK_VIDEOS.find(function(v) { return v.title === 'Кот-детектив'; });
+var school = renderWindow.RUDIK_VIDEOS.find(function(v) { return v.title === 'Алина в школе'; });
+ok('Cat detective embeds exact Rutube during moderation',
+  detective && detective.order === 7 && detective.rutube === '5d442091b657d1575542ebb9305652de' &&
+  detective.moderation === 'pending' && detective.review !== 'pending' && !detective.file);
+ok('Alina in school remains the right-hand card with original MP4',
+  school && school.order === 8 && school.file === '/video/alina-school.mp4' &&
+  school.poster === '/video/alina-school.jpg' && names[6] === 'Кот-детектив' && names[7] === 'Алина в школе');
+ok('Cat player is an iframe now, not coming soon',
+  renderGrid.children[6].children[1].children[0].type === 'iframe' &&
+  renderGrid.children[6].children[1].children[0].src === 'https://rutube.ru/play/embed/5d442091b657d1575542ebb9305652de');
+ok('School has its original local video player',
+  renderGrid.children[7].children[1].children[0].type === 'video' &&
+  renderGrid.children[7].children[1].children[0].src === '/video/alina-school.mp4');
+ok('Test grid shares cat-left school-right order',
+  testGrid.children[6].children[0].textContent === 'Кот-детектив' &&
+  testGrid.children[7].children[0].textContent === 'Алина в школе');
 
 console.log(fail ? '\n' + fail + ' failed' : '\nall checks passed');
 process.exit(fail ? 1 : 0);

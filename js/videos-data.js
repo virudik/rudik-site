@@ -6,7 +6,7 @@
    Локальные MP4 не удалять до проверенного воспроизведения Rutube и сохранения исходников (условие владельца 08.11). */
 window.RUDIK_VIDEOS = [
   { title: 'Алексей против тараканов', order: 6, rutube: '5c9529ad09a354eb24e7fec0030f8108' },
-  { title: 'Алина в школе', file: '/video/alina-school.mp4', poster: '/video/alina-school.jpg' },
+  { title: 'Алина в школе', order: 8, file: '/video/alina-school.mp4', poster: '/video/alina-school.jpg' },
   { title: 'Алина — Очень Странный Дед Мороз ОСД (Новогоднее поздравление)',
     poster: '/video/alina-ny.jpg',
     order: 2, rutube: 'a260d16ec1ec08900d878aec655b62b0' },
@@ -20,7 +20,8 @@ window.RUDIK_VIDEOS = [
   { title: 'Канцлер Серёгиус' },
   { title: 'Матиз' },
   { title: 'Собаки блогеры' },
-  { title: 'Кот-детектив' },
+  // Rutube пока на модерации: iframe включён сразу и показывает ролик после публикации.
+  { title: 'Кот-детектив', order: 7, rutube: '5d442091b657d1575542ebb9305652de', moderation: 'pending' },
   { title: 'Роскосмос' },
   { title: 'Стасов калоген' },
   { title: 'Черепашки в гараже' }

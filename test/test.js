@@ -2,7 +2,19 @@
 (function () {
   var grid = document.getElementById('iiVideoGrid');
   if (!grid) return;
-  (window.RUDIK_VIDEOS || []).forEach(function (v) {
+  // Тот же порядок карточек, что в основной ИИшнице.
+  var items = (window.RUDIK_VIDEOS || []).slice();
+  function group(v) {
+    if (v.file || (v.rutube && v.review !== 'pending') || v.youtube) return 0;
+    if (v.rutube || v.review === 'pending') return 1;
+    return 2;
+  }
+  items.sort(function (a, b) {
+    var ar = typeof a.order === 'number' ? a.order : 1000;
+    var br = typeof b.order === 'number' ? b.order : 1000;
+    return ar - br || group(a) - group(b);
+  });
+  items.forEach(function (v) {
     var c = document.createElement('div'); c.className = 'rv-card';
     var t = document.createElement('div'); t.className = 'rv-t'; t.textContent = v.title; c.appendChild(t);
     if (v.subtitle) {
