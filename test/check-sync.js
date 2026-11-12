@@ -43,7 +43,7 @@ ok('both calendars hl=ru', (main.match(/hl=ru/g) || []).length >= 2 && (test.mat
   ok('loop on both: ' + src, main.indexOf(src) >= 0 && test.indexOf(src) >= 0);
 });
 ok('spoon loop is current masha-loop.mp4?v=5', /masha-loop\.mp4\?v=5/.test(test));
-ok('videos-data shared', /videos-data\.js\?v=9/.test(main) && /videos-data\.js\?v=9/.test(test));
+ok('videos-data shared', /videos-data\.js\?v=10/.test(main) && /videos-data\.js\?v=10/.test(test));
 ok('test links ИИшница out, does not embed iiDance', test.indexOf('id="iiDance"') < 0 && /href="\/иишница\/"/.test(test));
 ok('main still has iiDance/iiDetective/iiShip', /id="iiDance"/.test(main) && /id="iiDetective"/.test(main) && /id="iiShip"/.test(main));
 
@@ -77,7 +77,7 @@ copies.concat(['test/index.html']).forEach(function (rel) {
 var vids = read('js/videos-data.js');
 ok('Rutube portfolio has six exact owner video IDs', [
  '5c9529ad09a354eb24e7fec0030f8108',
- 'bded60522d4d787ae2df31e8ebe5ad23',
+ '7be3173c4b9fb2411d7c83b6e6622e01',
  '81a1e6150e98400ce7732b6da6bbc3e6',
  'f28cf60c314b00eadc77d88f582e1be0',
  '71a96d88e127f61acd8e49c3831b50d7',
@@ -106,7 +106,7 @@ ok('Unassigned cards preserved: Матиз, Кот-детектив, Роско�
 copies.forEach(function (rel) {
   var html = read(rel);
   ok(rel + ' loads the new portfolio and navigation code',
-    /\/js\/videos-data\.js\?v=9/.test(html) &&
+    /\/js\/videos-data\.js\?v=10/.test(html) &&
     /\/js\/rudik\.js\?v=6/.test(html) &&
     /\/js\/clean-urls\.js\?v=3/.test(html) &&
     /\/css\/extra\.css\?v=23/.test(html));
@@ -142,9 +142,16 @@ ok('Replaced original MP4 absent only after Drive backup and Rutube verification
 ok('Alexey MP4 removed: site uses Rutube and durations match', !vids.includes('alexey.mp4') && !fs.existsSync(path.join(root,'video/alexey.mp4')));
 ok('Kotmonavty MP4 kept while local and Rutube durations disagree', fs.existsSync(path.join(root,'video/kotmonavty.mp4')) && !vids.includes('kotmonavty.mp4'));
 ok('School film stays on the local file', vids.includes('/video/alina-school.mp4') && fs.existsSync(path.join(root,'video/alina-school.mp4')));
-var ownerIds = ["81a1e6150e98400ce7732b6da6bbc3e6", "a260d16ec1ec08900d878aec655b62b0", "bded60522d4d787ae2df31e8ebe5ad23", "71a96d88e127f61acd8e49c3831b50d7", "f28cf60c314b00eadc77d88f582e1be0", "5c9529ad09a354eb24e7fec0030f8108"];
+var ownerIds = ["81a1e6150e98400ce7732b6da6bbc3e6", "a260d16ec1ec08900d878aec655b62b0", "7be3173c4b9fb2411d7c83b6e6622e01", "71a96d88e127f61acd8e49c3831b50d7", "f28cf60c314b00eadc77d88f582e1be0", "5c9529ad09a354eb24e7fec0030f8108"];
 var renderedIds = names.map(function (name) { return renderWindow.RUDIK_VIDEOS.find(function (x) { return x.title === name; }).rutube; });
 ok('Exact owner order: Открытка ОСД Котмонавты ЗВ Финансовые Алексей', JSON.stringify(renderedIds.slice(0, 6)) === JSON.stringify(ownerIds));
+var kotmonavty = renderWindow.RUDIK_VIDEOS.find(function(v) { return v.title === 'Котмонавты росКОТмоса'; });
+ok('Kotmonavty third card uses owner 13Nov Rutube link and player',
+  kotmonavty && kotmonavty.order === 3 && kotmonavty.rutube === '7be3173c4b9fb2411d7c83b6e6622e01' &&
+  names[2] === kotmonavty.title && !vids.includes('bded60522d4d787ae2df31e8ebe5ad23') &&
+  renderGrid.children[2].children[1].children[0].type === 'iframe' &&
+  renderGrid.children[2].children[1].children[0].src === 'https://rutube.ru/play/embed/7be3173c4b9fb2411d7c83b6e6622e01');
+
 ok('Remaining videos before remaining soon cards', ranks.slice(6).every(function (v, i, a) { return i === 0 || v >= a[i - 1]; }));
 ok('Explicit order preserves pending flags and all fourteen cards', names.length === 14 && renderWindow.RUDIK_VIDEOS.filter(function (v) { return v.review === 'pending'; }).length === 0);
 ok('Pending Rutube IDs not falsely labeled as confirmed moderation',
