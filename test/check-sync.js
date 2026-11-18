@@ -140,7 +140,7 @@ ok('Video cards unique after merging twice-named films',
   names.filter(function (x) { return x.includes('Звёздные войны в деревне'); }).length === 1);
 ok('Replaced original MP4 absent only after Drive backup and Rutube verification', !vids.includes('/video/alina-ny.mp4') && !vids.includes('/video/zv.mp4') && !fs.existsSync(path.join(root,'video/alina-ny.mp4')) && !fs.existsSync(path.join(root,'video/zv.mp4')));
 ok('Alexey MP4 removed: site uses Rutube and durations match', !vids.includes('alexey.mp4') && !fs.existsSync(path.join(root,'video/alexey.mp4')));
-ok('Kotmonavty MP4 kept while local and Rutube durations disagree', fs.existsSync(path.join(root,'video/kotmonavty.mp4')) && !vids.includes('kotmonavty.mp4'));
+ok('Kotmonavty MP4 removed: site uses Rutube and owner keeps the source', !vids.includes('kotmonavty.mp4') && !fs.existsSync(path.join(root,'video/kotmonavty.mp4')));
 ok('School film stays on the local file', vids.includes('/video/alina-school.mp4') && fs.existsSync(path.join(root,'video/alina-school.mp4')));
 var ownerIds = ["81a1e6150e98400ce7732b6da6bbc3e6", "a260d16ec1ec08900d878aec655b62b0", "7be3173c4b9fb2411d7c83b6e6622e01", "71a96d88e127f61acd8e49c3831b50d7", "f28cf60c314b00eadc77d88f582e1be0", "5c9529ad09a354eb24e7fec0030f8108"];
 var renderedIds = names.map(function (name) { return renderWindow.RUDIK_VIDEOS.find(function (x) { return x.title === name; }).rutube; });
