@@ -383,7 +383,15 @@
       var links = gr.querySelectorAll('a[href]');
       for (var k = 0; k < links.length; k++) {
         var img = links[k].querySelector('img');
-        images.push({ src: links[k].getAttribute('href'), alt: (img && img.getAttribute('alt')) || title.trim() });
+        var item = { src: links[k].getAttribute('href'), alt: (img && img.getAttribute('alt')) || title.trim() };
+        var rawPos = img ? img.style.objectPosition : '';
+        if (!rawPos && img) {
+          var pos = /object-position\s*:\s*([^;]+)/i.exec(img.getAttribute('style') || '');
+          if (pos) rawPos = pos[1];
+        }
+        var focus = safeFocus(rawPos);
+        if (focus) item.focus = focus;
+        images.push(item);
       }
       if (!images.length) continue;
       sections.push({ anchor: h.id, title: title.trim() || h.textContent.trim(), subtitle: sub ? sub.textContent.trim() : '', images: images });
@@ -434,7 +442,7 @@
   }
 
   var fallback = fromDom();
-  fetch('/data/iishnitsa-gallery.json?v=1', { credentials: 'same-origin' })
+  fetch('/data/iishnitsa-gallery.json?v=2', { credentials: 'same-origin' })
     .then(function (r) { if (!r.ok) throw new Error('gallery'); return r.json(); })
     .then(function (data) {
       var sections = data && data.sections;
