@@ -267,12 +267,21 @@
       if (u) window.open(u, '_blank', 'noopener');
       return;
     }
+    var host = (st && st.ribbon) || root;
     var items = images.map(function (img, i) {
       var src = safeSrc(img.src);
-      var shown = root.querySelector('.ii-slide[data-ii="' + i + '"]:not(.ii-clone) img');
-      var w = shown && shown.naturalWidth ? shown.naturalWidth : 1600;
-      var h = shown && shown.naturalHeight ? shown.naturalHeight : 900;
-      return { src: src, w: w, h: h, title: img.alt || '', msrc: src, rdSize: !!(shown && shown.naturalWidth) };
+      /* только кадр этой ленты: тот же data-ii есть в каждом разделе */
+      var shown = host.querySelector('.ii-slide[data-ii="' + i + '"]:not(.ii-clone) img');
+      var same = shown && (shown.currentSrc === src || shown.getAttribute('src') === src);
+      var known = !!(same && shown.naturalWidth);
+      return {
+        src: src,
+        w: known ? shown.naturalWidth : 1600,
+        h: known ? shown.naturalHeight : 900,
+        title: img.alt || '',
+        msrc: src,
+        rdSize: known
+      };
     });
     var g = new PhotoSwipe(el, PhotoSwipeUI_Default, items, {
       index: index || 0,
