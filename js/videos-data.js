@@ -7,6 +7,7 @@
 window.RUDIK_VIDEOS = [
   { title: 'Алексей против тараканов', order: 6, rutube: '5c9529ad09a354eb24e7fec0030f8108' },
   { title: 'Алина в школе', order: 8, file: '/video/alina-school.mp4', poster: '/video/alina-school.jpg' },
+  { title: 'Серёгиус. Титры под финальный номер', order: 9, rutube: 'eb1ba5166e11e31bd283b67076f6e418' },
   { title: 'Алина — Очень Странный Дед Мороз ОСД (Новогоднее поздравление)',
     poster: '/video/alina-ny.jpg',
     order: 2, rutube: 'a260d16ec1ec08900d878aec655b62b0' },
