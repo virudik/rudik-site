@@ -13,7 +13,15 @@
   var SPEED = 34; /* px/с, влево */
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var narrowQ = window.matchMedia ? matchMedia('(max-width: 600px)') : null;
-  function isNarrow() { return !!(narrowQ && narrowQ.matches); }
+  /* viewport сайта зафиксирован на 992px, поэтому max-width:600 на телефоне не срабатывает.
+     Квадраты включаем и когда физический экран не шире 600, а окно вёрстки — эти 992. */
+  function phoneLayout() {
+    var layout = window.innerWidth || 0;
+    var screenW = (window.screen && window.screen.width) || 0;
+    return !!(screenW && screenW <= 600 && Math.abs(layout - 992) < 80);
+  }
+  function isNarrow() { return !!((narrowQ && narrowQ.matches) || phoneLayout()); }
+  function markNarrow() { if (root) root.classList.toggle('ii-narrow', isNarrow()); }
   var ribbons = [];
   var activeLB = null;
   var lbLock = 0;
@@ -35,11 +43,14 @@
     return Math.min(box, vis);
   }
   function slideWidth(ribbon) {
-    var view = visibleWidth(ribbon);
-    /* Уже 600px: четыре квадрата на экран. Шире — прежняя лента PR 5. */
-    if (isNarrow()) return Math.max(64, (view - GAP * 3) / 4);
-    var n = countFor(view);
-    return Math.max(96, (view - GAP * (n - 1)) / n);
+    if (isNarrow()) {
+      /* На масштабированном телефоне четыре квадрата на всю колонку, иначе — на видимую ширину окна. */
+      var view = phoneLayout() ? (ribbon.clientWidth || 320) : visibleWidth(ribbon);
+      return Math.max(64, (view - GAP * 3) / 4);
+    }
+    var wide = visibleWidth(ribbon);
+    var n = countFor(wide);
+    return Math.max(96, (wide - GAP * (n - 1)) / n);
   }
   function safeFocus(v) {
     if (typeof v !== 'string') return '';
@@ -113,6 +124,7 @@
   }
 
   function measure(st) {
+    markNarrow();
     var w = slideWidth(st.ribbon);
     st.ribbon.style.setProperty('--ii-slide', w.toFixed(2) + 'px');
     if (st.still) return;

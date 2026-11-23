@@ -116,7 +116,7 @@
   aspect-ratio: 16 / 10;
 }
 
-/* Только узкий экран: четыре квадрата, как просил владелец для телефона. */
+/* Узкое окно (max-width) и телефон с viewport=992 (класс ставит js/ii-gallery.js). */
 @media (max-width: 600px) {
   #iiGallery .gr > a { flex-basis: calc((100% - 36px) / 4); }
   #iiGallery .gr img,
@@ -124,6 +124,11 @@
   #iiGallery .ii-ribbon.is-still .ii-slide img { aspect-ratio: 1 / 1; }
   #iiGallery .ii-ribbon { height: var(--ii-slide, 96px); }
 }
+#iiGallery.ii-narrow .gr > a { flex-basis: calc((100% - 36px) / 4); }
+#iiGallery.ii-narrow .gr img,
+#iiGallery.ii-narrow .ii-ribbon.is-still .ii-slide,
+#iiGallery.ii-narrow .ii-ribbon.is-still .ii-slide img { aspect-ratio: 1 / 1; }
+#iiGallery.ii-narrow .ii-ribbon { height: var(--ii-slide, 220px); }
 
 @media (prefers-reduced-motion: reduce) {
   #iiGallery .ii-track { will-change: auto; }
