@@ -43,7 +43,7 @@ ok('lazy via data-src', /data-src/.test(js) && /loading="lazy"/.test(read('ии�
 var copies = ['index.html', 'алина/index.html', 'маша/index.html', 'виталик/index.html', 'иишница/index.html', 'мои-видео/index.html', 'обо-мне/index.html', 'промты/index.html', 'работа/index.html', 'фото/index.html', 'видео/index.html', 'prompts/index.html'];
 copies.forEach(function (rel) {
   var html = read(rel);
-  ok(rel + ' script', /\/js\/ii-gallery\.js\?v=6/.test(html));
+  ok(rel + ' script', /\/js\/ii-gallery\.js\?v=7/.test(html));
   ok(rel + ' css', /\/css\/ii-gallery\.css\?v=4/.test(html));
   ids.forEach(function (id) { ok(rel + ' #' + id, html.indexOf('id="' + id + '"') >= 0); });
   ok(rel + ' chips', /href="#ii-honor"/.test(html) && /href="#ii-konkurs"/.test(html) && /href="#ii-stikhiy"/.test(html));

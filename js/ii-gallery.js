@@ -22,6 +22,7 @@
   }
   function isNarrow() { return !!((narrowQ && narrowQ.matches) || phoneLayout()); }
   function markNarrow() { if (root) root.classList.toggle('ii-narrow', isNarrow()); }
+  markNarrow();
   var ribbons = [];
   var activeLB = null;
   var lbLock = 0;
