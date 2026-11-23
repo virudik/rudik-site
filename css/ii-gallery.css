@@ -33,7 +33,7 @@
 #iiGallery .gr img {
   width: 100%;
   height: auto;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 16 / 10;
   object-fit: cover;
   object-position: center;
   display: block;
@@ -44,7 +44,7 @@
   position: relative;
   width: 100%;
   max-width: 100%;
-  height: var(--ii-slide, 220px);
+  height: calc(var(--ii-slide, 220px) * 0.625);
   margin: 0 0 8px;
   overflow: hidden;
   touch-action: pan-y;
@@ -91,7 +91,7 @@
 }
 #iiGallery .ii-ribbon.is-still .ii-slide {
   height: auto;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 16 / 10;
   cursor: pointer;
 }
 #iiGallery .ii-slide:hover,
@@ -113,7 +113,16 @@
 }
 #iiGallery .ii-ribbon.is-still .ii-slide img {
   height: auto;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 16 / 10;
+}
+
+/* Только узкий экран: четыре квадрата, как просил владелец для телефона. */
+@media (max-width: 600px) {
+  #iiGallery .gr > a { flex-basis: calc((100% - 36px) / 4); }
+  #iiGallery .gr img,
+  #iiGallery .ii-ribbon.is-still .ii-slide,
+  #iiGallery .ii-ribbon.is-still .ii-slide img { aspect-ratio: 1 / 1; }
+  #iiGallery .ii-ribbon { height: var(--ii-slide, 96px); }
 }
 
 @media (prefers-reduced-motion: reduce) {

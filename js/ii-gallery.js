@@ -10,16 +10,22 @@
   root.setAttribute('data-ready', 'pending');
 
   var GAP = 12;
-  var PER = 4; /* сколько квадратов видно сразу, как в прежней сетке 220px */
   var SPEED = 34; /* px/с, влево */
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var narrowQ = window.matchMedia ? matchMedia('(max-width: 600px)') : null;
+  function isNarrow() { return !!(narrowQ && narrowQ.matches); }
   var ribbons = [];
   var activeLB = null;
   var lbLock = 0;
   var lbAcc = 0;
 
-  /* Ширина видимой части ленты: на десктопе это вся колонка (~4×220),
-     на узком окне — то, что реально на экране, чтобы влезли те же 4 квадрата. */
+  function countFor(px) {
+    if (px >= 860) return 4;
+    if (px >= 640) return 3;
+    if (px >= 480) return 2;
+    return 1.35;
+  }
+  /* Ширина видимой части ленты. На десктопе это колонка ~920px (четыре кадра 16:10, как в PR 5). */
   function visibleWidth(ribbon) {
     var box = ribbon.clientWidth || 320;
     var layout = window.innerWidth || box;
@@ -29,7 +35,11 @@
     return Math.min(box, vis);
   }
   function slideWidth(ribbon) {
-    return Math.max(64, (visibleWidth(ribbon) - GAP * (PER - 1)) / PER);
+    var view = visibleWidth(ribbon);
+    /* Уже 600px: четыре квадрата на экран. Шире — прежняя лента PR 5. */
+    if (isNarrow()) return Math.max(64, (view - GAP * 3) / 4);
+    var n = countFor(view);
+    return Math.max(96, (view - GAP * (n - 1)) / n);
   }
   function safeFocus(v) {
     if (typeof v !== 'string') return '';
@@ -322,7 +332,7 @@
   }, { passive: false, capture: true });
 
   function prime(st) {
-    var n = PER + 1;
+    var n = (isNarrow() ? 4 : countFor(visibleWidth(st.ribbon))) + 1;
     var imgs = st.track.querySelectorAll('.ii-slide:not(.ii-clone) img[data-src]');
     for (var i = 0; i < imgs.length && i < n; i++) {
       arm(imgs[i], imgs[i].getAttribute('data-src'));
@@ -411,6 +421,8 @@
       ro.observe(root);
     }
     window.addEventListener('resize', relayout);
+    if (narrowQ && narrowQ.addEventListener) narrowQ.addEventListener('change', relayout);
+    else if (narrowQ && narrowQ.addListener) narrowQ.addListener(relayout);
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
