@@ -43,7 +43,7 @@ ok('both calendars hl=ru', (main.match(/hl=ru/g) || []).length >= 2 && (test.mat
   ok('loop on both: ' + src, main.indexOf(src) >= 0 && test.indexOf(src) >= 0);
 });
 ok('spoon loop is current masha-loop.mp4?v=5', /masha-loop\.mp4\?v=5/.test(test));
-ok('videos-data shared', /videos-data\.js\?v=10/.test(main) && /videos-data\.js\?v=10/.test(test));
+ok('videos-data shared', /videos-data\.js\?v=11/.test(main) && /videos-data\.js\?v=11/.test(test));
 ok('test links ИИшница out, does not embed iiDance', test.indexOf('id="iiDance"') < 0 && /href="\/иишница\/"/.test(test));
 ok('main still has iiDance/iiDetective/iiShip', /id="iiDance"/.test(main) && /id="iiDetective"/.test(main) && /id="iiShip"/.test(main));
 
@@ -106,7 +106,7 @@ ok('Unassigned cards preserved: Матиз, Кот-детектив, Роско�
 copies.forEach(function (rel) {
   var html = read(rel);
   ok(rel + ' loads the new portfolio and navigation code',
-    /\/js\/videos-data\.js\?v=10/.test(html) &&
+    /\/js\/videos-data\.js\?v=11/.test(html) &&
     /\/js\/rudik\.js\?v=6/.test(html) &&
     /\/js\/clean-urls\.js\?v=3/.test(html) &&
     /\/css\/extra\.css\?v=23/.test(html));
@@ -135,7 +135,7 @@ var ranks = names.map(function (name) {
   return 2;
 });
 ok('Video cards unique after merging twice-named films',
-  names.length === 14 && new Set(names).size === 14 &&
+  names.length === 15 && new Set(names).size === 15 &&
   names.filter(function (x) { return x.includes('Очень Странный Дед Мороз'); }).length === 1 &&
   names.filter(function (x) { return x.includes('Звёздные войны в деревне'); }).length === 1);
 ok('Replaced original MP4 absent only after Drive backup and Rutube verification', !vids.includes('/video/alina-ny.mp4') && !vids.includes('/video/zv.mp4') && !fs.existsSync(path.join(root,'video/alina-ny.mp4')) && !fs.existsSync(path.join(root,'video/zv.mp4')));
@@ -153,7 +153,7 @@ ok('Kotmonavty third card uses owner 13Nov Rutube link and player',
   renderGrid.children[2].children[1].children[0].src === 'https://rutube.ru/play/embed/7be3173c4b9fb2411d7c83b6e6622e01');
 
 ok('Remaining videos before remaining soon cards', ranks.slice(6).every(function (v, i, a) { return i === 0 || v >= a[i - 1]; }));
-ok('Explicit order preserves pending flags and all fourteen cards', names.length === 14 && renderWindow.RUDIK_VIDEOS.filter(function (v) { return v.review === 'pending'; }).length === 0);
+ok('Explicit order preserves pending flags and all fifteen cards', names.length === 15 && renderWindow.RUDIK_VIDEOS.filter(function (v) { return v.review === 'pending'; }).length === 0);
 ok('Pending Rutube IDs not falsely labeled as confirmed moderation',
   /Публикация на Rutube проверяется/.test(read('js/rudik.js')) &&
   !/На модерации/.test(read('js/videos-data.js')));
@@ -194,6 +194,20 @@ ok('School has its original local video player',
 ok('Test grid shares cat-left school-right order',
   testGrid.children[6].children[0].textContent === 'Кот-детектив' &&
   testGrid.children[7].children[0].textContent === 'Алина в школе');
+var credits = renderWindow.RUDIK_VIDEOS.find(function (v) { return v.rutube === 'eb1ba5166e11e31bd283b67076f6e418'; });
+ok('Seregius end credits is the next ready Rutube card after the owner sequence',
+  credits && credits.order === 9 && credits.title === 'Серёгиус. Титры под финальный номер' &&
+  !credits.file && credits.review !== 'pending' && (vids.match(/eb1ba5166e11e31bd283b67076f6e418/g) || []).length === 1 &&
+  names[8] === credits.title && names[9] === 'Канцлер Серёгиус' &&
+  renderGrid.children[8].children[1].children[0].type === 'iframe' &&
+  renderGrid.children[8].children[1].children[0].src === 'https://rutube.ru/play/embed/eb1ba5166e11e31bd283b67076f6e418' &&
+  renderGrid.children[8].children[2].textContent === 'Открыть на Rutube' &&
+  renderGrid.children[8].children[2].href === 'https://rutube.ru/video/eb1ba5166e11e31bd283b67076f6e418/');
+ok('Test grid keeps the credits iframe after school and before the soon stub',
+  testGrid.children[8].children[0].textContent === 'Серёгиус. Титры под финальный номер' &&
+  testGrid.children[8].children[1].children[0].type === 'iframe' &&
+  testGrid.children[8].children[1].children[0].src === 'https://rutube.ru/play/embed/eb1ba5166e11e31bd283b67076f6e418' &&
+  testGrid.children[9].children[0].textContent === 'Канцлер Серёгиус');
 
 console.log(fail ? '\n' + fail + ' failed' : '\nall checks passed');
 process.exit(fail ? 1 : 0);
