@@ -33,18 +33,10 @@
 #iiGallery .gr img {
   width: 100%;
   height: auto;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
+  object-position: center;
   display: block;
-}
-@media (max-width: 900px) {
-  #iiGallery .gr > a { flex-basis: calc((100% - 24px) / 3); }
-}
-@media (max-width: 700px) {
-  #iiGallery .gr > a { flex-basis: calc((100% - 12px) / 2); }
-}
-@media (max-width: 480px) {
-  #iiGallery .gr > a { flex-basis: 78%; }
 }
 
 /* живая лента */
@@ -52,7 +44,7 @@
   position: relative;
   width: 100%;
   max-width: 100%;
-  height: calc(var(--ii-slide, 220px) * 0.625);
+  height: var(--ii-slide, 220px);
   margin: 0 0 8px;
   overflow: hidden;
   touch-action: pan-y;
@@ -99,7 +91,7 @@
 }
 #iiGallery .ii-ribbon.is-still .ii-slide {
   height: auto;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 1 / 1;
   cursor: pointer;
 }
 #iiGallery .ii-slide:hover,
@@ -114,13 +106,14 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   display: block;
   pointer-events: none;
   -webkit-user-drag: none;
 }
 #iiGallery .ii-ribbon.is-still .ii-slide img {
   height: auto;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 1 / 1;
 }
 
 @media (prefers-reduced-motion: reduce) {

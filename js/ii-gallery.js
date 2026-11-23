@@ -10,6 +10,7 @@
   root.setAttribute('data-ready', 'pending');
 
   var GAP = 12;
+  var PER = 4; /* сколько квадратов видно сразу, как в прежней сетке 220px */
   var SPEED = 34; /* px/с, влево */
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ribbons = [];
@@ -17,22 +18,8 @@
   var lbLock = 0;
   var lbAcc = 0;
 
-  function countFor(px) {
-    if (px >= 860) return 4;
-    if (px >= 640) return 3;
-    if (px >= 480) return 2;
-    return 1.35;
-  }
-
-  /* Телефон с meta viewport width=992: окно вёрстки ~992, а экран уже.
-     Тогда в ленте меньше кадров, и на масштабированной странице они крупнее.
-     Узкое окно десктопа сюда не попадает — там считаем по видимой ширине. */
-  function phoneScreen() {
-    var layout = window.innerWidth || 0;
-    var screenW = (window.screen && window.screen.width) || 0;
-    if (screenW && Math.abs(layout - 992) < 48 && screenW + 80 < layout) return screenW;
-    return 0;
-  }
+  /* Ширина видимой части ленты: на десктопе это вся колонка (~4×220),
+     на узком окне — то, что реально на экране, чтобы влезли те же 4 квадрата. */
   function visibleWidth(ribbon) {
     var box = ribbon.clientWidth || 320;
     var layout = window.innerWidth || box;
@@ -41,15 +28,14 @@
     if (!(vis > 80)) vis = Math.min(box, layout);
     return Math.min(box, vis);
   }
-  function perView(ribbon) {
-    var phone = phoneScreen();
-    if (phone) return countFor(phone);
-    return countFor(visibleWidth(ribbon));
-  }
   function slideWidth(ribbon) {
-    var n = perView(ribbon);
-    var viewport = phoneScreen() ? (ribbon.clientWidth || 320) : visibleWidth(ribbon);
-    return Math.max(96, (viewport - GAP * (n - 1)) / n);
+    return Math.max(64, (visibleWidth(ribbon) - GAP * (PER - 1)) / PER);
+  }
+  function safeFocus(v) {
+    if (typeof v !== 'string') return '';
+    var s = v.trim();
+    if (/^(?:(?:left|right|center|top|bottom)|-?\d+(?:\.\d+)?%)(?:\s+(?:(?:left|right|center|top|bottom)|-?\d+(?:\.\d+)?%))?$/.test(s)) return s;
+    return '';
   }
 
   function wrap(x, m) {
@@ -144,8 +130,10 @@
     im.setAttribute('draggable', 'false');
     var src = safeSrc(img.src);
     if (src) im.setAttribute('data-src', src);
-    im.setAttribute('width', '1600');
+    im.setAttribute('width', '900');
     im.setAttribute('height', '900');
+    var focus = safeFocus(img.focus);
+    if (focus) im.style.objectPosition = focus;
     b.appendChild(im);
     return b;
   }
@@ -334,7 +322,7 @@
   }, { passive: false, capture: true });
 
   function prime(st) {
-    var n = Math.ceil(perView(st.ribbon)) + 1;
+    var n = PER + 1;
     var imgs = st.track.querySelectorAll('.ii-slide:not(.ii-clone) img[data-src]');
     for (var i = 0; i < imgs.length && i < n; i++) {
       arm(imgs[i], imgs[i].getAttribute('data-src'));
