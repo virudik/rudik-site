@@ -1,0 +1,348 @@
+{
+  "sections": [
+    {
+      "id": "kot-detektiv",
+      "anchor": "ii-kot",
+      "title": "Кот-детектив",
+      "images": [
+        {
+          "src": "/img/ai/01-detective-cat-riverside-solo.jpg",
+          "alt": "Кот-детектив в твидовом костюме сидит у набережной в тёплом свете лампы"
+        },
+        {
+          "src": "/img/ai/02-KD07-clockwork-stair.jpg",
+          "alt": "Кот-детектив и полицейский пёс на часовой лестнице с видом на ночной Лондон"
+        },
+        {
+          "src": "/img/ai/03-KD19-masked-auction.jpg",
+          "alt": "Кот-детектив на маскированном аукционе в кабинете с часами и витринами"
+        },
+        {
+          "src": "/img/ai/kot-detektiv/KD14-rooftop-kite.jpg",
+          "alt": "Кот-детектив на крыше ночного Лондона с бумажным змеем в небе"
+        },
+        {
+          "src": "/img/ai/kot-detektiv/KD10-observatory.jpg",
+          "alt": "Кот-детектив в обсерватории у телескопа с картами и тёплым светом ламп"
+        },
+        {
+          "src": "/img/ai/kot-detektiv/KD22-bridge-fog.jpg",
+          "alt": "Красный экипаж мчится по мокрому ночному мосту в тумане, кот-детектив в погоне"
+        },
+        {
+          "src": "/img/ai/kot-detektiv/KD13-opera-box.jpg",
+          "alt": "Кот-детектив в театральной ложе с красным бархатом и розой"
+        },
+        {
+          "src": "/img/ai/kot-detektiv/KD12-glasshouse.jpg",
+          "alt": "Кот-детектив в ночной оранжерее среди растений и фонарей"
+        },
+        {
+          "src": "/img/ai/kot-detektiv/KD20-bell-chamber.jpg",
+          "alt": "Кот-детектив и полицейский пёс в колокольне у большого колокола"
+        },
+        {
+          "src": "/img/ai/kot-detektiv/KD11-raven-station.jpg",
+          "alt": "Кот-детектив на мокрой ночной станции с чемоданом и фонарём"
+        }
+      ]
+    },
+    {
+      "id": "kotmonavty",
+      "anchor": "ii-km",
+      "title": "Котмонавты",
+      "images": [
+        {
+          "src": "/img/ai/04-ryzhik.jpg",
+          "alt": "Рыжий кот Рыжик с зелёным световым мечом в кабине корабля, рядом сидит человек"
+        },
+        {
+          "src": "/img/ai/05-ship-exterior-front.jpg",
+          "alt": "Космический корабль Роскотмос с красной полосой и гербом в открытом космосе"
+        },
+        {
+          "src": "/img/ai/06-KM20-storm-port.jpg",
+          "alt": "Котмонавты у корабля Роскотмос в штормовом порту под дождём"
+        },
+        {
+          "src": "/img/ai/07-KM13-glass-market.jpg",
+          "alt": "Котмонавты на стеклянном подводном рынке перед гигантской рыбой"
+        },
+        {
+          "src": "/img/ai/kotmonavty/KM15-giant-eye.jpg",
+          "alt": "Котмонавты на фоне гигантского светящегося космического глаза"
+        },
+        {
+          "src": "/img/ai/kotmonavty/KM17-luminous-garden.jpg",
+          "alt": "Котмонавт в светящемся инопланетном саду с водопадом и золотой листвой"
+        },
+        {
+          "src": "/img/ai/kotmonavty/KM19-frozen-vault.jpg",
+          "alt": "Белый и рыжий котмонавты в ледяном хранилище среди кристаллических сводов"
+        },
+        {
+          "src": "/img/ai/kotmonavty/KM21-gravity-museum.jpg",
+          "alt": "Котмонавты в музее гравитации на фоне чёрной дыры и звёздного кольца"
+        },
+        {
+          "src": "/img/ai/kotmonavty/KM11-hangar-departure.jpg",
+          "alt": "Корабль Роскотмос вылетает из освещённого ангара, внизу стоят котмонавты"
+        },
+        {
+          "src": "/img/ai/kotmonavty/KM12-magnetic-scrapyard.jpg",
+          "alt": "Котмонавты на магнитной свалке среди парящих обломков и контейнеров"
+        }
+      ]
+    },
+    {
+      "id": "roskosmos",
+      "anchor": "ii-rk",
+      "title": "Роскосмос",
+      "images": [
+        {
+          "src": "/img/ai/08-03-small-satellite.jpg",
+          "alt": "Небольшой спутник в руках инженеров в белых перчатках"
+        },
+        {
+          "src": "/img/ai/09-05-space-instrument.jpg",
+          "alt": "Космический прибор с линзой крупным планом в лаборатории"
+        },
+        {
+          "src": "/img/ai/roskosmos/s09-earth-from-orbit.jpg",
+          "alt": "Планета Земля, снятая с орбиты на чёрном фоне космоса"
+        },
+        {
+          "src": "/img/ai/roskosmos/c24-capsule-sea.jpg",
+          "alt": "Спускаемый аппарат Роскосмоса в море рядом с кораблём сопровождения"
+        },
+        {
+          "src": "/img/ai/roskosmos/c25-hydrolab-pool.jpg",
+          "alt": "Тренировка космонавта в скафандре под водой в гидролаборатории"
+        },
+        {
+          "src": "/img/ai/roskosmos/c21-soyuz-sim.jpg",
+          "alt": "Космонавт в лётном костюме в кабине тренажёра корабля Союз"
+        },
+        {
+          "src": "/img/ai/roskosmos/s20-delta.jpg",
+          "alt": "Речная дельта с орбиты: извилистые рукава среди песков и зелени"
+        },
+        {
+          "src": "/img/ai/roskosmos/01-earth-work.jpg",
+          "alt": "Река и поля на закате, снятые с большой высоты"
+        },
+        {
+          "src": "/img/ai/roskosmos/c25-suit-lowering.jpg",
+          "alt": "Скафандр опускают в зале гидролаборатории, рядом стоят специалисты"
+        },
+        {
+          "src": "/img/ai/roskosmos/c21-centrifuge.jpg",
+          "alt": "Тренажёр-центрифуга и кабина в круглом зале подготовки космонавтов"
+        }
+      ]
+    },
+    {
+      "id": "raznoe",
+      "anchor": "ii-raz",
+      "title": "Разное",
+      "images": [
+        {
+          "src": "/img/ai/10-darya.jpg",
+          "alt": "Референс-лист персонажа Дарья: повороты фигуры и выражения лица"
+        },
+        {
+          "src": "/img/ai/11-bublik.jpg",
+          "alt": "Референс-лист собаки Бублик: повороты и выражения морды"
+        },
+        {
+          "src": "/img/ai/12-sonya.jpg",
+          "alt": "Референс-лист персонажа Соня: повороты фигуры и выражения лица"
+        },
+        {
+          "src": "/img/ai/raznoe/MS01-inner-sea-boat.jpg",
+          "alt": "Мальчик в красной кофте плывёт в лодке по волнам с бумажным корабликом"
+        },
+        {
+          "src": "/img/ai/raznoe/MS01-beach-hug.jpg",
+          "alt": "Девочка и мальчик обнимаются на берегу моря на закате"
+        },
+        {
+          "src": "/img/ai/raznoe/MS02-space-helmet.jpg",
+          "alt": "Ребёнок в стеклянном шлеме космонавта на фоне звёздного неба"
+        },
+        {
+          "src": "/img/ai/raznoe/MS02-suit-street.jpg",
+          "alt": "Маленький космонавт в скафандре стоит на вечерней городской улице"
+        },
+        {
+          "src": "/img/ai/raznoe/MS01-night-lighthouse.jpg",
+          "alt": "Мальчик и девочка в пижамах и наушниках сидят у окна с видом на маяк"
+        },
+        {
+          "src": "/img/ai/raznoe/MS02-grandma-hug.jpg",
+          "alt": "Бабушка обнимает внука в очках в тёплом домашнем свете"
+        },
+        {
+          "src": "/img/ai/raznoe/MS01-courtyard-retreat.jpg",
+          "alt": "Мальчик с мешочком стоит во дворе в золотом осеннем свете"
+        },
+        {
+          "src": "/img/ai/raznoe/MS01-gift-glass.jpg",
+          "alt": "Мальчик и девочка рассматривают голубой стеклянный шарик, рядом сидит пёс"
+        }
+      ]
+    },
+    {
+      "id": "seregius",
+      "anchor": "ii-sg",
+      "title": "Серёгиус",
+      "images": [
+        {
+          "src": "/img/ai/13-S20-wide-standing.jpg",
+          "alt": "Светящаяся голубая фигура стоит у озера на фоне сказочных замков"
+        },
+        {
+          "src": "/img/ai/14-S13-council-lap.jpg",
+          "alt": "Серёгиус и друг сидят в зале совета, на коленях у одного из них кот"
+        },
+        {
+          "src": "/img/ai/seregius/S48-worm-ride.jpg",
+          "alt": "Всадник мчится на огромном песчаном черве по пустыне на фоне города"
+        },
+        {
+          "src": "/img/ai/seregius/Serega-ship-sith-ruins.jpg",
+          "alt": "Космический корабль Серёгиуса на закате среди скал и древних руин"
+        },
+        {
+          "src": "/img/ai/seregius/S70-cantina-entrance.jpg",
+          "alt": "Тёплая кантина: зал с посетителями, барной стойкой и светом ламп"
+        },
+        {
+          "src": "/img/ai/seregius/Serega-ship-naboo-evening.jpg",
+          "alt": "Корабль Серёгиуса на берегу озера на закате, вдали огни города"
+        },
+        {
+          "src": "/img/ai/seregius/Serega-ship-kashyyyk-landing.jpg",
+          "alt": "Корабль Серёгиуса садится в туманном лесу среди гигантских деревьев"
+        },
+        {
+          "src": "/img/ai/seregius/S58-ship-explosion.jpg",
+          "alt": "Взрыв корабля в пустыне: открытый люк и клубы огня на фоне города"
+        }
+      ]
+    },
+    {
+      "id": "honor",
+      "anchor": "ii-honor",
+      "title": "HONOR",
+      "images": [
+        {
+          "src": "/img/ai/honor/S4-REAL-P5-light-ribbons.jpg",
+          "alt": "Человек идёт по мокрой неоновой улице сквозь розово-голубые световые ленты"
+        },
+        {
+          "src": "/img/ai/honor/S4-REAL-P7-phone-rings.jpg",
+          "alt": "Смартфон HONOR в световых кольцах на фоне ночного неонового города"
+        },
+        {
+          "src": "/img/ai/honor/S4-REAL-P3-rain-street.jpg",
+          "alt": "Человек в пальто идёт по дождливой неоновой улице ночного города"
+        },
+        {
+          "src": "/img/ai/honor/S4-3D-P5-sculptural.jpg",
+          "alt": "Салатовый смартфон HONOR среди золотых колец и жемчужин на тёмном фоне"
+        },
+        {
+          "src": "/img/ai/honor/honor-realism-trails.jpg",
+          "alt": "Чёрный смартфон HONOR парит над мокрой неоновой улицей в световых лентах"
+        },
+        {
+          "src": "/img/ai/honor/honor-3d-ribbon.jpg",
+          "alt": "Чёрный смартфон HONOR в золотой ленте на тёмном фоне"
+        },
+        {
+          "src": "/img/ai/honor/honor-drawn-birds.jpg",
+          "alt": "Рисованный смартфон HONOR среди птиц и цветов на тёмно-синем фоне"
+        }
+      ]
+    },
+    {
+      "id": "konkurs",
+      "anchor": "ii-konkurs",
+      "title": "Конкурс",
+      "images": [
+        {
+          "src": "/img/ai/konkurs/rif-underwater-city.jpg",
+          "alt": "Подводный город-риф с круглым окном и золотыми вспышками света"
+        },
+        {
+          "src": "/img/ai/konkurs/rif-porthole-portrait.jpg",
+          "alt": "Женщина в профиль смотрит в круглый иллюминатор на подводный коралловый мир"
+        },
+        {
+          "src": "/img/ai/konkurs/dfm-underpass-coat.jpg",
+          "alt": "Тёмное пальто висит на перилах в туманном подземном переходе"
+        },
+        {
+          "src": "/img/ai/konkurs/hvost-reunion.jpg",
+          "alt": "Женщина обнимает рыжую собаку во дворе, рядом стоит мужчина с телефоном"
+        },
+        {
+          "src": "/img/ai/konkurs/rif-library-porthole.jpg",
+          "alt": "Человек стоит в библиотеке у круглого иллюминатора с видом на подводный риф"
+        },
+        {
+          "src": "/img/ai/konkurs/tenchat-cafe.jpg",
+          "alt": "Трое друзей разговаривают в светлом кафе"
+        },
+        {
+          "src": "/img/ai/konkurs/tenchat-studio.jpg",
+          "alt": "Девушка в бежевом кардигане работает за столом в светлой мастерской"
+        },
+        {
+          "src": "/img/ai/konkurs/dfm-bureau.jpg",
+          "alt": "Мужчина в пальто стоит у окошка канцелярии напротив служащего"
+        }
+      ]
+    },
+    {
+      "id": "stikhiy",
+      "anchor": "ii-stikhiy",
+      "title": "Стахий",
+      "images": [
+        {
+          "src": "/img/ai/stikhiy/LOC06-red-square.jpg",
+          "alt": "Зимняя Красная площадь: храм Василия Блаженного и Спасская башня"
+        },
+        {
+          "src": "/img/ai/stikhiy/LOC01-dacha.jpg",
+          "alt": "Зелёная дача и деревянный стол в летнем саду"
+        },
+        {
+          "src": "/img/ai/stikhiy/LOC07-azlk.jpg",
+          "alt": "Старый заводской цех АЗЛК с зелёными станками и светом из высоких окон"
+        },
+        {
+          "src": "/img/ai/stikhiy/LOC10-cemetery.jpg",
+          "alt": "Тихая аллея кладбища среди берёз в пасмурный день"
+        },
+        {
+          "src": "/img/ai/stikhiy/LOC02-apartment.jpg",
+          "alt": "Комната в старой квартире с диваном, паркетом и солнечным светом из окна"
+        },
+        {
+          "src": "/img/ai/stikhiy/LOC03-kitchen.jpg",
+          "alt": "Кухня с плитой, столом и светом из окна в доме Стахия"
+        },
+        {
+          "src": "/img/ai/stikhiy/LOC05-bedroom.jpg",
+          "alt": "Спальня с кроватью и ночной лампой в доме Стахия"
+        },
+        {
+          "src": "/img/ai/stikhiy/LOC08-hospital-corridor.jpg",
+          "alt": "Пустой больничный коридор с зеленоватыми стенами и рядом дверей"
+        }
+      ]
+    }
+  ]
+}
