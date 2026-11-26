@@ -33,7 +33,7 @@ ok('test stays noindex', /noindex/.test(test));
 ok('test keeps theme button', /id="themeBtn"/.test(test));
 ok('test keeps dark theme hook', /data-theme/.test(test) && /rd-theme/.test(test) && /data-theme="dark"/.test(css));
 ok('test loads satellites.js?v=5', /satellites\.js\?v=5/.test(test));
-ok('test loads test.css?v=22', /test\.css\?v=22/.test(test));
+ok('test loads test.css?v=23', /test\.css\?v=23/.test(test));
 ok('test cosmonaut lives in .spacev, not #rdSpace', /class="spacev"/.test(test) && !/id="rdSpace"/.test(test));
 ok('test work calendar is .cal-space', /class="cal chip cal-space"/.test(test));
 ok('test home calendar is .cal-wall', /class="cal chip cal-wall"/.test(test));
@@ -43,7 +43,7 @@ ok('both calendars hl=ru', (main.match(/hl=ru/g) || []).length >= 2 && (test.mat
   ok('loop on both: ' + src, main.indexOf(src) >= 0 && test.indexOf(src) >= 0);
 });
 ok('spoon loop is current masha-loop.mp4?v=5', /masha-loop\.mp4\?v=5/.test(test));
-ok('videos-data shared', /videos-data\.js\?v=11/.test(main) && /videos-data\.js\?v=11/.test(test));
+ok('videos-data shared', /videos-data\.js\?v=14/.test(main) && /videos-data\.js\?v=14/.test(test));
 ok('test links ИИшница out, does not embed iiDance', test.indexOf('id="iiDance"') < 0 && /href="\/иишница\/"/.test(test));
 ok('main still has iiDance/iiDetective/iiShip', /id="iiDance"/.test(main) && /id="iiDetective"/.test(main) && /id="iiShip"/.test(main));
 
@@ -100,16 +100,16 @@ ok('test Video click stays on the TV section under the sticky bar',
   /getAttribute\('href'\) !== '#video'/.test(read('test/test.js')) &&
   /function go\(y\)/.test(read('test/test.js')) &&
   /id="video"/.test(test) && /Видео со мной из того что шло по телику/.test(test) &&
-  /\/test\/test\.js\?v=5/.test(test));
+  /\/test\/test\.js\?v=6/.test(test));
 ok('Unassigned cards preserved: Матиз, Кот-детектив, Роскосмос',
   ['Матиз', 'Кот-детектив', 'Роскосмос'].every(function (n) { return vids.includes("title: '" + n + "'"); }));
 copies.forEach(function (rel) {
   var html = read(rel);
   ok(rel + ' loads the new portfolio and navigation code',
-    /\/js\/videos-data\.js\?v=11/.test(html) &&
-    /\/js\/rudik\.js\?v=6/.test(html) &&
+    /\/js\/videos-data\.js\?v=14/.test(html) &&
+    /\/js\/rudik\.js\?v=7/.test(html) &&
     /\/js\/clean-urls\.js\?v=3/.test(html) &&
-    /\/css\/extra\.css\?v=23/.test(html));
+    /\/css\/extra\.css\?v=24/.test(html));
 });
 
 
@@ -130,12 +130,12 @@ vm.runInNewContext(vids + '\n' + read('js/rudik.js'),
 var names = renderGrid.children.map(function (card) { return card.children[0].textContent; });
 var ranks = names.map(function (name) {
   var v = renderWindow.RUDIK_VIDEOS.find(function (x) { return x.title === name; });
-  if (v.file || v.youtube || (v.rutube && v.review !== 'pending')) return 0;
+  if (v.file || v.youtube || v.vk || (v.rutube && v.review !== 'pending')) return 0;
   if (v.rutube || v.review === 'pending') return 1;
   return 2;
 });
 ok('Video cards unique after merging twice-named films',
-  names.length === 15 && new Set(names).size === 15 &&
+  names.length === 16 && new Set(names).size === 16 &&
   names.filter(function (x) { return x.includes('Очень Странный Дед Мороз'); }).length === 1 &&
   names.filter(function (x) { return x.includes('Звёздные войны в деревне'); }).length === 1);
 ok('Replaced original MP4 absent only after Drive backup and Rutube verification', !vids.includes('/video/alina-ny.mp4') && !vids.includes('/video/zv.mp4') && !fs.existsSync(path.join(root,'video/alina-ny.mp4')) && !fs.existsSync(path.join(root,'video/zv.mp4')));
@@ -153,7 +153,7 @@ ok('Kotmonavty third card uses owner 13Nov Rutube link and player',
   renderGrid.children[2].children[1].children[0].src === 'https://rutube.ru/play/embed/7be3173c4b9fb2411d7c83b6e6622e01');
 
 ok('Remaining videos before remaining soon cards', ranks.slice(6).every(function (v, i, a) { return i === 0 || v >= a[i - 1]; }));
-ok('Explicit order preserves pending flags and all fifteen cards', names.length === 15 && renderWindow.RUDIK_VIDEOS.filter(function (v) { return v.review === 'pending'; }).length === 0);
+ok('Explicit order preserves pending flags and all sixteen cards', names.length === 16 && renderWindow.RUDIK_VIDEOS.filter(function (v) { return v.review === 'pending'; }).length === 0);
 ok('Pending Rutube IDs not falsely labeled as confirmed moderation',
   /Публикация на Rutube проверяется/.test(read('js/rudik.js')) &&
   !/На модерации/.test(read('js/videos-data.js')));
@@ -181,7 +181,8 @@ var detective = renderWindow.RUDIK_VIDEOS.find(function(v) { return v.title === 
 var school = renderWindow.RUDIK_VIDEOS.find(function(v) { return v.title === 'Алина в школе'; });
 ok('Cat detective embeds exact Rutube during moderation',
   detective && detective.order === 7 && detective.rutube === '5d442091b657d1575542ebb9305652de' &&
-  detective.moderation === 'pending' && detective.review !== 'pending' && !detective.file);
+  detective.moderation === 'pending' && detective.review !== 'pending' && !detective.file &&
+  detective.credit === 'в соавторстве с Алексеем Илялетдиновым');
 ok('Alina in school remains the right-hand card with original MP4',
   school && school.order === 8 && school.file === '/video/alina-school.mp4' &&
   school.poster === '/video/alina-school.jpg' && names[6] === 'Кот-детектив' && names[7] === 'Алина в школе');
@@ -198,16 +199,53 @@ var credits = renderWindow.RUDIK_VIDEOS.find(function (v) { return v.rutube === 
 ok('Seregius end credits is the next ready Rutube card after the owner sequence',
   credits && credits.order === 9 && credits.title === 'Серёгиус. Титры под финальный номер' &&
   !credits.file && credits.review !== 'pending' && (vids.match(/eb1ba5166e11e31bd283b67076f6e418/g) || []).length === 1 &&
-  names[8] === credits.title && names[9] === 'Канцлер Серёгиус' &&
-  renderGrid.children[8].children[1].children[0].type === 'iframe' &&
-  renderGrid.children[8].children[1].children[0].src === 'https://rutube.ru/play/embed/eb1ba5166e11e31bd283b67076f6e418' &&
-  renderGrid.children[8].children[2].textContent === 'Открыть на Rutube' &&
-  renderGrid.children[8].children[2].href === 'https://rutube.ru/video/eb1ba5166e11e31bd283b67076f6e418/');
-ok('Test grid keeps the credits iframe after school and before the soon stub',
-  testGrid.children[8].children[0].textContent === 'Серёгиус. Титры под финальный номер' &&
-  testGrid.children[8].children[1].children[0].type === 'iframe' &&
-  testGrid.children[8].children[1].children[0].src === 'https://rutube.ru/play/embed/eb1ba5166e11e31bd283b67076f6e418' &&
-  testGrid.children[9].children[0].textContent === 'Канцлер Серёгиус');
+  names[7] === 'Алина в школе' && names[9] === credits.title && names[10] === 'Канцлер Серёгиус' &&
+  renderGrid.children[9].children[1].children[0].type === 'iframe' &&
+  renderGrid.children[9].children[1].children[0].src === 'https://rutube.ru/play/embed/eb1ba5166e11e31bd283b67076f6e418' &&
+  renderGrid.children[9].children[2].textContent === 'Открыть на Rutube' &&
+  renderGrid.children[9].children[2].href === 'https://rutube.ru/video/eb1ba5166e11e31bd283b67076f6e418/');
+ok('Test grid keeps the credits iframe after the clip and before the soon stub',
+  testGrid.children[9].children[0].textContent === 'Серёгиус. Титры под финальный номер' &&
+  testGrid.children[9].children[1].children[0].type === 'iframe' &&
+  testGrid.children[9].children[1].children[0].src === 'https://rutube.ru/play/embed/eb1ba5166e11e31bd283b67076f6e418' &&
+  testGrid.children[10].children[0].textContent === 'Канцлер Серёгиус');
+
+var readyBefore = ['Открытка', 'Алина — Очень Странный Дед Мороз ОСД (Новогоднее поздравление)', 'Котмонавты росКОТмоса', 'Звёздные войны в деревне (ЗВ)', 'Финансовые мультики против мошенников', 'Алексей против тараканов', 'Кот-детектив', 'Алина в школе'];
+var soonAfter = ['Серёгиус. Титры под финальный номер', 'Канцлер Серёгиус', 'Матиз', 'Собаки блогеры', 'Роскосмос', 'Стасов калоген', 'Черепашки в гараже'];
+ok('Clip sits between Alina in school and Seregius credits',
+  JSON.stringify(names.slice(0, 8)) === JSON.stringify(readyBefore) &&
+  names[8] === 'Очищаем планету - очищаем орбиту!' &&
+  JSON.stringify(names.slice(9)) === JSON.stringify(soonAfter));
+function creditOf(card) {
+  var title = card.children[0];
+  var line = title.children.filter(function (n) { return n.className === 'rv-subtitle' && n.textContent.indexOf('в соавторстве') === 0; })[0];
+  return line ? line.textContent : '';
+}
+ok('Detective credit is a subtitle line under the same title',
+  creditOf(renderGrid.children[6]) === 'в соавторстве с Алексеем Илялетдиновым' &&
+  creditOf(testGrid.children[6]) === 'в соавторстве с Алексеем Илялетдиновым' &&
+  renderGrid.children[6].children[0].textContent === 'Кот-детектив');
+var clip = renderWindow.RUDIK_VIDEOS.filter(function (v) { return v.vk; })[0];
+var clipCard = renderGrid.children[8];
+var testClip = testGrid.children[8];
+ok('VK clip sits before the Seregius credits card',
+  names[7] === 'Алина в школе' &&
+  names[8] === 'Очищаем планету - очищаем орбиту!' &&
+  names[9] === 'Серёгиус. Титры под финальный номер' &&
+  clip && clip.order === 8.5 && clip.clip === true &&
+  clip.credit === 'в соавторстве с Александром Фролкиным' &&
+  clip.vk.oid === 317680 && clip.vk.id === 456239471 &&
+  clip.vk.href === 'https://vk.ru/clip317680_456239471' &&
+  (vids.match(/id: 456239471/g) || []).length === 1 &&
+  creditOf(clipCard) === clip.credit && creditOf(testClip) === clip.credit &&
+  clipCard.className === 'rv-card rv-clip' &&
+  clipCard.children[1].className === 'rv-box rv-clip' &&
+  clipCard.children[1].children[0].type === 'iframe' &&
+  clipCard.children[1].children[0].src === 'https://vk.com/video_ext.php?oid=317680&id=456239471&hd=2' &&
+  clipCard.children[1].children[0].loading === 'lazy' &&
+  clipCard.children[2].textContent === 'Открыть во ВКонтакте' &&
+  clipCard.children[2].href === 'https://vk.ru/clip317680_456239471' &&
+  testClip.children[1].children[0].src === 'https://vk.com/video_ext.php?oid=317680&id=456239471&hd=2');
 
 console.log(fail ? '\n' + fail + ' failed' : '\nall checks passed');
 process.exit(fail ? 1 : 0);

@@ -172,6 +172,12 @@
       s.textContent = sec.subtitle;
       h.appendChild(s);
     }
+    if (sec.credit) {
+      var credit = document.createElement('span');
+      credit.className = 'ii-credit';
+      credit.textContent = sec.credit;
+      h.appendChild(credit);
+    }
     return h;
   }
 
@@ -398,6 +404,7 @@
       var gr = h.nextElementSibling;
       if (!gr || !gr.classList.contains('gr')) continue;
       var sub = h.querySelector('.ii-sub');
+      var creditEl = h.querySelector('.ii-credit');
       var title = '';
       for (var n = h.firstChild; n; n = n.nextSibling) {
         if (n.nodeType === 3) title += n.textContent;
@@ -417,7 +424,7 @@
         images.push(item);
       }
       if (!images.length) continue;
-      sections.push({ anchor: h.id, title: title.trim() || h.textContent.trim(), subtitle: sub ? sub.textContent.trim() : '', images: images });
+      sections.push({ anchor: h.id, title: title.trim() || h.textContent.trim(), subtitle: sub ? sub.textContent.trim() : '', credit: creditEl ? creditEl.textContent.trim() : '', images: images });
     }
     return sections;
   }
@@ -467,7 +474,7 @@
   }
 
   var fallback = fromDom();
-  fetch('/data/iishnitsa-gallery.json?v=2', { credentials: 'same-origin' })
+  fetch('/data/iishnitsa-gallery.json?v=3', { credentials: 'same-origin' })
     .then(function (r) { if (!r.ok) throw new Error('gallery'); return r.json(); })
     .then(function (data) {
       var sections = data && data.sections;

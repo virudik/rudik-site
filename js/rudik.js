@@ -3,7 +3,7 @@
   if (grid) {
     var items = (window.RUDIK_VIDEOS || []).slice();
     function group(v) {
-      if (v.file || (v.rutube && v.review !== 'pending') || v.youtube) return 0;
+      if (v.file || (v.rutube && v.review !== 'pending') || v.youtube || v.vk) return 0;
       if (v.rutube || v.review === 'pending') return 1;
       return 2;
     }
@@ -20,7 +20,12 @@
         var subtitle = document.createElement('div'); subtitle.className = 'rv-subtitle';
         subtitle.textContent = v.subtitle; t.appendChild(subtitle);
       }
-      var b = document.createElement('div'); b.className = 'rv-box';
+      if (v.credit) {
+        var credit = document.createElement('div'); credit.className = 'rv-subtitle';
+        credit.textContent = v.credit; t.appendChild(credit);
+      }
+      if (v.clip) c.className += ' rv-clip';
+      var b = document.createElement('div'); b.className = 'rv-box' + (v.clip ? ' rv-clip' : '');
       var source = null, note = null;
       if (v.file && (!v.rutube || v.review === 'pending')) {
         // Пока внешний дубль недоступен, проигрываем существующий локальный MP4.
@@ -39,6 +44,13 @@
         var f = document.createElement('iframe');
         f.src = '//www.youtube.com/embed/' + v.youtube + '?controls=1' + (v.start ? '&start=' + v.start : '');
         f.title = v.title; f.allowFullscreen = true; b.appendChild(f);
+      } else if (v.vk && typeof v.vk.oid === 'number' && typeof v.vk.id === 'number') {
+        var vf = document.createElement('iframe');
+        vf.src = 'https://vk.com/video_ext.php?oid=' + v.vk.oid + '&id=' + v.vk.id + '&hd=2';
+        vf.title = v.title;
+        vf.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock';
+        vf.allowFullscreen = true; vf.loading = 'lazy';
+        vf.setAttribute('frameborder', '0'); b.appendChild(vf);
       } else if (v.rutube && v.review === 'pending') {
         var wait = document.createElement('div');
         wait.className = 'rv-pending';
@@ -58,6 +70,14 @@
         source = document.createElement('a');
         source.href = 'https://rutube.ru/' + (v.shorts ? 'shorts/' : 'video/') + v.rutube + '/';
         source.textContent = v.review === 'pending' ? 'Проверить на Rutube' : 'Открыть на Rutube';
+        source.className = 'rv-source';
+        source.target = '_blank'; source.rel = 'noopener noreferrer';
+        c.appendChild(source);
+      }
+      if (v.vk && typeof v.vk.href === 'string' && /^https:\/\/vk\.(?:ru|com)\/clip\d+_\d+$/.test(v.vk.href)) {
+        source = document.createElement('a');
+        source.href = v.vk.href;
+        source.textContent = 'Открыть во ВКонтакте';
         source.className = 'rv-source';
         source.target = '_blank'; source.rel = 'noopener noreferrer';
         c.appendChild(source);
