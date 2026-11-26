@@ -407,3 +407,7 @@ html body { transition:transform .9s cubic-bezier(.5,0,.3,1); }
 /* «Мои видео»: ожидание подтверждения Rutube — выше заглушек «скоро». */
 .rv-box .rv-pending { color:#fff; font:600 18px/1.45 'Open Sans',sans-serif; text-align:center; padding:20px; }
 .rv-card .rv-check { color:#715e23; font:500 12px/1.4 'Open Sans',sans-serif; margin-top:4px; }
+
+/* Вертикальный клип VK: своя строка сетки, рамка 9:16, кадр не обрезается. */
+.rv-card.rv-clip { grid-column: 1 / -1; }
+.rv-box.rv-clip { height: auto; aspect-ratio: 9 / 16; width: min(100%, 420px); max-width: 100%; margin-left: auto; margin-right: auto; }

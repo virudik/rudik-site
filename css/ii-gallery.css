@@ -9,6 +9,16 @@
   color: #5c4a3a;
   margin-left: 0.45em;
 }
+/* Та же строка, что подпись соавторства в карточках «Мои видео». */
+#iiGallery h3 .ii-credit {
+  display: block;
+  margin-top: 2px;
+  text-transform: none;
+  letter-spacing: 0;
+  font: 700 18px/26px 'Open Sans', sans-serif;
+  color: #1F1209;
+  text-align: center;
+}
 
 /* запасной ряд, если скрипт не запустился: фото видны, ленту можно прокрутить */
 #iiGallery .gr {

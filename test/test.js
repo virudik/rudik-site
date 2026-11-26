@@ -5,7 +5,7 @@
   // Тот же порядок карточек, что в основной ИИшнице.
   var items = (window.RUDIK_VIDEOS || []).slice();
   function group(v) {
-    if (v.file || (v.rutube && v.review !== 'pending') || v.youtube) return 0;
+    if (v.file || (v.rutube && v.review !== 'pending') || v.youtube || v.vk) return 0;
     if (v.rutube || v.review === 'pending') return 1;
     return 2;
   }
@@ -21,7 +21,12 @@
       var subtitle = document.createElement('div'); subtitle.className = 'rv-subtitle';
       subtitle.textContent = v.subtitle; t.appendChild(subtitle);
     }
-    var b = document.createElement('div'); b.className = 'rv-box';
+    if (v.credit) {
+      var credit = document.createElement('div'); credit.className = 'rv-subtitle';
+      credit.textContent = v.credit; t.appendChild(credit);
+    }
+    if (v.clip) c.className += ' rv-clip';
+    var b = document.createElement('div'); b.className = 'rv-box' + (v.clip ? ' rv-clip' : '');
     if (v.file) {
       var vd = document.createElement('video');
       vd.controls = true; vd.preload = 'none'; vd.setAttribute('playsinline', '');
@@ -35,10 +40,23 @@
       var f = document.createElement('iframe');
       f.src = 'https://www.youtube.com/embed/' + v.youtube + '?controls=1' + (v.start ? '&start=' + v.start : '');
       f.title = v.title; f.loading = 'lazy'; f.allowFullscreen = true; b.appendChild(f);
+    } else if (v.vk && typeof v.vk.oid === 'number' && typeof v.vk.id === 'number') {
+      var vf = document.createElement('iframe');
+      vf.src = 'https://vk.com/video_ext.php?oid=' + v.vk.oid + '&id=' + v.vk.id + '&hd=2';
+      vf.title = v.title; vf.loading = 'lazy'; vf.allowFullscreen = true;
+      vf.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock';
+      b.appendChild(vf);
     } else {
       b.innerHTML = '<div class="rv-soon">скоро</div>';
     }
-    c.appendChild(b); grid.appendChild(c);
+    c.appendChild(b);
+    if (v.vk && typeof v.vk.href === 'string') {
+      var source = document.createElement('a');
+      source.href = v.vk.href; source.textContent = 'Открыть во ВКонтакте';
+      source.className = 'rv-source'; source.target = '_blank'; source.rel = 'noopener noreferrer';
+      c.appendChild(source);
+    }
+    grid.appendChild(c);
   });
 })();
 
