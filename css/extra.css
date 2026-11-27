@@ -35,10 +35,18 @@
 /* Мои видео */
 .rv { max-width:970px; margin:56px auto 0; position:relative; }
 .rv-anchor { position:absolute; top:-70px; }
-.rv-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px 20px; margin-top:22px; }
-.rv-card { position:relative; }
-.rv-card .rv-t { font:bold 18px/26px 'Open Sans',sans-serif; color:#1F1209; text-align:center; margin:0 0 6px; }
-.rv-box { position:relative; height:320px; background:#111; color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.rv-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px 20px; margin-top:22px; align-items:stretch; }
+.rv-card { position:relative; display:flex; flex-direction:column; }
+.rv-card .rv-t { font:bold 18px/26px 'Open Sans',sans-serif; color:#1F1209; text-align:center; margin:0 0 6px; min-height:52px; }
+.rv-box { position:relative; height:320px; flex:0 0 320px; width:100%; background:#111; color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+/* В ряду без ссылки оставляем ту же высоту подписи, что у «Открыть на Rutube». */
+.rv-card:not(:has(.rv-source))::after { content:""; display:block; height:25px; margin:5px 0 2px; flex:0 0 25px; }
+/* В каждом ряду заголовки, плееры и ссылки садятся в общие линии сетки. */
+@supports (grid-template-rows: subgrid) {
+  .rv-grid .rv-card { display:grid; grid-template-rows:subgrid; grid-row:span 3; }
+  .rv-card .rv-t { min-height:0; }
+  .rv-card:not(:has(.rv-source))::after { display:none; }
+}
 .rv-box iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
 .rv-box .rv-play { width:0;height:0;border-left:34px solid rgba(255,255,255,.85);border-top:21px solid transparent;border-bottom:21px solid transparent; margin-bottom:16px; }
 .rv-box .rv-soon { font:normal 20px 'Open Sans',sans-serif; letter-spacing:.08em; text-transform:lowercase; opacity:.8; }
@@ -401,7 +409,7 @@ html body { transition:transform .9s cubic-bezier(.5,0,.3,1); }
 #page_3 #wb_element_instance227, #page_3 #wb_element_instance231 { cursor: pointer; }
 
 /* Запасная ссылка на Rutube, если браузер блокирует встроенный плеер. */
-.rv-card .rv-source { display:block; font:600 13px/18px 'Open Sans',sans-serif; margin:5px 0 2px; color:#315da6; text-align:right; text-decoration:underline; text-underline-offset:2px; }
+.rv-card .rv-source { display:block; font:600 13px/18px 'Open Sans',sans-serif; margin:5px 0 2px; min-height:18px; color:#315da6; text-align:right; text-decoration:underline; text-underline-offset:2px; }
 .rv-card .rv-source:hover, .rv-card .rv-source:focus-visible { color:#a42a86; }
 
 /* «Мои видео»: ожидание подтверждения Rutube — выше заглушек «скоро». */
