@@ -33,7 +33,7 @@ ok('test stays noindex', /noindex/.test(test));
 ok('test keeps theme button', /id="themeBtn"/.test(test));
 ok('test keeps dark theme hook', /data-theme/.test(test) && /rd-theme/.test(test) && /data-theme="dark"/.test(css));
 ok('test loads satellites.js?v=5', /satellites\.js\?v=5/.test(test));
-ok('test loads test.css?v=25', /test\.css\?v=25/.test(test));
+ok('test loads test.css?v=26', /test\.css\?v=26/.test(test));
 ok('test cosmonaut lives in .spacev, not #rdSpace', /class="spacev"/.test(test) && !/id="rdSpace"/.test(test));
 ok('test work calendar is .cal-space', /class="cal chip cal-space"/.test(test));
 ok('test home calendar is .cal-wall', /class="cal chip cal-wall"/.test(test));
@@ -109,7 +109,7 @@ copies.forEach(function (rel) {
     /\/js\/videos-data\.js\?v=15/.test(html) &&
     /\/js\/rudik\.js\?v=8/.test(html) &&
     /\/js\/clean-urls\.js\?v=3/.test(html) &&
-    /\/css\/extra\.css\?v=26/.test(html));
+    /\/css\/extra\.css\?v=27/.test(html));
 });
 
 
