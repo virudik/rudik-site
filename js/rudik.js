@@ -44,12 +44,31 @@
         f.src = '//www.youtube.com/embed/' + v.youtube + '?controls=1' + (v.start ? '&start=' + v.start : '');
         f.title = v.title; f.allowFullscreen = true; b.appendChild(f);
       } else if (v.vk && typeof v.vk.oid === 'number' && typeof v.vk.id === 'number') {
+        // Клип VK — контейнер 9:16, но кадр внутри горизонтальный 16:9.
+        // Рамка обрезает чёрные поля клипа, обложка — горизонтальный кадр.
+        b.className += ' rv-vk-wide';
         var vf = document.createElement('iframe');
         vf.src = 'https://vk.com/video_ext.php?oid=' + v.vk.oid + '&id=' + v.vk.id + '&hd=2';
         vf.title = v.title;
         vf.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock';
         vf.allowFullscreen = true; vf.loading = 'lazy';
         vf.setAttribute('frameborder', '0'); b.appendChild(vf);
+        if (v.poster) {
+          var posterBtn = document.createElement('button');
+          posterBtn.type = 'button';
+          posterBtn.className = 'rv-poster';
+          posterBtn.setAttribute('aria-label', 'Смотреть: ' + v.title);
+          var posterImg = document.createElement('img');
+          posterImg.src = v.poster; posterImg.alt = '';
+          posterBtn.appendChild(posterImg);
+          var play = document.createElement('div'); play.className = 'rv-play';
+          posterBtn.appendChild(play);
+          b.appendChild(posterBtn);
+          posterBtn.addEventListener('click', function () {
+            if (posterBtn.parentNode) posterBtn.parentNode.removeChild(posterBtn);
+            if (vf.src.indexOf('autoplay=') < 0) vf.src += '&autoplay=1';
+          });
+        }
       } else if (v.rutube && v.review === 'pending') {
         var wait = document.createElement('div');
         wait.className = 'rv-pending';

@@ -53,6 +53,12 @@
 }
 .rv-box iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
 .rv-box .rv-play { width:0;height:0;border-left:34px solid rgba(255,255,255,.85);border-top:21px solid transparent;border-bottom:21px solid transparent; margin-bottom:16px; }
+/* Клип VK 9:16 с горизонтальным кадром 16:9 в середине: обрезаем чёрные поля, обложка горизонтальная. */
+.rv-box.rv-vk-wide { overflow:hidden; }
+.rv-box.rv-vk-wide iframe { inset:auto; left:0; top:50%; width:100%; height:auto; aspect-ratio:9/16; transform:translateY(-50%); }
+.rv-box .rv-poster { position:absolute; inset:0; z-index:2; margin:0; padding:0; border:0; cursor:pointer; background:#111; display:flex; align-items:center; justify-content:center; }
+.rv-box .rv-poster img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#000; display:block; }
+.rv-box .rv-poster .rv-play { position:relative; z-index:1; margin:0; filter:drop-shadow(0 0 8px rgba(0,0,0,.7)); }
 .rv-box .rv-soon { font:normal 20px 'Open Sans',sans-serif; letter-spacing:.08em; text-transform:lowercase; opacity:.8; }
 
 .rv h2.wb-stl-heading2 { font-size:26px; line-height:34px; font-weight:bold; }
