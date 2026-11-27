@@ -24,8 +24,7 @@
         var credit = document.createElement('div'); credit.className = 'rv-subtitle';
         credit.textContent = v.credit; t.appendChild(credit);
       }
-      if (v.clip) c.className += ' rv-clip';
-      var b = document.createElement('div'); b.className = 'rv-box' + (v.clip ? ' rv-clip' : '');
+      var b = document.createElement('div'); b.className = 'rv-box';
       var source = null, note = null;
       if (v.file && (!v.rutube || v.review === 'pending')) {
         // Пока внешний дубль недоступен, проигрываем существующий локальный MP4.

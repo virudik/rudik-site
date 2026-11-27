@@ -33,7 +33,7 @@ ok('test stays noindex', /noindex/.test(test));
 ok('test keeps theme button', /id="themeBtn"/.test(test));
 ok('test keeps dark theme hook', /data-theme/.test(test) && /rd-theme/.test(test) && /data-theme="dark"/.test(css));
 ok('test loads satellites.js?v=5', /satellites\.js\?v=5/.test(test));
-ok('test loads test.css?v=23', /test\.css\?v=23/.test(test));
+ok('test loads test.css?v=24', /test\.css\?v=24/.test(test));
 ok('test cosmonaut lives in .spacev, not #rdSpace', /class="spacev"/.test(test) && !/id="rdSpace"/.test(test));
 ok('test work calendar is .cal-space', /class="cal chip cal-space"/.test(test));
 ok('test home calendar is .cal-wall', /class="cal chip cal-wall"/.test(test));
@@ -43,7 +43,7 @@ ok('both calendars hl=ru', (main.match(/hl=ru/g) || []).length >= 2 && (test.mat
   ok('loop on both: ' + src, main.indexOf(src) >= 0 && test.indexOf(src) >= 0);
 });
 ok('spoon loop is current masha-loop.mp4?v=5', /masha-loop\.mp4\?v=5/.test(test));
-ok('videos-data shared', /videos-data\.js\?v=14/.test(main) && /videos-data\.js\?v=14/.test(test));
+ok('videos-data shared', /videos-data\.js\?v=15/.test(main) && /videos-data\.js\?v=15/.test(test));
 ok('test links ИИшница out, does not embed iiDance', test.indexOf('id="iiDance"') < 0 && /href="\/иишница\/"/.test(test));
 ok('main still has iiDance/iiDetective/iiShip', /id="iiDance"/.test(main) && /id="iiDetective"/.test(main) && /id="iiShip"/.test(main));
 
@@ -100,16 +100,16 @@ ok('test Video click stays on the TV section under the sticky bar',
   /getAttribute\('href'\) !== '#video'/.test(read('test/test.js')) &&
   /function go\(y\)/.test(read('test/test.js')) &&
   /id="video"/.test(test) && /Видео со мной из того что шло по телику/.test(test) &&
-  /\/test\/test\.js\?v=6/.test(test));
+  /\/test\/test\.js\?v=7/.test(test));
 ok('Unassigned cards preserved: Матиз, Кот-детектив, Роскосмос',
   ['Матиз', 'Кот-детектив', 'Роскосмос'].every(function (n) { return vids.includes("title: '" + n + "'"); }));
 copies.forEach(function (rel) {
   var html = read(rel);
   ok(rel + ' loads the new portfolio and navigation code',
-    /\/js\/videos-data\.js\?v=14/.test(html) &&
-    /\/js\/rudik\.js\?v=7/.test(html) &&
+    /\/js\/videos-data\.js\?v=15/.test(html) &&
+    /\/js\/rudik\.js\?v=8/.test(html) &&
     /\/js\/clean-urls\.js\?v=3/.test(html) &&
-    /\/css\/extra\.css\?v=24/.test(html));
+    /\/css\/extra\.css\?v=25/.test(html));
 });
 
 
@@ -232,14 +232,14 @@ ok('VK clip sits before the Seregius credits card',
   names[7] === 'Алина в школе' &&
   names[8] === 'Очищаем планету - очищаем орбиту!' &&
   names[9] === 'Серёгиус. Титры под финальный номер' &&
-  clip && clip.order === 8.5 && clip.clip === true &&
+  clip && clip.order === 8.5 && !clip.clip &&
   clip.credit === 'в соавторстве с Александром Фролкиным' &&
   clip.vk.oid === 317680 && clip.vk.id === 456239471 &&
   clip.vk.href === 'https://vk.ru/clip317680_456239471' &&
   (vids.match(/id: 456239471/g) || []).length === 1 &&
   creditOf(clipCard) === clip.credit && creditOf(testClip) === clip.credit &&
-  clipCard.className === 'rv-card rv-clip' &&
-  clipCard.children[1].className === 'rv-box rv-clip' &&
+  clipCard.className === 'rv-card' &&
+  clipCard.children[1].className === 'rv-box' &&
   clipCard.children[1].children[0].type === 'iframe' &&
   clipCard.children[1].children[0].src === 'https://vk.com/video_ext.php?oid=317680&id=456239471&hd=2' &&
   clipCard.children[1].children[0].loading === 'lazy' &&
