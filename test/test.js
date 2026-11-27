@@ -40,11 +40,27 @@
       f.src = 'https://www.youtube.com/embed/' + v.youtube + '?controls=1' + (v.start ? '&start=' + v.start : '');
       f.title = v.title; f.loading = 'lazy'; f.allowFullscreen = true; b.appendChild(f);
     } else if (v.vk && typeof v.vk.oid === 'number' && typeof v.vk.id === 'number') {
+      b.className += ' rv-vk-wide';
       var vf = document.createElement('iframe');
       vf.src = 'https://vk.com/video_ext.php?oid=' + v.vk.oid + '&id=' + v.vk.id + '&hd=2';
       vf.title = v.title; vf.loading = 'lazy'; vf.allowFullscreen = true;
       vf.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock';
       b.appendChild(vf);
+      if (v.poster) {
+        var posterBtn = document.createElement('button');
+        posterBtn.type = 'button'; posterBtn.className = 'rv-poster';
+        posterBtn.setAttribute('aria-label', 'Смотреть: ' + v.title);
+        var posterImg = document.createElement('img');
+        posterImg.src = v.poster; posterImg.alt = '';
+        posterBtn.appendChild(posterImg);
+        var play = document.createElement('div'); play.className = 'rv-play';
+        posterBtn.appendChild(play);
+        b.appendChild(posterBtn);
+        posterBtn.addEventListener('click', function () {
+          if (posterBtn.parentNode) posterBtn.parentNode.removeChild(posterBtn);
+          if (vf.src.indexOf('autoplay=') < 0) vf.src += '&autoplay=1';
+        });
+      }
     } else {
       b.innerHTML = '<div class="rv-soon">скоро</div>';
     }

@@ -37,18 +37,28 @@
 .rv-anchor { position:absolute; top:-70px; }
 .rv-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px 20px; margin-top:22px; align-items:stretch; }
 .rv-card { position:relative; display:flex; flex-direction:column; }
-.rv-card .rv-t { font:bold 18px/26px 'Open Sans',sans-serif; color:#1F1209; text-align:center; margin:0 0 6px; min-height:52px; }
+.rv-card .rv-t { font:bold 18px/26px 'Open Sans',sans-serif; color:#1F1209; text-align:center; margin:0 0 6px; }
 .rv-box { position:relative; height:320px; flex:0 0 320px; width:100%; background:#111; color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; }
 /* В ряду без ссылки оставляем ту же высоту подписи, что у «Открыть на Rutube». */
 .rv-card:not(:has(.rv-source))::after { content:""; display:block; height:25px; margin:5px 0 2px; flex:0 0 25px; }
-/* В каждом ряду заголовки, плееры и ссылки садятся в общие линии сетки. */
+/* Плееры в одном ряду на одной высоте только если у соседа надпись выше;
+   однострочную надпись прижимаем вниз, к видео, прежний отступ 6px сохраняется.
+   Если обе надписи одной высоты, ряд выглядит как раньше.
+   row-gap обнуляем: иначе 24px сетки встают между надписью и видео. */
 @supports (grid-template-rows: subgrid) {
-  .rv-grid .rv-card { display:grid; grid-template-rows:subgrid; grid-row:span 3; }
-  .rv-card .rv-t { min-height:0; }
+  .rv-grid { row-gap:0; }
+  .rv-grid .rv-card { display:grid; grid-template-rows:subgrid; grid-row:span 3; margin-bottom:24px; }
+  .rv-card .rv-t { align-self:end; }
   .rv-card:not(:has(.rv-source))::after { display:none; }
 }
 .rv-box iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
 .rv-box .rv-play { width:0;height:0;border-left:34px solid rgba(255,255,255,.85);border-top:21px solid transparent;border-bottom:21px solid transparent; margin-bottom:16px; }
+/* Клип VK 9:16 с горизонтальным кадром 16:9 в середине: обрезаем чёрные поля, обложка горизонтальная. */
+.rv-box.rv-vk-wide { overflow:hidden; }
+.rv-box.rv-vk-wide iframe { inset:auto; left:0; top:50%; width:100%; height:auto; aspect-ratio:9/16; transform:translateY(-50%); }
+.rv-box .rv-poster { position:absolute; inset:0; z-index:2; margin:0; padding:0; border:0; cursor:pointer; background:#111; display:flex; align-items:center; justify-content:center; }
+.rv-box .rv-poster img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#000; display:block; }
+.rv-box .rv-poster .rv-play { position:relative; z-index:1; margin:0; filter:drop-shadow(0 0 8px rgba(0,0,0,.7)); }
 .rv-box .rv-soon { font:normal 20px 'Open Sans',sans-serif; letter-spacing:.08em; text-transform:lowercase; opacity:.8; }
 
 .rv h2.wb-stl-heading2 { font-size:26px; line-height:34px; font-weight:bold; }
